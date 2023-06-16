@@ -1,0 +1,763 @@
+<!doctype html>
+<html lang="zxx">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Specs-Mart</title>
+    <link rel="icon" href="/img/favicon.png">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <!-- animate CSS -->
+    <link rel="stylesheet" href="/css/animate.css">
+    <!-- owl carousel CSS -->
+    <link rel="stylesheet" href="/css/owl.carousel.min.css">
+    <!-- font awesome CSS -->
+    <link rel="stylesheet" href="/css/all.css">
+    <!-- flaticon CSS -->
+    <link rel="stylesheet" href="/css/flaticon.css">
+    <link rel="stylesheet" href="/css/themify-icons.css">
+    <!-- font awesome CSS -->
+    <link rel="stylesheet" href="/css/magnific-popup.css">
+    <!-- swiper CSS -->
+    <link rel="stylesheet" href="/css/slick.css">
+    <!-- style CSS -->
+    <link rel="stylesheet" href="/css/style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+
+        <style>
+            .primary-btn {
+                display: inline-block;
+                padding: 10px 20px;
+                background-color: #ff5500;
+                color: #ffffff;
+                border: none;
+                border-radius: 4px;
+                font-size: 16px;
+                font-weight: bold;
+                text-decoration: none;
+                text-align: center;
+                margin-right: 50px;
+                cursor: pointer;
+            }
+    
+            .primary-btn:hover {
+                background-color: #ff00b7;
+            }
+        </style>
+
+<style>
+    /* Hide the up and down arrows */
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      margin: 0;
+    }
+
+    input[type="number"] {
+      -webkit-appearance: textfield;
+      -moz-appearance: textfield;
+      appearance: textfield;
+    }
+  </style>
+
+            <!--sweetalert2 cdn-->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.4/dist/sweetalert2.all.min.js"></script>
+
+
+
+    </head>
+
+<body>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+        crossorigin="anonymous"></script>
+  
+    <!--::header part start::-->
+    <header class="main_menu home_menu">
+        <div class="container">
+            <div class="row align-items-center justify-content-center">
+                <div class="col-lg-12">
+                    <nav class="navbar navbar-expand-lg navbar-light">
+                        <!-- Navbar code... -->
+                        <!-- <a class="navbar-brand" href="index.html"> <img src="img/logo.png" alt="logo"> </a> -->
+                        <a href="index.html"><img src="/img/logo.png" alt="#"></a>
+                        <button class="navbar-toggler" type="button" data-toggle="collapse"
+                            data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                            aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="menu_icon"><i class="fas fa-bars"></i></span>
+                        </button>
+    
+                        <div class="collapse navbar-collapse main-menu-item" id="navbarSupportedContent">
+                            <ul class="navbar-nav">
+                                <li class="nav-item">
+                                    <a class="nav-link" href="index">Home</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="about">about</a>
+                                </li>
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="blog" id="navbarDropdown_1" role="button"
+                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        product
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="navbarDropdown_1">
+                                        <a class="dropdown-item" href="product_list"> product list</a>
+                                        <a class="dropdown-item" href="single-product">product details</a>
+    
+                                    </div>
+                                </li>
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="blog" id="navbarDropdown_3" role="button"
+                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        pages
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="navbarDropdown_2">
+                                        <a class="dropdown-item" href="/login">
+                                            login
+    
+                                        </a>
+                                        <!-- <a class="dropdown-item" href="checkout">product checkout</a>
+                                        <a class="dropdown-item" href="/cart">shopping cart</a>
+                                        <a class="dropdown-item" href="confirmation">confirmation</a>
+                                        <a class="dropdown-item" href="elements">elements</a> -->                                         
+                                          
+                                    </div>
+                                </li>
+    
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="blog" id="navbarDropdown_2" role="button"
+                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        blog
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="navbarDropdown_2">
+                                        <a class="dropdown-item" href="blog"> blog</a>
+                                        <a class="dropdown-item" href="single-blog">Single blog</a>
+                                    </div>
+                                </li>
+    
+                                <li class="nav-item">
+                                    <a class="nav-link" href="contact">Contact</a>
+                                </li>
+                            </ul>
+                        </div>
+    
+                        <div class="hearer_icon d-flex align-items-center">
+                            <!-- Other icons... -->
+                            
+                            <% if (typeof userData !== 'undefined') { %>
+                                <a id="search_1" href="javascript:void(0)"><i class="ti-search"></i></a>
+                                <a href="/addtocart">
+                                    <i class="flaticon-shopping-cart-black-shape"></i>
+                                </a>
+                                <a href="/logout">
+                                    <i class="logout-icon">&#128075;</i>
+                                    logout
+                                </a>
+                            <% } else { %>
+                                <a href="/login">
+                                    <i class="login-icon">&#128274;</i>
+                                </a>
+                            <% } %>
+    
+                            <% if (typeof userData !== 'undefined' && userData.wishlist && userData.wishlist.length > 0) { %>
+                                <a href="/addwishlist" class="wishlist-link">
+                                    <i class="fas fa-heart"></i>
+                                    <span class="wishlist-count"><%= userData.wishlist.length %></span>
+                                </a>
+                            <% } else if (typeof userData !== 'undefined') { %>
+                                <a href="/addwishlist" class="wishlist-link">
+                                    <i class="far fa-heart"></i>
+                                </a>
+                            <% } %>
+                        </div>
+                    </nav>
+                </div>
+            </div>
+        </div>
+        <!-- Search input code... -->
+    </header>
+    <!-- Header part end-->
+
+
+
+    <!-- <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
+        <div class="carousel-inner">
+
+            <% carousels.forEach(function(carousel,i,carousels){%>
+
+                <% if(!carousel.isDisabled){%>
+
+                    <% carousel.carouselImages.forEach(function(carouselImages){%>
+
+                        <div class="carousel-item active">
+                            <img class="d-block w-100" src="/admin/<%= carouselImages %>">
+                        </div>
+
+                    <% }) %>
+
+                <%}%>
+
+            <% })%>
+
+
+        </div>
+        <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+        </a>
+        <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+        </a>
+    </div> -->
+
+    <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
+        <div class="carousel-inner">
+
+            <% carousels.forEach(function(carousel, i) {
+                if (!carousel.isDisabled) {
+                    carousel.carouselImages.forEach(function(carouselImage, j) {
+                        var isActive = (j === 0) ? 'active' : ''; // Add 'active' class to the first item only
+    
+                        %>
+                                     <div class="carousel-item <%= isActive %>">
+                    <img class="d-block w-100" src="/admin/<%= carouselImage %>">
+                </div>
+                <% 
+                    });
+                }
+            }); %>
+            </div>
+
+        <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+        </a>
+        <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+        </a>
+    </div>
+
+    <!--  breadcrumb part start-->
+    <section class="breadcrumb_part">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="breadcrumb_iner">
+                        <h2>product list</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- breadcrumb part end -->
+
+    <!-- product list part start-->
+    <section class="product_list section_padding">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="product_sidebar">
+                        <div class="single_sedebar">
+                            <form action="#">
+                                <input type="text" name="#" placeholder="Search keyword">
+                                <i class="ti-search"></i>
+                            </form>
+                        </div>
+                        <div class="single_sedebar">
+                            <div class="select_option">
+                                <div class="select_option_list">Category <i class="right fas fa-caret-down"></i> </div>
+                                <div class="select_option_dropdown">
+                                    <p><a href="#">Category 1</a></p>
+                                    <p><a href="#">Category 2</a></p>
+                                    <p><a href="#">Category 3</a></p>
+                                    <p><a href="#">Category 4</a></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="single_sedebar">
+                            <div class="select_option">
+                                <div class="select_option_list">Type <i class="right fas fa-caret-down"></i> </div>
+                                <div class="select_option_dropdown">
+                                    <p><a href="#">Type 1</a></p>
+                                    <p><a href="#">Type 2</a></p>
+                                    <p><a href="#">Type 3</a></p>
+                                    <p><a href="#">Type 4</a></p>
+                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-8">
+                    <div class="product_list">
+                        <div class="row">
+                            <% products.forEach(function(product,i,products) { %>
+                                
+                                <% if (!product.isDisabled) { %>
+                                    <div class="col-lg-6 col-sm-6">
+                                        <div class="single_product_item border">
+                                            <img src="/admin/<%= products[i].imageUrls[0] %>" alt="#" class="img-fluid">
+                                            <h3>
+                                                <a href="/single-product/<%= products[i]._id %>">
+                                                    <%= products[i].productName %>
+                                                </a>
+                                            </h3>
+                                            <p>Quantity</p>
+                                            <div class="d-flex mb-2" style="max-width: 130px"
+                                    id="productCount<%= products[i]._id %>">
+                                    <div class="d-flex mb-2" style="max-width: 180px">
+                                        <button class="btn btn-primary px-2 me-1"
+                                            onclick="changeCount('<%=products[i]._id%>','decrement')">
+                                            <i class="fas fa-minus"></i>
+                                        </button>
+
+                                        <!--productsCheck passed for not removing the quantity from the field while reloading-->
+
+                                        <div class="form-outline" style="flex: 1;">
+                                            <input id="form1" min="1" name="quantityofproduct"
+                                                value="<%= products[i].quantity %>" type="number" class="form-control"
+                                                style="height: auto; padding: 0.375rem 0.75rem; font-size: 0.875rem;"
+                                                readonly />
+                                        </div>
+                                        <button class="btn btn-primary px-2 ms-1"
+                                            onclick="changeCount('<%=products[i]._id%>','increment')">
+                                            <i class="fas fa-plus"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                            <p>
+                                                <%= products[i].price %>
+                                            </p>
+                                            <% if (product.stockCount==0) { %>
+                                    <h3 style="color: red;">Out of Stock</h3>
+                                    <% } else { %>
+                                        <div class="card_area d-flex align-items-center">
+                                            <a class="primary-btn" onclick="addToCart('<%= products[i]._id %>')">Add to
+                                                Cart</a>
+
+                                            <a class="primary-btn" onclick="addToWishlist('<%= products[i]._id %>')"
+                                                href="#"><i class="fas fa-heart"> </i></a>
+                                        </div>
+                                        <% } %>
+                                        </div>
+                                    </div>
+                                    <% } %>
+                                        <% }); %>
+                        </div>
+                        <div class="load_more_btn text-center">
+                            <a href="#" class="btn_3">Load More</a>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- <div class="col-lg-6 col-sm-6">
+                                    <div class="single_product_item">
+                                        <img src="/img/product/product_list_1.png" alt="#" class="img-fluid">
+                                        <h3> <a href="single-product.html">Cervical pillow for airplane
+                                                car office nap pillow</a> </h3>
+                                        <p>From $5</p>
+                                    </div>
+                                </div> -->
+                <!-- <div class="col-lg-6 col-sm-6">
+                                    <div class="single_product_item">
+                                        <img src="/img/product/product_list_2.png" alt="#" class="img-fluid">
+                                        <h3> <a href="single-product.html">Geometric striped flower home classy
+                                                decor</a> </h3>
+                                        <p>From $5</p>
+                                    </div>
+                                </div> -->
+                <!-- <div class="col-lg-6 col-sm-6">
+                                    <div class="single_product_item">
+                                        <img src="/img/product/product_list_3.png" alt="#" class="img-fluid">
+                                        <h3> <a href="single-product.html">Foam filling cotton slow rebound pillows</a>
+                                        </h3>
+                                        <p>From $5</p>
+                                    </div>
+                                </div> -->
+                <!-- <div class="col-lg-6 col-sm-6">
+                                    <div class="single_product_item">
+                                        <img src="/img/product/product_list_4.png" alt="#" class="img-fluid">
+                                        <h3> <a href="single-product.html">Memory foam filling cotton Slow rebound
+                                                pillows</a> </h3>
+                                        <p>From $5</p>
+                                    </div>
+                                </div> -->
+                <!-- <div class="col-lg-6 col-sm-6">
+                                    <div class="single_product_item">
+                                        <img src="/img/product/product_list_5.png" alt="#" class="img-fluid">
+                                        <h3> <a href="single-product.html">Memory foam filling cotton Slow rebound
+                                                pillows</a> </h3>
+                                        <p>From $5</p>
+                                    </div>
+                                </div> -->
+                <!-- <div class="col-lg-6 col-sm-6">
+                                    <div class="single_product_item">
+                                        <img src="/img/product/product_list_6.png" alt="#" class="img-fluid">
+                                        <h3> <a href="single-product.html">Sleeping orthopedic sciatica Back Hip Joint
+                                                Pain relief</a> </h3>
+                                        <p>From $5</p>
+                                    </div>
+                                </div> -->
+                <!-- <div class="col-lg-6 col-sm-6">
+                                    <div class="single_product_item">
+                                        <img src="/img/product/product_list_7.png" alt="#" class="img-fluid">
+                                        <h3> <a href="single-product.html">Memory foam filling cotton Slow rebound
+                                                pillows</a> </h3>
+                                        <p>From $5</p>
+                                    </div>
+                                </div> -->
+                <!-- <div class="col-lg-6 col-sm-6">
+                                    <div class="single_product_item">
+                                        <img src="/img/product/product_list_8.png" alt="#" class="img-fluid">
+                                        <h3> <a href="single-product.html">Sleeping orthopedic sciatica Back Hip Joint
+                                                Pain relief</a> </h3>
+                                        <p>From $5</p>
+                                    </div>
+                                </div> -->
+                <!-- <div class="col-lg-6 col-sm-6">
+                                    <div class="single_product_item">
+                                        <img src="/img/product/product_list_9.png" alt="#" class="img-fluid">
+                                        <h3> <a href="single-product.html">Geometric striped flower home classy
+                                                decor</a> </h3>
+                                        <p>From $5</p>
+                                    </div>
+                                </div> -->
+                <!-- <div class="col-lg-6 col-sm-6">
+                                    <div class="single_product_item">
+                                        <img src="/img/product/product_list_10.png" alt="#" class="img-fluid">
+                                        <h3> <a href="single-product.html">Geometric striped flower home classy
+                                                decor</a> </h3>
+                                        <p>From $5</p>
+                                    </div>
+                                </div> -->
+
+
+
+            </div>
+        </div>
+    </section>
+    <!-- product list part end-->
+
+    <!-- client review part here -->
+    <section class="client_review">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="client_review_slider owl-carousel">
+                        <div class="single_client_review">
+                            <div class="client_img">
+                                <img src="/img/client.png" alt="#">
+                            </div>
+                            <p>"Working in conjunction with humanitarian aid agencies, we have supported programmes to
+                                help alleviate human suffering.</p>
+                            <h5>- Micky Mouse</h5>
+                        </div>
+                        <div class="single_client_review">
+                            <div class="client_img">
+                                <img src="/img/client_1.png" alt="#">
+                            </div>
+                            <p>"Working in conjunction with humanitarian aid agencies, we have supported programmes to
+                                help alleviate human suffering.</p>
+                            <h5>- Micky Mouse</h5>
+                        </div>
+                        <div class="single_client_review">
+                            <div class="client_img">
+                                <img src="/img/client_2.png" alt="#">
+                            </div>
+                            <p>"Working in conjunction with humanitarian aid agencies, we have supported programmes to
+                                help alleviate human suffering.</p>
+                            <h5>- Micky Mouse</h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- client review part end -->
+
+    <!-- feature part here -->
+    <section class="feature_part section_padding">
+        <div class="container">
+            <div class="row justify-content-between">
+                <div class="col-lg-6">
+                    <div class="feature_part_tittle">
+                        <h3>Credibly innovate granular
+                            internal or organic sources
+                            whereas standards.</h3>
+                    </div>
+                </div>
+                <div class="col-lg-5">
+                    <div class="feature_part_content">
+                        <p>Seamlessly empower fully researched growth strategies and interoperable internal or “organic”
+                            sources. Credibly innovate granular internal or “organic” sources whereas high standards in
+                            web-readiness.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-lg-3 col-sm-6">
+                    <div class="single_feature_part">
+                        <img src="/img/icon/feature_icon_1.svg" alt="#">
+                        <h4>Credit Card Support</h4>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-sm-6">
+                    <div class="single_feature_part">
+                        <img src="/img/icon/feature_icon_2.svg" alt="#">
+                        <h4>Online Order</h4>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-sm-6">
+                    <div class="single_feature_part">
+                        <img src="/img/icon/feature_icon_3.svg" alt="#">
+                        <h4>Free Delivery</h4>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-sm-6">
+                    <div class="single_feature_part">
+                        <img src="/img/icon/feature_icon_4.svg" alt="#">
+                        <h4>Product with Gift</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- feature part end -->
+
+    <!-- subscribe part here -->
+    <section class="subscribe_part section_padding">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="subscribe_part_content">
+                        <h2>Get promotions & updates!</h2>
+                        <p>Seamlessly empower fully researched growth strategies and interoperable internal or “organic”
+                            sources credibly innovate granular internal .</p>
+                        <div class="subscribe_form">
+                            <input type="email" placeholder="Enter your mail">
+                            <a href="#" class="btn_1">Subscribe</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- subscribe part end -->
+
+    <!--::footer_part start::-->
+    <footer class="footer_part">
+        <div class="footer_iner">
+            <div class="container">
+                <div class="row justify-content-between align-items-center">
+                    <div class="col-lg-8">
+                        <div class="footer_menu">
+                            <div class="footer_logo">
+                                <a href="index.html"><img src="/img/logo.png" alt="#"></a>
+                            </div>
+                            <div class="footer_menu_item">
+                                <a href="index.html">Home</a>
+                                <a href="about.html">About</a>
+                                <a href="product_list.html">Products</a>
+                                <a href="#">Pages</a>
+                                <a href="blog.html">Blog</a>
+                                <a href="contact.html">Contact</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="social_icon">
+                            <a href="#"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#"><i class="fab fa-instagram"></i></a>
+                            <a href="#"><i class="fab fa-google-plus-g"></i></a>
+                            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="copyright_part">
+            <div class="container">
+                <div class="row ">
+                    <div class="col-lg-12">
+                        <div class="copyright_text">
+                            <P><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                                Copyright &copy;
+                                <script>document.write(new Date().getFullYear());</script> All rights reserved | This
+                                template is made with <i class="ti-heart" aria-hidden="true"></i> by <a
+                                    href="https://colorlib.com" target="_blank">Colorlib</a>
+                                <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                            </P>
+                            <div class="copyright_link">
+                                <a href="#">Turms & Conditions</a>
+                                <a href="#">FAQ</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!--::footer_part end::-->
+
+    <!-- jquery plugins here-->
+    <script src="/js/jquery-1.12.1.min.js"></script>
+    <!-- popper js -->
+    <script src="/js/popper.min.js"></script>
+    <!-- bootstrap js -->
+    <script src="/js/bootstrap.min.js"></script>
+    <!-- easing js -->
+    <script src="/js/jquery.magnific-popup.js"></script>
+    <!-- swiper js -->
+    <script src="/js/swiper.min.js"></script>
+    <!-- swiper js -->
+    <script src="/js/mixitup.min.js"></script>
+    <!-- particles js -->
+    <script src="/js/owl.carousel.min.js"></script>
+    <script src="/js/jquery.nice-select.min.js"></script>
+    <!-- slick js -->
+    <script src="/js/slick.min.js"></script>
+    <script src="/js/jquery.counterup.min.js"></script>
+    <script src="/js/waypoints.min.js"></script>
+    <script src="/js/contact.js"></script>
+    <script src="/js/jquery.ajaxchimp.min.js"></script>
+    <script src="/js/jquery.form.js"></script>
+    <script src="/js/jquery.validate.min.js"></script>
+    <script src="/js/mail-script.js"></script>
+    <!-- custom js -->
+    <script src="/js/custom.js"></script>
+
+    <script>
+        const addToCart = async (productId) => {
+            try {
+                const response = await fetch('/addtocart', {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ productId: productId })
+                });
+                const res = await response.json();
+
+                if (res === "success") {
+                    Swal.fire({
+                        title: 'Success',
+                        text: "Item added to Cart!",
+                        icon: 'success',
+                        showConfirmButton: false,
+                        iconHtml: '<i class="fas fa-shopping-cart"></i>',
+                        timer: 1000
+                    });
+                } else if (res === "Iteminside") {
+                    Swal.fire({
+                        title: 'Success',
+                        text: "Item already inside the Cart, please click the cart Icon!",
+                        icon: 'error',
+                        showConfirmButton: false,
+                        iconHtml: '<i class="fas fa-shopping-cart"></i>',
+                        timer: 1000
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'Error',
+                        text: "An error occurred while adding the item to the cart!",
+                        icon: 'error',
+                        showConfirmButton: false,
+                        iconHtml: '<i class="fas fa-shopping-cart"></i>',
+                        timer: 1000
+                    });
+                }
+            } catch (error) {
+                console.error(error);
+                Swal.fire({
+                    title: 'Error',
+                    text: "An error occurred while adding the item to the cart!",
+                    icon: 'error',
+                    showConfirmButton: false,
+                    iconHtml: '<i class="fas fa-shopping-cart"></i>',
+                    timer: 1000
+                });
+            }
+        };
+
+
+        const addToWishlist = async (productId) => {
+            // console.log("==========productId=========",productId);
+            const response = await fetch('/addwishlist', {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ productId: productId })
+            });
+            // console.log(response);
+            const res = await response.json();
+            // console.log(res,"-----------------res-------------");
+            if (res === 'success') {
+                // const data = await response.json();
+                // console.log(data,"------------------data----------------");
+                Swal.fire({
+                    title: 'Success',
+                    text: "Item added to wishlist !",
+                    icon: 'success',
+                    showConfirmButton: false,
+                    iconHtml: '<i class="fas fa-heart"></i>',
+                    timer: 1000
+                });
+                const wishlistContainer = document.getElementById('wishlist-container');
+                const itemElement = document.createElement("div");
+                wishlistContainer.appendChild(itemElement);
+            }
+            else if (res === 'Productexists') {
+                Swal.fire({
+                    title: 'Success',
+                    text: "Item already added to wishlist, check in the wishlist table!",
+                    icon: 'success',
+                    showConfirmButton: false,
+                    iconHtml: '<i class="fas fa-heart"></i>',
+                    timer: 3000
+                });
+            }
+            else {
+                res.status(500).json({ message: "Error adding product to wishlist!" });
+            }
+        }  
+    </script>
+
+    <script>
+        async function changeCount(id, status) {
+            var quant = document.getElementById(`productCount${id}`);
+            await fetch('/quantity', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    prodId: id,
+                    status: status
+                })
+            })
+                .then(response => response.json())
+                .then((res) => {
+                    console.log(res);
+                    if (res.status === "success") {
+                        quant.querySelector('input[type=number]').value = res.quantity;
+
+                        document.getElementById(`unitProductTotal${id}`).innerHTML = res.totalprice
+
+                        document.getElementById('Overallprice').innerHTML = res.totalPriceofProducts
+                    }
+                });
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,22 @@
+<!-- Product Details -->
+<h2>Product Name: <%= product[0].productName %></h2>
+<p>Product Description: <%= product[0].productDescription %></p>
+
+<!-- Review Form -->
+<form id="reviewForm" action="/product-ratings/<%= product[0]._id %>" method="POST">
+  <label for="rating">Rating (1-5):</label>
+  <input type="number" id="rating" name="rating" min="1" max="5" required>
+
+  <label for="comment">Review Comment:</label>
+  <textarea id="comment" name="comment" required></textarea>
+
+  <button type="submit">Submit Review</button>
+</form>
+
+<!-- Reviews Section -->
+<h3>Reviews</h3>
+<ul id="reviewsList">
+  <% product[0].reviews.forEach(function(review) { %>
+    <li>Rating: <%= review.rating %>, Comment: <%= review.comment %></li>
+  <% }) %>
+</ul>
