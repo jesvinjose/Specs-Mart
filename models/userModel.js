@@ -51,7 +51,35 @@ const userSchema = new mongoose.Schema({
          ref: 'Product'
       }
 
-   ]
+   ],
+   boughtBy:[
+      {
+         type: mongoose.Schema.Types.ObjectId,
+         ref: 'Product'
+      }
+   ],
+   wallet: {
+      balance: {
+          type: Number,
+          default: 0,
+      },
+      transactions: [
+          {
+              date: {
+                  type: Date,
+              },
+              details: {
+                type: String,
+              },
+              amount: {
+                  type: Number,
+              },
+              status: {
+                  type: String,
+              },
+          },
+      ],
+  },
 },{ versionKey: 'version' });
 
 const User = mongoose.model('User', userSchema);

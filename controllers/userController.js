@@ -6,10 +6,10 @@ const Review = require('../models/reviewModel')
 const BillingAddress = require('../models/billingAddressModel')
 const ShippingAddress = require('../models/shippingAddressModel')
 const Order = require('../models/orderModel')
-// const Cart=require('../models/cartModel')
 const bcrypt = require('bcrypt');
 const session = require('express-session')
 const validator = require('validator');
+const Razorpay = require('razorpay')
 
 const mongoose = require('mongoose');
 
@@ -17,6 +17,7 @@ const mongoose = require('mongoose');
 
 const nodemailer = require('nodemailer'); // Import Nodemailer for sending emails
 const { ObjectId } = require('mongodb');
+const billingAddress = require('../models/billingAddressModel');
 
 
 let userData
@@ -63,17 +64,21 @@ const loadProductDetail = async (req, res) => {
   try {
     // console.log("Hitting Product Detail--------------------------");
     const _id = req.params._id;
+    // console.log(_id,"-----------id------------");
+
     const singleProduct = await Product.find({ _id: _id })
+    // console.log(singleProduct);
+    const oneImage = singleProduct[0].imageUrls[0]
+    // console.log(oneImage);
     if (req.session.user != undefined) {
       const data = req.session.user;
-      // console.log(_id)
-      // console.log(singleProduct);
-
-      res.render('single-product', { product: singleProduct, userData: data })
+      // console.log(_id) 
+      res.render('single-product', { product: singleProduct, userData: data, oneImage: oneImage })
     }
     else {
-      res.render('single-product', { product: singleProduct })
+      res.render('single-product', { product: singleProduct, oneImage: oneImage })
     }
+
   } catch (error) {
     console.log(error)
   }
@@ -403,44 +408,16 @@ const saveProductRatingtoDB = async (req, res) => {
   }
 }
 
-
-//Not working lookup
-// const loadWishlist = async (req, res) => {
-//   try {
-//     if (req.session.user !== undefined) {
-//       let userData = req.session.user;
-
-//       const userWithWishlistDetails = await User.aggregate([
-//         {
-//           $match: { _id: userData._id } // Match the user document
-//         },
-//         {
-//           $lookup: {
-//             from: 'products',
-//             localField: 'wishList',
-//             foreignField: '_id',
-//             as: 'wishlistDetails'
-//           }
-//         }
-//       ]);
-
-//       console.log(userWithWishlistDetails);
-
-//       // Extract the wishlist details from the aggregated result
-//       const wishlistDetails = userWithWishlistDetails[0].wishlistDetails;
-
-//       res.render('wishlist', { user: userData, wishList: wishlistDetails });
-//     }
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };
-
 const addToCart = async (req, res) => {
   try {
     const { productId } = req.body;
     const userData = req.session.user;
     // console.log(userData,"---------userData------------------");
+    // console.log(userData)
+    if (!userData) {
+      res.json('usernotloggedin')
+      return;
+    }
     const user = await User.findById(userData._id);
     if (!user.cart) {
       user.cart = [];
@@ -474,6 +451,10 @@ const addWishList = async (req, res) => {
   try {
     const { productId } = req.body;
     const userData = req.session.user;
+    if (!userData) {
+      res.json('usernotloggedin')
+      return;
+    }
     const user = await User.findById(userData._id);
     if (!user.wishList) {
       user.wishList = []; // Initialize wishList as an empty array if it's undefined
@@ -567,13 +548,6 @@ const quantityChange = async (req, res) => {
       const product = await Product.findById(prodId)
       let totalprice = product.price * quant.cart[0].quantity
 
-      // const userWithCartDetails = await User.findById(userData._id)
-      // .populate({
-      //   path: 'cart',
-      //   populate: {
-      //     path: 'products',
-      //   },
-      // });
       const userWithCartDetails = await User.findById(userData._id)
         .populate({
           path: 'cart',
@@ -622,6 +596,7 @@ const loadWishlist = async (req, res) => {
 
 const loadCart = async (req, res) => {
   try {
+    // console.log("Inside loadCart");
     if (req.session.user !== undefined) {
       const data = req.session.user;
       const userWithCartDetails = await User.findById(data._id)
@@ -652,6 +627,8 @@ const loadCart = async (req, res) => {
   }
 };
 
+
+
 const loadCheckOut = async (req, res) => {
   try {
     if (req.session.user !== undefined) {
@@ -681,12 +658,40 @@ const loadCheckOut = async (req, res) => {
         }
       });
       // console.log(productsCheck,"---------------------productsCheck---------------------------");
-      res.render('checkout', { userData: data, shippingAddresses: shippingAddresses, billingAddresses: billingAddresses, products: productsCheck, subtotal })
+      // console.log(productsCheck.length,'product length')
+      if (productsCheck.length == 0) {
+        // console.log('inside if')
+        // res.json('empty')
+        res.status(404).send();
+        // res.redirect('/empty-cart');
+
+      } else {
+        res.render('checkout', { userData: data, shippingAddresses: shippingAddresses, billingAddresses: billingAddresses, products: productsCheck, subtotal })
+
+      }
     }
   } catch (error) {
     console.log(error);
   }
 }
+
+
+// const loadEmptyCart=async(req,res)=>{
+//   console.log("Inside Empty cart");
+//   res.send("inside empty")
+//   // res.send(`
+//   //   <script>
+//   //     Swal.fire({
+//   //       icon: 'info',
+//   //       title: 'Empty Basket',
+//   //       text: 'Your cart is currently empty.',
+//   //       html: '<i class="fas fa-shopping-cart"></i>', // Replace with the Font Awesome icon class
+//   //       showCancelButton: false,
+//   //       showConfirmButton: false,
+//   //     });
+//   //   </script>
+//   // `);
+// }
 
 // const addToCart = async (req, res) => {
 //   try {
@@ -854,45 +859,35 @@ const placeOrder = async (req, res) => {
     // console.log(productsInCart,"----------productsInCart-----------------");
     let hasInsufficientStock = false;
 
-    for (const item of productsInCart) 
-    {
+    for (const item of productsInCart) {
       const product = productDetails.find((p) => p._id.toString() === item.productId);
 
-      if (product && item.quantity > product.stockCount) 
-      {
+      if (product && item.quantity > product.stockCount) {
         // The quantity in cart is greater than the available stock count
         hasInsufficientStock = true;
         break;
       }
     }
-    if (hasInsufficientStock) 
-    {
+    if (hasInsufficientStock) {
       return res.status(400).json({ error: 'Insufficient stock for one or more products' });
     }
     const orderItems = [];
-    // for (const item of productsInCart) {
-    //   const product = productDetails.find((p) => {
-    //     console.log(item.productId.toString(), p._id.toString());
-    //     return p._id.toString() == item.productId.toString();
-    //   });
-    //   console.log(product);
-    // }
-    for (const item of productsInCart) 
-    {
+
+    for (const item of productsInCart) {
       const product = productDetails.find((p) => p._id.toString() === item.productId.toString());
 
-      if (product) 
-      {
+      if (product) {
         product.stockCount -= item.quantity;
         await product.save();
         // console.log(product, "ppppppppppppppppppppppppppppp");
-        const orderItem = 
+        const orderItem =
         {
           id: product._id,
           name: product.productName,
           price: product.price,
           quantity: item.quantity,
           image: product.imageUrls[0],
+          brand: product.productBrand
         };
         orderItems.push(orderItem);
       }
@@ -903,29 +898,374 @@ const placeOrder = async (req, res) => {
       return Math.floor(Math.random() * 100000000)
     }
 
-    const newOrder = new Order({
-      userId: user._id,
-      product: orderItems,
-      billingaddress: req.session.user.billingDetail,
-      shippingaddress: req.session.user.shippingDetail,
-      orderId: generateOrderId(),
-      total: subtotal,
-      paymentMethod: paymentMethod
 
-    });
+    if (paymentMethod == 'cod') {
+      var newOrder = new Order({
+        userId: user._id,
+        product: orderItems,
+        billingaddress: req.session.user.billingDetail,
+        shippingaddress: req.session.user.shippingDetail,
+        orderId: generateOrderId(),
+        total: subtotal,
+        paymentMethod: paymentMethod,
+      });
 
-    user.cart = [];
-    await user.save();
+      user.cart = [];
+      await user.save();
+
+      await newOrder.save();
+
+      // console.log(orderItems);
+      res.json({ success: true, order: newOrder });
+    } else if (paymentMethod == 'wallet') {
+
+      console.log("Hi wallet....");
+      if (subtotal > user.wallet.balance) {
+        console.log("Hi wallet balance....");
+        return res.status(400).json({ error: 'Insufficient balance in the wallet' });
+      }
+      else {
+        user.wallet.balance = user.wallet.balance - subtotal;
+        var newOrder = new Order({
+          userId: user._id,
+          product: orderItems,
+          billingaddress: req.session.user.billingDetail,
+          shippingaddress: req.session.user.shippingDetail,
+          orderId: generateOrderId(),
+          total: subtotal,
+          paymentMethod: paymentMethod,
+        });
+
+        user.cart = [];
+        await user.save();
+
+        await newOrder.save();
+
+        // console.log(orderItems);
+        res.json({ success: true, order: newOrder });
+      }
+    } else {
+      if (paymentMethod == 'gpay') {
+
+        console.log(paymentMethod, "----------inside gpay-------------");
+
+
+
+        try {
+          const options = {
+            amount: subtotal * 100,  // amount in the smallest currency unit
+            currency: "INR",
+            receipt: generateOrderId(),
+          };
+
+          var instance = new Razorpay({ key_id: 'rzp_test_ORkJ65oKPb4Z48', key_secret: 'AYEvrnuXqhkw3DJ5NO71mzWQ' })
+          const order = await instance.orders.create(options);
+
+          var newOrder = new Order({
+            userId: user._id,
+            product: orderItems,
+            billingaddress: req.session.user.billingDetail,
+            shippingaddress: req.session.user.shippingDetail,
+            orderId: options.receipt,
+            total: subtotal,
+            paymentMethod: paymentMethod,
+          });
+
+          await newOrder.save();
+          console.log(options.receipt, "-----optionsReceipt------------");
+
+          console.log(order, "------------newOrder--------------");
+          user.cart = [];
+          await user.save();
+          console.log(user, "-------------user------------");
+
+          // res.status(200).json({
+          //   success: true,
+          //   order,
+          //   amount: options.amount
+          // });
+          res.json({ success: true, order: order, amount: options.amount, newOrder });
+        } catch (error) {
+          res.status(500).json({ error: 'An error occurred while creating the order' });
+        }
+      }
+    }
+
+
+
+
     // console.log("updated")
-    await newOrder.save();
+    console.log("hi-------------------------------------");
+    // console.log(newOrder);
 
-    console.log(newOrder);
-    // console.log(orderItems);
-    res.json({ success: true });
+
 
 
   }
   catch (error) {
+    console.log(error);
+    res.status(500).json({ error: 'An error occurred while placing the order' });
+  }
+}
+
+const loadConfirmation = async (req, res) => {
+  try {
+    console.log("Hi load confirmation");
+    const userData = req.session.user;
+    const orderId = req.query.orderId;
+    // const order = JSON.parse(req.query.order);
+    // console.log(order,"-----------order---------------");
+    const orderDetails = await Order.findOne({ orderId: orderId })
+    // console.log(orderDetails);
+    // console.log(userData.billingDetail);
+    // console.log(userData.shippingDetail);
+
+    const BillingAddressDetail = await BillingAddress.find({ _id: userData.billingDetail })
+    // console.log(BillingAddressDetail);
+    const ShippingAddressDetail = await ShippingAddress.find({ _id: userData.shippingDetail })
+    // console.log(ShippingAddressDetail);
+    if (userData !== 'undefined') {
+      res.render('confirmation', { userData: userData, order: orderDetails, BillingAddress: BillingAddressDetail, ShippingAddress: ShippingAddressDetail })
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('An error occurred');
+  }
+}
+
+const loadProfile = async (req, res) => {
+  try {
+    const userData = req.session.user;
+    if (userData !== 'undefined') {
+      const userobj = await User.findOne({ _id: userData._id })
+      // console.log(userobj.wallet.balance,"-----------------");
+      res.render('profile', { userData: userData, walletamount: userobj.wallet.balance })
+    }
+
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+const loadMyOrders = async (req, res) => {
+  try {
+    const userData = req.session.user;
+    if (userData !== 'undefined') {
+      const orderData = await Order.find({ userId: userData._id })
+      res.render('orders', { userData: userData, orderData: orderData })
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+const loadOrderDetails = async (req, res) => {
+  try {
+    const userData = req.session.user;
+    if (userData !== 'undefined') {
+      const orderId = req.query.orderId
+      // console.log(orderId);
+      // console.log(typeof(orderId));
+      const orderData = await Order.find({ orderId: orderId })
+      // console.log(orderData,"--------orderdata----------");
+      // Retrieve product details
+      // const productDetails = [];
+      // for (const product of orderData[0].product) {
+      //   const productDetail = await Product.findById(product.id);
+      //   productDetails.push(productDetail);
+      // }
+      // // console.log(productDetails);
+      const BillingAddressDetail = await BillingAddress.findById(orderData[0].billingaddress);
+      // console.log(BillingAddressDetail,"-----------BillingAddressDetail-------------");
+      const ShippingAddressDetail = await ShippingAddress.findById(orderData[0].shippingaddress);
+      // console.log(ShippingAddressDetail,"--------------ShippingAddressDetail---------------");
+      res.render('orderDetails', { userData: userData, orderData: orderData, BillingAddress: BillingAddressDetail, ShippingAddress: ShippingAddressDetail })
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+const loadFullProducts = async (req, res) => {
+  try {
+    const products = await Product.find()
+    const carousels = await Carousel.find();
+    // console.log(products);
+    const categories = await Category.find();
+    // console.log(categories);
+    var search = '';
+    if (req.query.search) {
+      search = req.query.search;
+    }
+
+    var page = +1;
+    if (req.query.page) {
+      page = req.query.page;
+    }
+
+    const limit = 1;
+    const count = await Product.find({
+      isDisabled: false,
+      $or: [
+        { productName: { $regex: '.*' + search + '.*', $options: 'i' } }
+      ]
+    }).countDocuments();
+
+    if (req.session.user != undefined) {
+      // console.log("Hitting inside");
+      let data = req.session.user;
+      res.render('fullProductsList', { products: products, carousels: carousels, userData: data, categories: categories, totalPages: Math.ceil(count / limit), currentPage: page });
+    }
+    else {
+      res.render('fullProductsList', { products: products, carousels: carousels, categories: categories, totalPages: Math.ceil(count / limit), currentPage: page });
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+const cancelOrder = async (req, res) => {
+  try {
+    // console.log('inside cancel order');
+    let id = req.query.id;
+    const orderDetails = await Order.findById({ _id: id })
+    // console.log(orderDetails, "---------------orderDetails--------");
+    orderDetails.status = "Cancelled";
+    await orderDetails.save();
+
+    const userData = req.session.user;
+
+    if (!userData) {
+      throw new Error('User data not found');
+    }
+    const user = await User.findById(userData._id);
+    if (!user) {
+      throw new Error('User not found');
+    }
+    // console.log(user.wallet);
+    // console.log(user.wallet.balance);
+    // console.log(orderDetails.total);
+    user.wallet.balance = user.wallet.balance + orderDetails.total;
+    // await user.save();
+    const result = await User.findByIdAndUpdate(userData._id, { 'wallet.balance': user.wallet.balance }, { new: true });
+    // console.log(result,"Result----------");
+
+    const transaction = {
+      date: new Date(),
+      details: `Cancelled Order - ${orderDetails.orderId}`,
+      amount: orderDetails.total,
+      status: "Credit",
+    };
+    await User.findByIdAndUpdate(userData._id, { $push: { "wallet.transactions": transaction } }, { new: true })
+
+    res.send("Your Order has been Cancelled")
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+const returnOrder = async (req, res) => {
+  try {
+    const orderId = req.query.id;
+    const orderDetails = await Order.findById(orderId);
+    // console.log(orderDetails, "---------------orderDetails--------");
+    orderDetails.status = "Returned";
+
+    await orderDetails.save();
+
+    const userData = req.session.user;
+    if (!userData) {
+      throw new Error('User data not found');
+    }
+    const user = await User.findById(userData._id);
+    if (!user) {
+      throw new Error('User not found');
+    }
+    // console.log(user.wallet);
+    // console.log(user.wallet.balance);
+    // console.log(orderDetails.total);
+    user.wallet.balance = user.wallet.balance + orderDetails.total;
+    await user.save();
+    const transaction = {
+      date: new Date(),
+      details: `Returned Order - ${orderDetails.orderId}`,
+      amount: orderDetails.total,
+      status: "Credit",
+    };
+    await User.findByIdAndUpdate(userData._id, { $push: { "wallet.transactions": transaction } }, { new: true })
+
+    res.send("Your Return request is processed and updated in the wallet");
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("An error occurred");
+  }
+};
+
+const loadAddresses = async (req, res) => {
+  try {
+    userData = req.session.user;
+    if (userData !== undefined) {
+      const shippingAddresses = await ShippingAddress.find({ userId: userData._id })
+      const billingAddresses = await BillingAddress.find({ userId: userData._id })
+      // console.log(billingAddresses);
+      // console.log(shippingAddresses);
+      res.render('addresses', { billingAddresses, shippingAddresses, userData })
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+const saveBillingAddress = async (req, res) => {
+  try {
+    console.log("Hi Billing Address");
+    const id = req.body.billingId;
+    userData = req.session.user;
+
+    if (userData !== undefined) {
+
+      await BillingAddress.findByIdAndUpdate({ _id: id }, {
+        name: req.body.name,
+        mobile: req.body.mobileNumber,
+        addressLine: req.body.addressLine,
+        city: req.body.city,
+        email: req.body.email,
+        state: req.body.state,
+        pincode: req.body.pincode,
+        is_default: false
+      })
+      const billingAddresses = await BillingAddress.find({ userId: userData._id })
+      const shippingAddresses = await ShippingAddress.find({ userId: userData._id })
+      res.render("addresses", { billingAddresses, shippingAddresses, userData })
+      console.log(BillingAddress, "------------edited--------------------");
+    }
+  } catch (error) {
+    console.log("Error");
+  }
+}
+
+const saveShippingAddress = async (req, res) => {
+  try {
+    console.log("Hi Shipping Address");
+    const id = req.body.shippingId;
+    userData = req.session.user;
+    if (userData !== 'undefined') {
+      await ShippingAddress.findByIdAndUpdate({ _id: id }, {
+        name: req.body.name,
+        mobile: req.body.mobileNumber,
+        addressLine: req.body.addressLine,
+        city: req.body.city,
+        email: req.body.email,
+        state: req.body.state,
+        pincode: req.body.pincode,
+        is_default: false
+      })
+      const billingAddresses = await BillingAddress.find({ userId: userData._id })
+      const shippingAddresses = await ShippingAddress.find({ userId: userData._id })
+      res.render("addresses", { billingAddresses, shippingAddresses, userData })
+      console.log(BillingAddress, "------------edited--------------------");
+    }
+  } catch (error) {
     console.log(error);
   }
 }
@@ -960,5 +1300,15 @@ module.exports = {
   addShippingAddress,
   setBillingAddress,
   setShippingAddress,
-  placeOrder
+  placeOrder,
+  loadConfirmation,
+  loadProfile,
+  loadMyOrders,
+  loadOrderDetails,
+  loadFullProducts,
+  cancelOrder,
+  returnOrder,
+  loadAddresses,
+  saveBillingAddress,
+  saveShippingAddress
 }

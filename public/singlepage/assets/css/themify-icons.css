@@ -1,0 +1,19 @@
+@font-face {
+    font-family: 'themify';
+    src: url('../fonts/themify-icons.eot?-fvbane');
+    src: url('../fonts/themify-icons.eot?#iefix-fvbane') format('embedded-opentype'),
+         url('../fonts/themify-icons.woff2?-fvbane') format('woff2'),
+         url('../fonts/themify-icons.woff?-fvbane') format('woff'),
+         url('../fonts/themify-icons.ttf?-fvbane') format('truetype'),
+         url('../fonts/themify-icons.svg?-fvbane#themify') format('svg');
+    font-weight: normal;
+    font-style: normal;
+  }
+  
+  /* Other CSS styles for Themify Icons */
+  
+  /* Example of styling the ti-search icon */
+  .ti-search:before {
+    content: "\e600";
+  }
+  

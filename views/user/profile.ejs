@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="zxx">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Specs-Mart</title>
+    <link rel="icon" href="/img/favicon.png">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <!-- animate CSS -->
+    <link rel="stylesheet" href="/css/animate.css">
+    <!-- owl carousel CSS -->
+    <link rel="stylesheet" href="/css/owl.carousel.min.css">
+    <!-- font awesome CSS -->
+    <link rel="stylesheet" href="/css/all.css">
+    <!-- flaticon CSS -->
+    <link rel="stylesheet" href="/css/flaticon.css">
+    <link rel="stylesheet" href="/css/themify-icons.css">
+    <!-- font awesome CSS -->
+    <link rel="stylesheet" href="/css/magnific-popup.css">
+    <!-- swiper CSS -->
+    <link rel="stylesheet" href="/css/slick.css">
+    <!-- style CSS -->
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha512-D4Tu/h0LB6Kjxlukqj49LMYy4eUIY7wbBEgLn+tXWdP58eKwHSCNQwZw1pPfR6XoC23z/dD2MXkr6VWpC1Bd+g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        /* Customize the styling as per your requirements */
+
+        .profile_section {
+            padding: 80px 0;
+        }
+
+        .profile_card {
+            background-color: #f5f5f5;
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+            height: 100%;
+        }
+
+        .profile_card .card_icon {
+            font-size: 48px;
+            color: #888;
+            margin-bottom: 20px;
+        }
+
+        .profile_card .card_title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .profile_card .card_description {
+            color: #888;
+            margin-bottom: 20px;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+
+        .btn-primary:hover {
+            background-color: #0069d9;
+            border-color: #0062cc;
+        }
+
+        .btn-primary:focus,
+        .btn-primary.focus {
+            box-shadow: 0 0 0 0.2rem rgba(38, 143, 255, 0.5);
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <!--::header part start::-->
+    <header class="main_menu home_menu">
+        <div class="container">
+            <div class="row align-items-center justify-content-center">
+                <div class="col-lg-12">
+                    <nav class="navbar navbar-expand-lg navbar-light">
+                        <!-- Navbar code... -->
+                        <a class="navbar-brand" href="home.ejs"> <img src="img/logo.png" alt="logo"> </a>
+                        <button class="navbar-toggler" type="button" data-toggle="collapse"
+                            data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                            aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="menu_icon"><i class="fas fa-bars"></i></span>
+                        </button>
+    
+                        <div class="collapse navbar-collapse main-menu-item" id="navbarSupportedContent">
+                            <ul class="navbar-nav">
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/home">Home</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="about">about</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/fullproducts">All items</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="contact">Contact</a>
+                                </li>
+                            </ul>
+                        </div>
+    
+                        <div class="hearer_icon d-flex align-items-center">
+                            <!-- Other icons... -->
+                            
+                            <% if (typeof userData !== 'undefined' && userData.wishlist && userData.wishlist.length > 0) { %>
+                                <a href="/addwishlist" class="wishlist-link">
+                                    <i class="fas fa-heart"></i>
+                                    <span class="wishlist-count"><%= userData.wishlist.length %></span>
+                                </a>
+                            <% } else if (typeof userData !== 'undefined') { %>
+                                <a href="/addtocart">
+                                    <i class="flaticon-shopping-cart-black-shape"></i>
+                                </a>
+                                <a href="/addwishlist" class="wishlist-link">
+                                    <i class="far fa-heart"></i>
+                                </a>
+                            <% } %>
+    
+                            <% if (typeof userData !== 'undefined') { %>
+                                <a id="search_1" href="javascript:void(0)"><i class="ti-search"></i></a>
+                                <a href="/profile">
+                                    <img src="/img/285645_user_icon.png" height="25px" width="25px" style="margin-left:20px;" alt="">
+                                    
+                                </a>
+                                <a href="/logout">
+                                    <i class="logout-icon">&#128075;</i>
+                                </a>
+                            <% } else { %>
+                                <a href="/login">
+                                    <i class="login-icon">&#128274;</i>
+                                </a>
+                            <% } %>
+    
+    
+                        </div>
+                    </nav>
+                </div>
+            </div>
+        </div>
+        <!-- Search input code... -->
+    </header>
+    <!-- Header part end-->
+
+    <!-- Profile content -->
+    <section class="profile_section">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4">
+                    <!-- Navigation Card -->
+                    <div class="profile_card">
+                        <div class="card_icon">
+                            <i class="fas fa-shopping-cart"></i>
+                        </div>
+                        <h2 class="card_title">My Orders</h2>
+                        <p class="card_description">View and track your orders.</p>
+                        <a href="/myorders" class="btn btn-primary">Go to Orders</a>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <!-- Addresses Card -->
+                    <div class="profile_card">
+                        <div class="card_icon">
+                            <i class="fas fa-address-card"></i>
+                        </div>
+                        <h2 class="card_title">Addresses</h2>
+                        <p class="card_description">Manage your addresses.</p>
+                        <a href='/loadAddresses' class="btn btn-primary">Manage Addresses</a>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <!-- Edit Details Card -->
+                    <div class="profile_card">
+                        <div class="card_icon">
+                            <i class="fas fa-user-cog"></i>
+                        </div>
+                        <h2 class="card_title">Edit Details</h2>
+                        <p class="card_description">Update your username, password, and mobile number.</p>
+                        <a href="edit_details.html" class="btn btn-primary">Edit Details</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <!-- Profile Cards -->
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <!-- User Information -->
+                    <div class="user_info">
+                        <h2 class="info_title">User Information</h2>
+                        <div class="info_details">
+                            <p><strong>Username:</strong><%=userData.userName%></p>
+                            <p><strong>Email:</strong> <%=userData.email %></p>
+                            <p><strong>Mobile Number:</strong> <%=userData.mobile %></p>
+                            <p><strong>Wallet:Rs </strong><%= walletamount %></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+  <!--================End Cart Area =================-->
+  <!--::footer_part start::-->
+  <footer class="footer_part">
+    <div class="footer_iner section_bg">
+      <div class="container">
+        <div class="row justify-content-between align-items-center">
+          <div class="col-lg-8">
+            <div class="footer_menu">
+              <div class="footer_logo">
+                <a href="index.html"><img src="/img/logo.png" alt="#"></a>
+              </div>
+              <div class="footer_menu_item">
+                <a href="index.html">Home</a>
+                <a href="about.html">About</a>
+                <a href="product_list.html">Products</a>
+                <a href="#">Pages</a>
+                <a href="blog.html">Blog</a>
+                <a href="contact.html">Contact</a>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4">
+            <div class="social_icon">
+              <a href="#"><i class="fab fa-facebook-f"></i></a>
+              <a href="#"><i class="fab fa-instagram"></i></a>
+              <a href="#"><i class="fab fa-google-plus-g"></i></a>
+              <a href="#"><i class="fab fa-linkedin-in"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="copyright_part">
+      <div class="container">
+        <div class="row ">
+          <div class="col-lg-12">
+            <div class="copyright_text">
+              <P><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                Copyright &copy;
+                <script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made
+                with <i class="ti-heart" aria-hidden="true"></i> by <a href="https://colorlib.com"
+                  target="_blank">Colorlib</a>
+                <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+              </P>
+              <div class="copyright_link">
+                <a href="#">Turms & Conditions</a>
+                <a href="#">FAQ</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <!--::footer_part end::-->
+
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/jquery-3.6.0.min.js"></script>
+</body>
+
+</html>

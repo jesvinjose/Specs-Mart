@@ -33,14 +33,10 @@ userRoute.get('/product_list/:categoryName',userController.loadProductList)
 
 userRoute.get('/single-product/:_id', userController.loadProductDetail)
 
+// userRoute.get('/shop-single/:_id', userController.loadProductDetail)
+
 userRoute.get('/product-ratings/:_id', userController.loadProductRatingForm)
 userRoute.post('/product-ratings/:_id', userController.saveProductRatingtoDB);
-
-// userRoute.get('/add-to-cart',userController.loadCart)
-// userRoute.post('/add-to-cart',userController.addToCart)
-// userRoute.post('/cart/:_id',userController.addProductsInCart)
-
-// userRoute.get("/cart",userController.cart);
 
 
 userRoute.get('/addwishlist',userController.loadWishlist)
@@ -49,6 +45,9 @@ userRoute.get('/remove-product',userController.removeProductFromWishList)
 
 userRoute.get('/addtocart',userController.loadCart)
 userRoute.post('/addtocart',userController.addToCart)
+
+
+
 userRoute.get('/remove-prodcart',userController.removeProductFromCartList)
 userRoute.post('/quantity',userController.quantityChange)
 
@@ -61,5 +60,20 @@ userRoute.post('/setBillingAddress',userController.setBillingAddress)
 userRoute.post('/setShippingAddress',userController.setShippingAddress)
 
 userRoute.post('/placeorder',userController.placeOrder)
+// userRoute.post('/placeOrderwithRazorpay',userController.placeOrderwithRazorpay)
+userRoute.get('/confirmation',userController.loadConfirmation)
+
+userRoute.get('/profile',userController.loadProfile)
+userRoute.get('/myorders',userController.loadMyOrders)
+userRoute.get('/orderDetails',userController.loadOrderDetails)
+
+userRoute.get('/fullproducts',userController.loadFullProducts)
+
+userRoute.get('/cancelOrder',userController.cancelOrder)
+userRoute.get('/returnOrder',userController.returnOrder)
+
+userRoute.get('/loadAddresses',userController.loadAddresses)
+userRoute.post('/saveBillingAddress',userController.saveBillingAddress)
+userRoute.post('/saveShippingAddress',userController.saveShippingAddress)
 
 module.exports=userRoute

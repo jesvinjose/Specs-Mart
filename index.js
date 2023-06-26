@@ -5,6 +5,7 @@ mongoose.connect('mongodb://127.0.0.1:27017/project')       //create database pr
 const multer=require('multer')
 const express=require('express');                          //to run the server using app
 const session = require('express-session');
+const Razorpay=require('razorpay');
 
 const ejs=require('ejs')
 

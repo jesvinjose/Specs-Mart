@@ -33,14 +33,14 @@
                             <span class="hide-menu">Home</span>
                         </li>
                         <li class="sidebar-item">
-                            <a class="sidebar-link" href="./admin/home" aria-expanded="false">
+                            <a class="sidebar-link" href="./home" aria-expanded="false">
                                 <span>
                                     <i class="ti ti-layout-dashboard"></i>
                                 </span>
                                 <span class="hide-menu">Dashboard</span>
                             </a>
                         </li>
-                        <li class="nav-small-cap">
+                        <!-- <li class="nav-small-cap">
                             <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
                             <span class="hide-menu">UI COMPONENTS</span>
                         </li>
@@ -103,7 +103,7 @@
                                 </span>
                                 <span class="hide-menu">Register</span>
                             </a>
-                        </li>
+                        </li> -->
 
                         <li class="nav-small-cap">
                             <a class="sidebar-link" href="/admin/carousels" aria-expanded="false">
@@ -254,19 +254,27 @@
                         value="<%= product[0].productDescription %>" placeholder="Enter Product Description">
                 </div>
 
+                <div class="mb-3">
+                    <label for="Description" class="form-label">Product Brand</label>
+                    <input type="text" class="form-control" id="description" name="productBrand"
+                        value="<%= product[0].productBrand %>" placeholder="Enter Product Brand">
+                </div>
 
 
                 <div class="mb-3">
                     <label for="Category" class="form-label">Product Category</label>
-                    <select class="form-control" id="productCategory" name="productCategory" required value=" <%= product[0].productCategory %>">
-                         
-                        <% for( let index = 0; index < category.length; index++ ) { %>
-                            
-                        <option value="<%= category[index].categoryName %>"> <%= category[index].categoryName  %> </option>
-                        <% } %>
-                
-                      </select>
-                </div>
+                    <select class="form-control" id="productCategory" name="productCategory" required>
+                      <% for (let index = 0; index < category.length; index++) { %>
+                        <option value="<%= category[index].categoryName %>"
+                          <% if (category[index].categoryName === product[0].productCategory) { %>
+                            selected
+                          <% } %>
+                        >
+                          <%= category[index].categoryName %>
+                        </option>
+                      <% } %>
+                    </select>
+                  </div>
 
                 <div class="mb-3">
                     <label for="Description" class="form-label">Product Price</label>

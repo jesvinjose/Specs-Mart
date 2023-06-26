@@ -57,6 +57,10 @@ adminRoute.get('/admin/users',adminController.loadUsers)
 adminRoute.get('/admin/categories',adminController.loadCategories)
 adminRoute.get('/admin/products',adminController.loadProducts)
 adminRoute.get('/admin/carousels',adminController.loadCarousel)
+adminRoute.get('/admin/orders',adminController.loadOrders)
+adminRoute.get('/admin/orderDetails',adminController.loadOrderDetails)
+
+adminRoute.post('/admin/updateStatus',adminController.updateStatus)
 
 adminRoute.get('/admin/addCategory',adminController.loadCategoryRegister)
 adminRoute.get('/admin/addCarousels',adminController.loadCarouselRegister)

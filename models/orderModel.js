@@ -17,11 +17,13 @@ const orderSchema = new mongoose.Schema({
         },
     ],
     billingaddress: {
-        type: String,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "BillingAddress",
         required: true,
     },
     shippingaddress: {
-        type: String,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "ShippingAddress",
         required: true,
     },
     orderId: {
@@ -44,6 +46,15 @@ const orderSchema = new mongoose.Schema({
     date: {
         type: Date,
         default: Date.now,
+    },
+    ExpectedDeliveryDate:{
+        type: Date
+    },
+    deliveredDate:{
+        type: Date
+    },
+    returnEndDate:{
+        type:Date,
     },
 })
 
