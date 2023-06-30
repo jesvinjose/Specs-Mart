@@ -32,5 +32,4 @@ const isLogOut=async(req,res,next)=>{
 module.exports={
     isLogin,
     isLogOut
-  
 }

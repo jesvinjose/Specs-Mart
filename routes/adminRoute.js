@@ -10,6 +10,7 @@ adminRoute.use(bodyParser.urlencoded({extended:true}))
 const ejs=require('ejs')
 
 
+
 adminRoute.use(express.static('public'))
 
 const multer = require('multer')
@@ -55,7 +56,7 @@ adminRoute.post("/admin/carousels/disable-enable",adminController.disableOrEnabl
 
 adminRoute.get('/admin/users',adminController.loadUsers)
 adminRoute.get('/admin/categories',adminController.loadCategories)
-adminRoute.get('/admin/products',adminController.loadProducts)
+adminRoute.get('/admin/product',adminController.loadProducts)
 adminRoute.get('/admin/carousels',adminController.loadCarousel)
 adminRoute.get('/admin/orders',adminController.loadOrders)
 adminRoute.get('/admin/orderDetails',adminController.loadOrderDetails)
@@ -69,7 +70,7 @@ adminRoute.post('/admin/addCategory',store.array('categoryImage',1),adminControl
 adminRoute.post('/admin/addCarousels',store.array('carouselImages',4),adminController.saveCarouseltoDB)
 
 adminRoute.get('/admin/addProduct',adminController.loadProductRegister)
-adminRoute.post('/admin/addProduct',store.array('imageUrls',4),adminController.saveProducttoDB)
+adminRoute.post('/admin/addProduct',store.array('imageUrls',8),adminController.saveProducttoDB)
 
 
 adminRoute.get('/admin/edit-category',adminController.editLoadCategory);
@@ -77,7 +78,7 @@ adminRoute.post('/admin/edit-category',store.array('categoryImage',1), adminCont
 
 adminRoute.get('/admin/edit-product',adminController.editLoadProduct);
 adminRoute.get('/admin/edit-carousel',adminController.editLoadCarousel);
-adminRoute.post('/admin/edit-product',store.array('imageUrls',4), adminController.updateProduct);
+adminRoute.post('/admin/edit-product',store.array('imageUrls',8), adminController.updateProduct);
 adminRoute.post('/admin/edit-carousel',store.array('carouselImages',4), adminController.updateCarousel);
 
 adminRoute.get('/admin/delete-category',adminController.deleteCategory);
@@ -85,6 +86,8 @@ adminRoute.get('/admin/delete-product',adminController.deleteProduct);
 adminRoute.get('/admin/delete-carousel',adminController.deleteCarousel);
 
 adminRoute.get('/admin/logout',adminController.loadLogout) 
+
+adminRoute.post('/removeIndeximage',adminController.removeIndexImage)
 
 // adminRoute.get('*',function(req,res){
 //     res.redirect('/admin');

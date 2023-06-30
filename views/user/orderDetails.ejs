@@ -138,38 +138,29 @@
                         <div class="hearer_icon d-flex align-items-center">
                             <!-- Other icons... -->
 
-                            <% if (typeof userData !=='undefined' && userData.wishlist && userData.wishlist.length> 0) {
-                                %>
+                            <% if (locals.userData.blockStatus==false) { %>
                                 <a href="/addwishlist" class="wishlist-link">
                                     <i class="fas fa-heart"></i>
-                                    <span class="wishlist-count">
-                                        <%= userData.wishlist.length %>
-                                    </span>
+                                    <span class="wishlist-count"></span>
                                 </a>
-                                <% } else if (typeof userData !=='undefined' ) { %>
-                                    <a href="/addtocart">
-                                        <i class="flaticon-shopping-cart-black-shape"></i>
-                                    </a>
-                                    <a href="/addwishlist" class="wishlist-link">
-                                        <i class="far fa-heart"></i>
-                                    </a>
-                                    <% } %>
-
-                                        <% if (typeof userData !=='undefined' ) { %>
-                                            <a id="search_1" href="javascript:void(0)"><i class="ti-search"></i></a>
-                                            <a href="/profile">
-                                                <img src="/img/285645_user_icon.png" height="25px" width="25px"
-                                                    style="margin-left:20px;" alt="">
-
-                                            </a>
-                                            <a href="/logout">
-                                                <i class="logout-icon">&#128075;</i>
-                                            </a>
-                                            <% } else { %>
-                                                <a href="/login">
-                                                    <i class="login-icon">&#128274;</i>
-                                                </a>
-                                                <% } %>
+        
+                                <a href="/addtocart">
+                                    <i class="flaticon-shopping-cart-black-shape"></i>
+                                </a>
+                                <a href="/profile">
+                                    <img src="/img/285645_user_icon.png" height="25px" width="25px" style="margin-left:20px;" alt=""> 
+                                </a>
+        
+                                <a href="/logout">
+                                    <i class="logout-icon">&#128075;</i>
+                                </a>
+        
+                            <% }else { %>
+                             
+                                <a href="/login">
+                                    <i class="login-icon">&#128274;</i>
+                                </a>
+                                <% } %>
 
 
                         </div>

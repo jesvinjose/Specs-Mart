@@ -27,28 +27,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
 
-    <style>
-        .primary-btn {
-            display: inline-block;
-            padding: 10px 20px;
-            background-color: #e98922;
-            color: #ffffff;
-            border: none;
-            border-radius: 4px;
-            font-size: 16px;
-            font-weight: bold;
-            text-decoration: none;
-            text-align: center;
-            margin-right: 50px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
 
-        .primary-btn:hover {
-            background-color: #b35d00;
-        }
-        
-    </style>
 
     <style>
         /* Hide the up and down arrows */
@@ -114,34 +93,30 @@
                         <div class="hearer_icon d-flex align-items-center">
                             <!-- Other icons... -->
 
-                            <% if (typeof userData !== 'undefined' && userData.wishlist && userData.wishlist.length > 0) { %>
+                            <% if (locals.userData && locals.userData.blockStatus===false) { %>
                                 <a href="/addwishlist" class="wishlist-link">
                                     <i class="fas fa-heart"></i>
-                                    <span class="wishlist-count"><%= userData.wishlist.length %></span>
+                                    <span class="wishlist-count"></span>
                                 </a>
-                            <% } else if (typeof userData !== 'undefined') { %>
+
                                 <a href="/addtocart">
                                     <i class="flaticon-shopping-cart-black-shape"></i>
                                 </a>
-                                <a href="/addwishlist" class="wishlist-link">
-                                    <i class="far fa-heart"></i>
-                                </a>
-                            <% } %>
-                            
-                            <% if (typeof userData !== 'undefined') { %>
-                                <a id="search_1" href="javascript:void(0)"><i class="ti-search"></i></a>
                                 <a href="/profile">
-                                    <img src="/img/285645_user_icon.png" height="25px" width="25px" style="margin-left:20px;" alt="">
-                                    
+                                    <img src="/img/285645_user_icon.png" height="25px" width="25px"
+                                        style="margin-left:20px;" alt="">
                                 </a>
+
                                 <a href="/logout">
                                     <i class="logout-icon">&#128075;</i>
                                 </a>
-                            <% } else { %>
-                                <a href="/login">
-                                    <i class="login-icon">&#128274;</i>
-                                </a>
-                            <% } %>
+
+                                <% }else { %>
+
+                                    <a href="/login">
+                                        <i class="login-icon">&#128274;</i>
+                                    </a>
+                                    <% } %>
                         </div>
                     </nav>
                 </div>
@@ -171,12 +146,13 @@
                 <div class="col-md-4">
                     <div class="product_sidebar">
                         <div class="single_sedebar">
-                            <form action="#">
-                                <input type="text" name="#" placeholder="Search keyword">
-                                <i class="ti-search"></i>
+                            <form class="d-flex">
+                                <input class="form-control me-2" type="search" placeholder="Search product name"
+                                    name="search" value="<%= search %>">
+                                <button class="btn btn-outline-success" type="submit">Search</button>
                             </form>
                         </div>
-                        <div class="single_sedebar">
+                        <!-- <div class="single_sedebar">
                             <div class="select_option">
                                 <div class="select_option_list">Category <i class="right fas fa-caret-down"></i> </div>
                                 <div class="select_option_dropdown">
@@ -186,15 +162,17 @@
                                     <p><a href="#">Category 4</a></p>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
                         <div class="single_sedebar">
                             <div class="select_option">
-                                <div class="select_option_list">Type <i class="right fas fa-caret-down"></i> </div>
+                                <div class="select_option_list">Sort <i class="right fas fa-caret-down"></i> </div>
                                 <div class="select_option_dropdown">
-                                    <p><a href="#">Type 1</a></p>
-                                    <p><a href="#">Type 2</a></p>
-                                    <p><a href="#">Type 3</a></p>
-                                    <p><a href="#">Type 4</a></p>
+                                    <p><a
+                                            href="/product_list?category=<%= categoryName %>&search=<%= search %>&sort=price_low">Price:
+                                            Low to High</a></p>
+                                    <p><a
+                                            href="/product_list?category=<%= categoryName %>&search=<%= search %>&sort=price_high">Price:
+                                            High to Low</a></p>
                                 </div>
                             </div>
                         </div>
@@ -211,47 +189,29 @@
                                         <div class="single_product_item border">
                                             <img src="/admin/<%= products[i].imageUrls[0] %>" alt="#" class="img-fluid">
                                             <h3 class="text-center">
-                                                <a href="/single-product/<%= products[i]._id %>" style="text-decoration: none;">
+                                                <a href="/single-product/<%= products[i]._id %>"
+                                                    style="text-decoration: none;">
                                                     <%= products[i].productName %>
                                                 </a>
                                             </h3>
-                                            <div class="card_area d-flex align-items-center justify-content-center">
-                                                <p>Quantity</p>  
-                                                <div class="d-flex mb-2" style="max-width: 130px"
-                                                    id="productCount<%= products[i]._id %>">
-                                                    <div class="d-flex mb-2" style="max-width: 180px">
-                                                        <button class="btn btn-dark px-2 me-1"
-                                                            onclick="changeCount('<%=products[i]._id%>','decrement')">
-                                                            <i class="fas fa-minus"></i>
-                                                        </button>
 
-                                                        <!--productsCheck passed for not removing the quantity from the field while reloading-->
 
-                                                        <div class="form-outline" style="flex: 1;">
-                                                            <input id="form1" min="1" name="quantityofproduct"
-                                                            value="<%= products[i].quantity %>" type="number"
-                                                            class="form-control"
-                                                            style="height: auto; padding: 0.375rem 0.75rem; font-size: 0.875rem;"
-                                                            readonly />
-                                                        </div>
-                                                        <button class="btn btn-dark px-2 me-1"
-                                                            onclick="changeCount('<%=products[i]._id%>','increment')">
-                                                            <i class="fas fa-plus"></i>
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            
 
                                             <p class="text-center">
-                                              Rs.  <%= products[i].price %>
+                                                Rs. <%= products[i].price %>
                                             </p>
                                             <% if (product.stockCount==0) { %>
                                                 <h3 style="color: red;">Out of Stock</h3>
                                                 <% } else { %>
                                                     <div class="card_area d-flex justify-content-between m-3 ">
-                                                        <button type="button" class="btn " onclick="addToCart('<%= products[i]._id %>')"  style="background-color: #f4edf2; color: black;">Add to Cart</button>
-                                                        <button type="button" class="btn " onclick="addToWishlist('<%= products[i]._id %>')"  style="background-color: #f4edf2; color: black;">Add to Wishlist</button>
+                                                        <button type="button" class="btn "
+                                                            onclick="addToCart('<%= products[i]._id %>')"
+                                                            style="background-color: #f4edf2; color: black;">Add to
+                                                            Cart</button>
+                                                        <button type="button" class="btn "
+                                                            onclick="addToWishlist('<%= products[i]._id %>')"
+                                                            style="background-color: #f4edf2; color: black;">Add to
+                                                            Wishlist</button>
                                                     </div>
                                                     <% } %>
                                         </div>
@@ -259,206 +219,38 @@
                                     <% } %>
                                         <% }); %>
                         </div>
-                        <div class="load_more_btn text-center">
+                        <!-- <div class="load_more_btn text-center">
                             <a href="#" class="btn_3">Load More</a>
-                        </div>
+                        </div> -->
+
+                        <% let previous=currentPage - 1; %>
+                            <% let next=Number(currentPage) + 1; %>
+
+                                <% if (currentPage> 1) { %>
+                                    <a href="?page=<%= previous %>&category=<%= categoryName %>&search=<%= search %>&sort=<%= sort %>">Previous</a>
+                                    <% } %>
+
+                                        <% for (let j=1; j <=totalPages; j++) { %>
+                                            <a href="?page=<%= j %>&category=<%= categoryName %>&search=<%= search %>&sort=<%= sort %>">
+                                                <%= j %>
+                                            </a>
+                                            <% } %>
+
+                                                <% if (currentPage < totalPages) { %>
+                                                    <a href="?page=<%= next %>&category=<%= categoryName %>&search=<%= search %>&sort=<%= sort %>">Next</a>
+                                                    <% } %>
+
+                                                        <br><br>
+
+                                                        <!-- <a href="/home">Go to Home</a> -->
+                                                        <br><br>
                     </div>
                 </div>
-
-
-                <!-- <div class="col-lg-6 col-sm-6">
-                                    <div class="single_product_item">
-                                        <img src="/img/product/product_list_1.png" alt="#" class="img-fluid">
-                                        <h3> <a href="single-product.html">Cervical pillow for airplane
-                                                car office nap pillow</a> </h3>
-                                        <p>From $5</p>
-                                    </div>
-                                </div> -->
-                <!-- <div class="col-lg-6 col-sm-6">
-                                    <div class="single_product_item">
-                                        <img src="/img/product/product_list_2.png" alt="#" class="img-fluid">
-                                        <h3> <a href="single-product.html">Geometric striped flower home classy
-                                                decor</a> </h3>
-                                        <p>From $5</p>
-                                    </div>
-                                </div> -->
-                <!-- <div class="col-lg-6 col-sm-6">
-                                    <div class="single_product_item">
-                                        <img src="/img/product/product_list_3.png" alt="#" class="img-fluid">
-                                        <h3> <a href="single-product.html">Foam filling cotton slow rebound pillows</a>
-                                        </h3>
-                                        <p>From $5</p>
-                                    </div>
-                                </div> -->
-                <!-- <div class="col-lg-6 col-sm-6">
-                                    <div class="single_product_item">
-                                        <img src="/img/product/product_list_4.png" alt="#" class="img-fluid">
-                                        <h3> <a href="single-product.html">Memory foam filling cotton Slow rebound
-                                                pillows</a> </h3>
-                                        <p>From $5</p>
-                                    </div>
-                                </div> -->
-                <!-- <div class="col-lg-6 col-sm-6">
-                                    <div class="single_product_item">
-                                        <img src="/img/product/product_list_5.png" alt="#" class="img-fluid">
-                                        <h3> <a href="single-product.html">Memory foam filling cotton Slow rebound
-                                                pillows</a> </h3>
-                                        <p>From $5</p>
-                                    </div>
-                                </div> -->
-                <!-- <div class="col-lg-6 col-sm-6">
-                                    <div class="single_product_item">
-                                        <img src="/img/product/product_list_6.png" alt="#" class="img-fluid">
-                                        <h3> <a href="single-product.html">Sleeping orthopedic sciatica Back Hip Joint
-                                                Pain relief</a> </h3>
-                                        <p>From $5</p>
-                                    </div>
-                                </div> -->
-                <!-- <div class="col-lg-6 col-sm-6">
-                                    <div class="single_product_item">
-                                        <img src="/img/product/product_list_7.png" alt="#" class="img-fluid">
-                                        <h3> <a href="single-product.html">Memory foam filling cotton Slow rebound
-                                                pillows</a> </h3>
-                                        <p>From $5</p>
-                                    </div>
-                                </div> -->
-                <!-- <div class="col-lg-6 col-sm-6">
-                                    <div class="single_product_item">
-                                        <img src="/img/product/product_list_8.png" alt="#" class="img-fluid">
-                                        <h3> <a href="single-product.html">Sleeping orthopedic sciatica Back Hip Joint
-                                                Pain relief</a> </h3>
-                                        <p>From $5</p>
-                                    </div>
-                                </div> -->
-                <!-- <div class="col-lg-6 col-sm-6">
-                                    <div class="single_product_item">
-                                        <img src="/img/product/product_list_9.png" alt="#" class="img-fluid">
-                                        <h3> <a href="single-product.html">Geometric striped flower home classy
-                                                decor</a> </h3>
-                                        <p>From $5</p>
-                                    </div>
-                                </div> -->
-                <!-- <div class="col-lg-6 col-sm-6">
-                                    <div class="single_product_item">
-                                        <img src="/img/product/product_list_10.png" alt="#" class="img-fluid">
-                                        <h3> <a href="single-product.html">Geometric striped flower home classy
-                                                decor</a> </h3>
-                                        <p>From $5</p>
-                                    </div>
-                                </div> -->
-
-
-
             </div>
         </div>
     </section>
     <!-- product list part end-->
 
-    <!-- client review part here -->
-    <section class="client_review">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-lg-8">
-                    <div class="client_review_slider owl-carousel">
-                        <div class="single_client_review">
-                            <div class="client_img">
-                                <img src="/img/client.png" alt="#">
-                            </div>
-                            <p>"Working in conjunction with humanitarian aid agencies, we have supported programmes to
-                                help alleviate human suffering.</p>
-                            <h5>- Micky Mouse</h5>
-                        </div>
-                        <div class="single_client_review">
-                            <div class="client_img">
-                                <img src="/img/client_1.png" alt="#">
-                            </div>
-                            <p>"Working in conjunction with humanitarian aid agencies, we have supported programmes to
-                                help alleviate human suffering.</p>
-                            <h5>- Micky Mouse</h5>
-                        </div>
-                        <div class="single_client_review">
-                            <div class="client_img">
-                                <img src="/img/client_2.png" alt="#">
-                            </div>
-                            <p>"Working in conjunction with humanitarian aid agencies, we have supported programmes to
-                                help alleviate human suffering.</p>
-                            <h5>- Micky Mouse</h5>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    <!-- client review part end -->
-
-    <!-- feature part here -->
-    <section class="feature_part section_padding">
-        <div class="container">
-            <div class="row justify-content-between">
-                <div class="col-lg-6">
-                    <div class="feature_part_tittle">
-                        <h3>Credibly innovate granular
-                            internal or organic sources
-                            whereas standards.</h3>
-                    </div>
-                </div>
-                <div class="col-lg-5">
-                    <div class="feature_part_content">
-                        <p>Seamlessly empower fully researched growth strategies and interoperable internal or “organic”
-                            sources. Credibly innovate granular internal or “organic” sources whereas high standards in
-                            web-readiness.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="row justify-content-center">
-                <div class="col-lg-3 col-sm-6">
-                    <div class="single_feature_part">
-                        <img src="/img/icon/feature_icon_1.svg" alt="#">
-                        <h4>Credit Card Support</h4>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-sm-6">
-                    <div class="single_feature_part">
-                        <img src="/img/icon/feature_icon_2.svg" alt="#">
-                        <h4>Online Order</h4>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-sm-6">
-                    <div class="single_feature_part">
-                        <img src="/img/icon/feature_icon_3.svg" alt="#">
-                        <h4>Free Delivery</h4>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-sm-6">
-                    <div class="single_feature_part">
-                        <img src="/img/icon/feature_icon_4.svg" alt="#">
-                        <h4>Product with Gift</h4>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    <!-- feature part end -->
-
-    <!-- subscribe part here -->
-    <section class="subscribe_part section_padding">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-lg-8">
-                    <div class="subscribe_part_content">
-                        <h2>Get promotions & updates!</h2>
-                        <p>Seamlessly empower fully researched growth strategies and interoperable internal or “organic”
-                            sources credibly innovate granular internal .</p>
-                        <div class="subscribe_form">
-                            <input type="email" placeholder="Enter your mail">
-                            <a href="#" class="btn_1">Subscribe</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    <!-- subscribe part end -->
 
     <!--::footer_part start::-->
     <footer class="footer_part">
@@ -573,8 +365,8 @@
                         iconHtml: '<i class="fas fa-shopping-cart"></i>',
                         timer: 1000
                     });
-                } 
-                else if(res==="usernotloggedin"){
+                }
+                else if (res === "usernotloggedin") {
                     Swal.fire({
                         title: 'Login',
                         text: "Please login to add the item to the cart!",
@@ -645,48 +437,23 @@
                     timer: 3000
                 });
             }
-            else if(res==="usernotloggedin"){
-                    Swal.fire({
-                        title: 'Login',
-                        text: "Please login to add the item to the wishlist!",
-                        icon: 'error',
-                        showConfirmButton: false,
-                        iconHtml: '<i class="fas fa-shopping-cart"></i>',
-                        timer: 1000
-                    });
-                }
+            else if (res === "usernotloggedin") {
+                Swal.fire({
+                    title: 'Login',
+                    text: "Please login to add the item to the wishlist!",
+                    icon: 'error',
+                    showConfirmButton: false,
+                    iconHtml: '<i class="fas fa-heart"></i>',
+                    timer: 1000
+                });
+            }
             else {
                 res.status(500).json({ message: "Error adding product to wishlist!" });
             }
         }  
     </script>
 
-    <script>
-        async function changeCount(id, status) {
-            var quant = document.getElementById(`productCount${id}`);
-            await fetch('/quantity', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    prodId: id,
-                    status: status
-                })
-            })
-                .then(response => response.json())
-                .then((res) => {
-                    console.log(res);
-                    if (res.status === "success") {
-                        quant.querySelector('input[type=number]').value = res.quantity;
 
-                        document.getElementById(`unitProductTotal${id}`).innerHTML = res.totalprice
-
-                        document.getElementById('Overallprice').innerHTML = res.totalPriceofProducts
-                    }
-                });
-        }
-    </script>
 </body>
 
 </html>

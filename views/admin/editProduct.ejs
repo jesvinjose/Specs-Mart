@@ -104,15 +104,21 @@
                                 <span class="hide-menu">Register</span>
                             </a>
                         </li> -->
+                        <li class="nav-small-cap">
+                            <a class="sidebar-link" href="/admin/orders" aria-expanded="false">
 
+                                <i class="typcn typcn-user-add-outline menu-icon"></i>
+                                <span class="menu-title">Orders</span>
+                            </a>
+                        </li>
                         <li class="nav-small-cap">
                             <a class="sidebar-link" href="/admin/carousels" aria-expanded="false">
-                            <!-- <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+                                <!-- <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
                             <span class="hide-menu">EXTRA</span> -->
-                            <i class="typcn typcn-user-add-outline menu-icon"></i>
-                            <span class="menu-title">Carousels</span>
-                          </a>
-                          </li>
+                                <i class="typcn typcn-user-add-outline menu-icon"></i>
+                                <span class="menu-title">Carousels</span>
+                            </a>
+                        </li>
                         <li class="nav-small-cap">
                             <a class="sidebar-link" href="/admin/users" aria-expanded="false">
                                 <!-- <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
@@ -122,7 +128,7 @@
                             </a>
                         </li>
                         <li class="nav-small-cap">
-                            <a class="sidebar-link" href="/admin/products" aria-expanded="false">
+                            <a class="sidebar-link" href="/admin/product" aria-expanded="false">
                                 <!-- <span>
                   <i class="ti ti-mood-happy"></i>
                 </span> -->
@@ -132,11 +138,11 @@
                             </a>
                         </li>
                         <li class="nav-small-cap">
-                            <a class="sidebar-link" href="/admin/category" aria-expanded="false">
+                            <a class="sidebar-link" href="/admin/categories" aria-expanded="false">
                                 <!-- <span>
-                  <i class="ti ti-aperture"></i>
-                </span>
-                <span class="hide-menu">Sample Page</span> -->
+                                <i class="ti ti-aperture"></i>
+                              </span>
+                              <span class="hide-menu">Sample Page</span> -->
                                 <i class="typcn typcn-user-add-outline menu-icon"></i>
                                 <span class="menu-title">Category</span>
                             </a>
@@ -242,11 +248,34 @@
                         value="<%= product[0].productName %>" placeholder="Enter Product Name">
                 </div>
 
+
+
                 <div class="mb-3">
                     <label for="image" class="form-label">Photo</label>
-                    <input type="file" name="imageUrls" value="<%= product[0].imageUrls %>" placeholder="Upload File" multiple>
+                    <input type="file" name="imageUrls" value="<%= product[0].imageUrls %>" placeholder="Upload File"
+                        multiple>
                     <br><br>
+
+                    <% if (product[0].imageUrls && product[0].imageUrls.length> 0) { %>
+                        <% for (let i=0; i < product[0].imageUrls.length; i++) { %>
+                            <% const imageUrl=product[0].imageUrls[i]; %>
+                                <div class="preview-image" id="indexImage<%= imageUrl %>" style="display: inline;">
+                                    <img src="<%= imageUrl %>"  alt="Preview-Image<%= i %>" width="100" height="100">
+                                    <button type="button" class="remove-button"
+                                        onclick="removeIndeximage('<%= imageUrl %>','<%=product[0]._id%>')"
+                                        data-index="<%= i %>">Remove</button>
+                                </div>
+                                <% } %>
+
+                                    <!-- <div class="image-navigation">
+                                        <button id="addButton">Add</button>
+                                    </div> -->
+                                    <% } %>
                 </div>
+
+
+
+
 
                 <div class="mb-3">
                     <label for="Description" class="form-label">Product Description</label>
@@ -264,17 +293,17 @@
                 <div class="mb-3">
                     <label for="Category" class="form-label">Product Category</label>
                     <select class="form-control" id="productCategory" name="productCategory" required>
-                      <% for (let index = 0; index < category.length; index++) { %>
-                        <option value="<%= category[index].categoryName %>"
-                          <% if (category[index].categoryName === product[0].productCategory) { %>
-                            selected
-                          <% } %>
-                        >
-                          <%= category[index].categoryName %>
-                        </option>
-                      <% } %>
+                        <% for (let index=0; index < category.length; index++) { %>
+                            <option value="<%= category[index].categoryName %>" <% if
+                                (category[index].categoryName===product[0].productCategory) { %>
+                                selected
+                                <% } %>
+                                    >
+                                    <%= category[index].categoryName %>
+                            </option>
+                            <% } %>
                     </select>
-                  </div>
+                </div>
 
                 <div class="mb-3">
                     <label for="Description" class="form-label">Product Price</label>
@@ -302,6 +331,34 @@
     <script src="../assets/libs/apexcharts/dist/apexcharts.min.js"></script>
     <script src="../assets/libs/simplebar/dist/simplebar.js"></script>
     <script src="../assets/js/dashboard.js"></script>
+
+    <script>
+
+        async function removeIndeximage(dataindex, id) {
+            console.log(dataindex)
+            const response = await fetch('/removeIndeximage', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    imageUrlName: dataindex,
+                    prodId: id
+                })
+            })
+                .then(response => response.json())
+                .then((res) => {
+                    if (res.status === "success")
+                    {
+                        console.log("Hi success");
+                        document.getElementById('indexImage'+dataindex).innerHTML="" 
+                    }
+                })
+            }
+
+    </script>
+
+
 </body>
 
 </html>

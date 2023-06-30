@@ -84,34 +84,29 @@
                       <div class="hearer_icon d-flex align-items-center">
                           <!-- Other icons... -->
                           
-                          <% if (typeof userData !== 'undefined' && userData.wishlist && userData.wishlist.length > 0) { %>
-                              <a href="/addwishlist" class="wishlist-link">
-                                  <i class="fas fa-heart"></i>
-                                  <span class="wishlist-count"><%= userData.wishlist.length %></span>
-                              </a>
-                          <% } else if (typeof userData !== 'undefined') { %>
-                              <a href="/addtocart">
-                                  <i class="flaticon-shopping-cart-black-shape"></i>
-                              </a>
-                              <a href="/addwishlist" class="wishlist-link">
-                                  <i class="far fa-heart"></i>
-                              </a>
-                          <% } %>
-  
-                          <% if (typeof userData !== 'undefined') { %>
-                              <a id="search_1" href="javascript:void(0)"><i class="ti-search"></i></a>
-                              <a href="/profile">
-                                  <img src="/img/285645_user_icon.png" height="25px" width="25px" style="margin-left:20px;" alt="">
-                                  
-                              </a>
-                              <a href="/logout">
-                                  <i class="logout-icon">&#128075;</i>
-                              </a>
-                          <% } else { %>
-                              <a href="/login">
-                                  <i class="login-icon">&#128274;</i>
-                              </a>
-                          <% } %>
+                          <% if (locals.userData.blockStatus==false) { %>
+                            <a href="/addwishlist" class="wishlist-link">
+                                <i class="fas fa-heart"></i>
+                                <span class="wishlist-count"></span>
+                            </a>
+    
+                            <a href="/addtocart">
+                                <i class="flaticon-shopping-cart-black-shape"></i>
+                            </a>
+                            <a href="/profile">
+                                <img src="/img/285645_user_icon.png" height="25px" width="25px" style="margin-left:20px;" alt=""> 
+                            </a>
+    
+                            <a href="/logout">
+                                <i class="logout-icon">&#128075;</i>
+                            </a>
+    
+                        <% }else { %>
+                         
+                            <a href="/login">
+                                <i class="login-icon">&#128274;</i>
+                            </a>
+                            <% } %>
   
   
                       </div>
@@ -275,27 +270,71 @@
 
   <script>
     const addToCart = async (productId) => {
-      const response = await fetch('/addtocart', {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ productId: productId })
-      });
-      let res = await response.json();
-      // console.log(res, "-----------response-------------------------");
-      if (res == "success") {
-        Swal.fire({
-          title: 'Success',
-          text: "Item added to Cart !",
-          icon: 'success',
-          showConfirmButton: false,
-          iconHtml: '<i class="fas fa-shopping-cart"></i>',
-          timer: 1000
-        });
+            try {
+                const response = await fetch('/addtocart', {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ productId: productId })
+                });
+                const res = await response.json();
 
-      }
-    }
+                if (res === "success") {
+                    Swal.fire({
+                        title: 'Success',
+                        text: "Item added to Cart!",
+                        icon: 'success',
+                        showConfirmButton: true,
+                        iconHtml: '<i class="fas fa-shopping-cart"></i>',
+                        timer: 1000
+                    });
+                } else if (res === "Iteminside") {
+                    Swal.fire({
+                        title: 'Success',
+                        text: "Item already inside the Cart, please click the cart Icon!",
+                        icon: 'error',
+                        showConfirmButton: true,
+                        iconHtml: '<i class="fas fa-shopping-cart"></i>',
+                        timer: 1000
+                    });
+                } 
+                else if(res==="usernotloggedin"){
+                    Swal.fire({
+                        title: 'Login',
+                        text: "Please login to add the item to the cart!",
+                        icon: 'error',
+                        showConfirmButton: false,
+                        iconHtml: '<i class="fas fa-shopping-cart"></i>',
+                        timer: 1000
+                    });
+                }  
+                else if (res === "userblocked") {
+                    console.log(res);
+                    window.location.href='/logout'
+                }
+                else {
+                    Swal.fire({
+                        title: 'Error',
+                        text: "An error occurred while adding the item to the cart!",
+                        icon: 'error',
+                        showConfirmButton: false,
+                        iconHtml: '<i class="fas fa-shopping-cart"></i>',
+                        timer: 1000
+                    });
+                }
+            } catch (error) {
+                console.log(error);
+                Swal.fire({
+                    title: 'Error',
+                    text: "An error occurred while adding the item to the cart!",
+                    icon: 'error',
+                    showConfirmButton: false,
+                    iconHtml: '<i class="fas fa-shopping-cart"></i>',
+                    timer: 1000
+                });
+            }
+        };
   </script>
 
 </body>

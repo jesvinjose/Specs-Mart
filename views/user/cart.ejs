@@ -79,37 +79,29 @@
             <div class="hearer_icon d-flex align-items-center">
               <!-- Other icons... -->
 
-              <% if (typeof userData !=='undefined' && userData.wishlist && userData.wishlist.length> 0) { %>
+              <% if (locals.userData.blockStatus==false) { %>
                 <a href="/addwishlist" class="wishlist-link">
-                  <i class="fas fa-heart"></i>
-                  <span class="wishlist-count">
-                    <%= userData.wishlist.length %>
-                  </span>
+                    <i class="fas fa-heart"></i>
+                    <span class="wishlist-count"></span>
                 </a>
-                <% } else if (typeof userData !=='undefined' ) { %>
-                  <a href="/addtocart" id="cartIcon">
-                    <i class=" flaticon-shopping-cart-black-shape"></i>
-                  </a>
-                  <a href="/addwishlist" class="wishlist-link">
-                    <i class="far fa-heart"></i>
-                  </a>
-                  <% } %>
 
-                    <% if (typeof userData !=='undefined' ) { %>
-                      <a id="search_1" href="javascript:void(0)"><i class="ti-search"></i></a>
-                      <a href="/profile">
-                        <img src="/img/285645_user_icon.png" height="25px" width="25px" style="margin-left:20px;"
-                          alt="">
+                <a href="/addtocart">
+                    <i class="flaticon-shopping-cart-black-shape"></i>
+                </a>
+                <a href="/profile">
+                    <img src="/img/285645_user_icon.png" height="25px" width="25px" style="margin-left:20px;" alt=""> 
+                </a>
 
-                      </a>
-                      <a href="/logout">
-                        <i class="logout-icon">&#128075;</i>
-                      </a>
-                      <% } else { %>
-                        <a href="/login">
-                          <i class="login-icon">&#128274;</i>
-                        </a>
-                        <% } %>
+                <a href="/logout">
+                    <i class="logout-icon">&#128075;</i>
+                </a>
+
+            <% }else { %>
+             
+                <a href="/login">
+                    <i class="login-icon">&#128274;</i>
+                </a>
+                <% } %>
 
 
             </div>
@@ -178,7 +170,7 @@
                       <td>
                         <div class="d-flex mb-2" style="max-width: 130px" id="productCount<%= cartItem.products._id %>">
                           <div class="d-flex mb-2" style="max-width: 180px">
-                            <button class="btn btn-primary px-2 me-1"
+                            <button class="btn btn-dark px-2 me-1" style="background-color: #f4edf2; color: black;"
                               onclick="changeCount('<%=cartItem.products._id%>','decrement')">
                               <i class="fas fa-minus"></i>
                             </button>
@@ -187,7 +179,7 @@
                                 type="number" class="form-control"
                                 style="height: auto; padding: 0.375rem 0.75rem; font-size: 0.875rem;" readonly />
                             </div>
-                            <button class="btn btn-primary px-2 ms-1"
+                            <button class="btn btn-dark px-2 me-1" style="background-color: #f4edf2; color: black;"
                               onclick="changeCount('<%=cartItem.products._id%>','increment')">
                               <i class="fas fa-plus"></i>
                             </button>

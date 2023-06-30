@@ -69,39 +69,30 @@
                         <div class="hearer_icon d-flex align-items-center">
                             <!-- Other icons... -->
 
-                            <% if (typeof userData !=='undefined' && userData.wishlist && userData.wishlist.length> 0) {
-                                %>
+                            <% if (locals.userData.blockStatus==false) { %>
                                 <a href="/addwishlist" class="wishlist-link">
                                     <i class="fas fa-heart"></i>
-                                    <span class="wishlist-count">
-                                        <%= userData.wishlist.length %>
-                                    </span>
+                                    <span class="wishlist-count"></span>
                                 </a>
-                                <% } else if (typeof userData !=='undefined' ) { %>
-                                    <a href="/addtocart">
-                                        <i class="flaticon-shopping-cart-black-shape"></i>
-                                    </a>
-                                    <a href="/addwishlist" class="wishlist-link">
-                                        <i class="far fa-heart"></i>
+
+                                <a href="/addtocart">
+                                    <i class="flaticon-shopping-cart-black-shape"></i>
+                                </a>
+                                <a href="/profile">
+                                    <img src="/img/285645_user_icon.png" height="25px" width="25px"
+                                        style="margin-left:20px;" alt="">
+                                </a>
+
+                                <a href="/logout">
+                                    <i class="logout-icon">&#128075;</i>
+                                </a>
+
+                                <% }else { %>
+
+                                    <a href="/login">
+                                        <i class="login-icon">&#128274;</i>
                                     </a>
                                     <% } %>
-
-                                        <% if (typeof userData !=='undefined' ) { %>
-                                            <a id="search_1" href="javascript:void(0)"><i class="ti-search"></i></a>
-                                            <a href="/profile">
-                                                <img src="/img/285645_user_icon.png" height="25px" width="25px"
-                                                    style="margin-left:20px;" alt="">
-
-                                            </a>
-                                            <a href="/logout">
-                                                <i class="logout-icon">&#128075;</i>
-                                            </a>
-                                            <% } else { %>
-                                                <a href="/login">
-                                                    <i class="login-icon">&#128274;</i>
-                                                </a>
-                                                <% } %>
-
 
                         </div>
                     </nav>
@@ -113,232 +104,302 @@
     <!-- Header part end-->
     <br>
     <br>
-    <p>Billing Addresses</p>
-    <div class="">
+    <div class="billing_details">
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="accordion accordion-flush" id="accordionFlushExample">
+                    <div class="accordion-item" style="margin-bottom: 50px;">
+                        <h2 class="accordion-header" id="flush-headingOne">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#flush-collapseOne" aria-expanded="false"
+                                aria-controls="flush-collapseOne">
+                                BILLING ADDRESSES
+                            </button>
+                        </h2>
+                        <div id="flush-collapseOne" class="accordion-collapse collapse"
+                            aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
+                            <div class="accordion-body">
 
-        <% billingAddresses.forEach(function(address,i){ %>
-            <div class="card">
-                <div class="card-body">
-                    <!-- <h5 class="card-title">Card title</h5>
+                                <% billingAddresses.forEach(function(address,i){ %>
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <!-- <h5 class="card-title">Card title</h5>
               <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6> -->
 
-                    <div class="form-group p_star">
+                                            <div class="form-group p_star">
 
-                        <input type="text" class="form-control" id="billingformname<%=i%>" name="name"
-                            value="<%=address.name %>" />
-                    </div>
-                    <div class="form-group p_star">
-                        <input type="text" class="form-control" id="billingformnumber" name="mobileNumber"
-                            value="<%= address.mobile %>" />
-                    </div>
-                    <div class="form-group p_star">
-                        <input type="text" class="form-control" id="billingformemail" name="email"
-                            value="<%=address.email%>" />
-                    </div>
-                    <div class="form-group p_star">
-                        <input type="text" class="form-control" id="billingformadd1" name="addressLine"
-                            value="<%=address.addressLine%>" />
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group col-md-6 p_star">
-                            <input type="text" class="form-control" id="billingformcity" name="city"
-                                value="<%=address.city %>" />
-                        </div>
-                        <div class="form-group col-md-6 p_star">
-                            <input type="text" class="form-control" id="billingformstate" name="state"
-                                value="<%=address.state %>" />
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <input type="text" class="form-control" id="zip" name="pincode" value="<%=address.pincode %>" />
-                    </div>
-                    <div class="form-group">
-                         <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                            data-bs-target="#staticBackdrop<%= address._id %>"
-                            onclick="editAddress('<%= address._id %>')">Edit</button>
+                                                <input type="text" class="form-control" id="billingformname<%=i%>"
+                                                    name="name" value="<%=address.name %>" />
+                                            </div>
+                                            <div class="form-group p_star">
+                                                <input type="text" class="form-control" id="billingformnumber"
+                                                    name="mobileNumber" value="<%= address.mobile %>" />
+                                            </div>
+                                            <div class="form-group p_star">
+                                                <input type="text" class="form-control" id="billingformemail"
+                                                    name="email" value="<%=address.email%>" />
+                                            </div>
+                                            <div class="form-group p_star">
+                                                <input type="text" class="form-control" id="billingformadd1"
+                                                    name="addressLine" value="<%=address.addressLine%>" />
+                                            </div>
+                                            <div class="form-row">
+                                                <div class="form-group col-md-6 p_star">
+                                                    <input type="text" class="form-control" id="billingformcity"
+                                                        name="city" value="<%=address.city %>" />
+                                                </div>
+                                                <div class="form-group col-md-6 p_star">
+                                                    <input type="text" class="form-control" id="billingformstate"
+                                                        name="state" value="<%=address.state %>" />
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <input type="text" class="form-control" id="zip" name="pincode"
+                                                    value="<%=address.pincode %>" />
+                                            </div>
+                                            <div class="form-group">
+                                                <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                                    data-bs-target="#staticBackdrop<%= address._id %>"
+                                                    onclick="editAddress('<%= address._id %>')">Edit</button>
 
-                        <!-- Modal for edit address -->
-                        <div class="modal fade" id="staticBackdrop<%= address._id %>" data-bs-backdrop="static"
-                            data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
-                            aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <form action="/saveBillingAddress" method="post">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="staticBackdropLabel">Edit Address</h5>
+                                                <!-- Modal for edit address -->
+                                                <div class="modal fade" id="staticBackdrop<%= address._id %>"
+                                                    data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+                                                    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                                    <div class="modal-dialog">
+                                                        <div class="modal-content">
+                                                            <form action="/saveBillingAddress" method="post">
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title" id="staticBackdropLabel">
+                                                                        Edit Address</h5>
 
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                aria-label="Close"></button>
+                                                                    <button type="button" class="btn-close"
+                                                                        data-bs-dismiss="modal"
+                                                                        aria-label="Close"></button>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    <div class="card">
+                                                                        <div class="card-body">
+                                                                            <div class="form-group p_star">
+                                                                                <input type="text" class="form-control"
+                                                                                    id="modalname" name="name"
+                                                                                    value="<%=address.name %>" />
+                                                                            </div>
+                                                                            <div class="form-group p_star">
+                                                                                <input type="text" class="form-control"
+                                                                                    id="modalnumber" name="mobileNumber"
+                                                                                    value="<%= address.mobile %>" />
+                                                                            </div>
+                                                                            <div class="form-group p_star">
+                                                                                <input type="text" class="form-control"
+                                                                                    id="email" name="email"
+                                                                                    value="<%= address.email %>" />
+                                                                            </div>
+                                                                            <div class="form-group p_star">
+                                                                                <input type="text" class="form-control"
+                                                                                    id="add1" name="addressLine"
+                                                                                    value="<%=address.addressLine%>" />
+                                                                            </div>
+                                                                            <div class="form-row">
+                                                                                <div class="form-group col-md-6 p_star">
+                                                                                    <input type="text"
+                                                                                        class="form-control" id="add2"
+                                                                                        name="city"
+                                                                                        value="<%=address.city%>" />
+                                                                                </div>
+                                                                                <div class="form-group col-md-6 p_star">
+                                                                                    <input type="text"
+                                                                                        class="form-control" id="city"
+                                                                                        name="state"
+                                                                                        value="<%=address.state%>" />
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="form-group">
+                                                                                <input type="text" class="form-control"
+                                                                                    id="zip" name="pincode"
+                                                                                    value="<%=address.pincode%>" />
+                                                                            </div>
+                                                                            <div class="form-group">
+                                                                                <input type="hidden"
+                                                                                    class="form-control" id="billingId"
+                                                                                    name="billingId"
+                                                                                    value="<%=address._id%>" />
+                                                                            </div>
+
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-secondary"
+                                                                        data-bs-dismiss="modal">Close</button>
+                                                                    <input type="submit" class="btn btn-primary"
+                                                                        value="Save">
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
                                         </div>
-                                        <div class="modal-body">
-                                            <div class="card">
-                                                <div class="card-body">
-                                                    <div class="form-group p_star">
-                                                        <input type="text" class="form-control" id="modalname"
-                                                            name="name" value="<%=address.name %>" />
-                                                    </div>
-                                                    <div class="form-group p_star">
-                                                        <input type="text" class="form-control" id="modalnumber"
-                                                            name="mobileNumber" value="<%= address.mobile %>" />
-                                                    </div>
-                                                    <div class="form-group p_star">
-                                                        <input type="text" class="form-control" id="email" name="email"
-                                                            value="<%= address.email %>" />
-                                                    </div>
-                                                    <div class="form-group p_star">
-                                                        <input type="text" class="form-control" id="add1"
-                                                            name="addressLine" value="<%=address.addressLine%>" />
-                                                    </div>
-                                                    <div class="form-row">
-                                                        <div class="form-group col-md-6 p_star">
-                                                            <input type="text" class="form-control" id="add2"
-                                                                name="city" value="<%=address.city%>" />
-                                                        </div>
-                                                        <div class="form-group col-md-6 p_star">
-                                                            <input type="text" class="form-control" id="city"
-                                                                name="state" value="<%=address.state%>" />
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <input type="text" class="form-control" id="zip" name="pincode"
-                                                            value="<%=address.pincode%>" />
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <input type="hidden" class="form-control" id="billingId"
-                                                            name="billingId" value="<%=address._id%>" />
-                                                    </div>
+                                    </div>
+                                    <% }) %>
+                            </div>
 
+                            <br>
+                            <br>
+
+                        </div>
+                        <div class="accordion-item" style="margin-bottom: 50px">
+                            <h2 class="accordion-header" id="flush-headingTwo">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#flush-collapseTwo" aria-expanded="false"
+                                    aria-controls="flush-collapseTwo">
+                                    SHIPPING ADDRESS
+                                </button>
+                            </h2>
+                            <div id="flush-collapseTwo" class="accordion-collapse collapse"
+                                aria-labelledby="flush-headingTwo" data-bs-parent="#accordionFlushExample">
+                                <div class="accordion-body">
+                                    <% shippingAddresses.forEach(function(address){ %>
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <h5 class="card-title">Card title</h5>
+                                                <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+                                                <div class="form-group p_star">
+                                                    <input type="text" class="form-control" id="shippingformname"
+                                                        name="name" value="<%=address.name %>" />
+                                                </div>
+                                                <div class="form-group p_star">
+                                                    <input type="text" class="form-control" id="shippingformnumber"
+                                                        name="mobileNumber" value="<%= address.mobile %>" />
+                                                </div>
+                                                <div class="form-group p_star">
+                                                    <input type="text" class="form-control" id="shippingformemail"
+                                                        name="email" value="<%=address.email%>" />
+                                                </div>
+                                                <div class="form-group p_star">
+                                                    <input type="text" class="form-control" id="shippingformadd1"
+                                                        name="addressLine" value="<%=address.addressLine%>" />
+                                                </div>
+                                                <div class="form-row">
+                                                    <div class="form-group col-md-6 p_star">
+                                                        <input type="text" class="form-control" id="shippingformcity"
+                                                            name="city" value="<%=address.city %>" />
+                                                    </div>
+                                                    <div class="form-group col-md-6 p_star">
+                                                        <input type="text" class="form-control" id="shippingformstate"
+                                                            name="state" value="<%=address.state %>" />
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <input type="text" class="form-control" id="shippingformzip"
+                                                        name="pincode" value="<%=address.pincode %>" />
+                                                </div>
+                                                <div class="form-group">
+                                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                                        data-bs-target="#staticBackdrop<%= address._id %>">
+                                                        Edit
+                                                    </button>
+                                                    <!-- Modal for edit address -->
+                                                    <div class="modal fade" id="staticBackdrop<%= address._id %>"
+                                                        data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+                                                        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                                        <div class="modal-dialog">
+                                                            <div class="modal-content">
+                                                                <form action="/saveShippingAddress" method="post">
+                                                                    <div class="modal-header">
+                                                                        <h5 class="modal-title"
+                                                                            id="staticBackdropLabel">
+                                                                            Edit Address</h5>
+                                                                        <button type="button" class="btn-close"
+                                                                            data-bs-dismiss="modal"
+                                                                            aria-label="Close"></button>
+                                                                    </div>
+                                                                    <div class="modal-body">
+                                                                        <div class="card">
+                                                                            <div class="card-body">
+
+                                                                                <div class="form-group p_star">
+                                                                                    <input type="text"
+                                                                                        class="form-control"
+                                                                                        id="modalname" name="name"
+                                                                                        value="<%=address.name %>" />
+                                                                                </div>
+                                                                                <div class="form-group p_star">
+                                                                                    <input type="text"
+                                                                                        class="form-control"
+                                                                                        id="modalnumber"
+                                                                                        name="mobileNumber"
+                                                                                        value="<%= address.mobile %>" />
+                                                                                </div>
+                                                                                <div class="form-group p_star">
+                                                                                    <input type="text"
+                                                                                        class="form-control" id="email"
+                                                                                        name="email"
+                                                                                        value="<%= address.email %>" />
+                                                                                </div>
+                                                                                <div class="form-group p_star">
+                                                                                    <input type="text"
+                                                                                        class="form-control" id="add1"
+                                                                                        name="addressLine"
+                                                                                        value="<%=address.addressLine%>" />
+                                                                                </div>
+                                                                                <div class="form-row">
+                                                                                    <div
+                                                                                        class="form-group col-md-6 p_star">
+                                                                                        <input type="text"
+                                                                                            class="form-control"
+                                                                                            id="add2" name="city"
+                                                                                            value="<%=address.city%>" />
+                                                                                    </div>
+                                                                                    <div
+                                                                                        class="form-group col-md-6 p_star">
+                                                                                        <input type="text"
+                                                                                            class="form-control"
+                                                                                            id="city" name="state"
+                                                                                            value="<%=address.state%>" />
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="form-group">
+                                                                                    <input type="text"
+                                                                                        class="form-control" id="zip"
+                                                                                        name="pincode"
+                                                                                        value="<%=address.pincode%>" />
+                                                                                </div>
+                                                                                <div class="form-group">
+                                                                                    <input type="hidden"
+                                                                                        class="form-control"
+                                                                                        id="shippingId"
+                                                                                        name="shippingId"
+                                                                                        value="<%=address._id%>" />
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="modal-footer">
+                                                                        <button type="button" class="btn btn-secondary"
+                                                                            data-bs-dismiss="modal">Close</button>
+                                                                        <input type="submit" class="btn btn-primary"
+                                                                            value="Save">
+                                                                    </div>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary"
-                                                data-bs-dismiss="modal">Close</button>
-                                            <input type="submit" class="btn btn-primary" value="Save">
-                                        </div>
-                                    </form>
+                                        <% }) %>
                                 </div>
-                            </div>
-                        </div>
 
-                    </div>
-                </div>
-            </div>
-            <% }) %>
-    </div>
-
-    <br>
-    <br>
-    <p>Shipping Addresses</p>
-    <div class="">
-        <% shippingAddresses.forEach(function(address){ %>
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Card title</h5>
-                    <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
-                    <div class="form-group p_star">
-                        <input type="text" class="form-control" id="shippingformname" name="name"
-                            value="<%=address.name %>" />
-                    </div>
-                    <div class="form-group p_star">
-                        <input type="text" class="form-control" id="shippingformnumber" name="mobileNumber"
-                            value="<%= address.mobile %>" />
-                    </div>
-                    <div class="form-group p_star">
-                        <input type="text" class="form-control" id="shippingformemail" name="email"
-                            value="<%=address.email%>" />
-                    </div>
-                    <div class="form-group p_star">
-                        <input type="text" class="form-control" id="shippingformadd1" name="addressLine"
-                            value="<%=address.addressLine%>" />
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group col-md-6 p_star">
-                            <input type="text" class="form-control" id="shippingformcity" name="city"
-                                value="<%=address.city %>" />
-                        </div>
-                        <div class="form-group col-md-6 p_star">
-                            <input type="text" class="form-control" id="shippingformstate" name="state"
-                                value="<%=address.state %>" />
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <input type="text" class="form-control" id="shippingformzip" name="pincode"
-                            value="<%=address.pincode %>" />
-                    </div>
-                    <div class="form-group">
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                            data-bs-target="#staticBackdrop<%= address._id %>">
-                            Edit
-                        </button>
-                        <!-- Modal for edit address -->
-                        <div class="modal fade" id="staticBackdrop<%= address._id %>" data-bs-backdrop="static"
-                            data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
-                            aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <form action="/saveShippingAddress" method="post">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="staticBackdropLabel">Edit Address</h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <div class="card">
-                                                <div class="card-body">
-
-                                                    <div class="form-group p_star">
-                                                        <input type="text" class="form-control" id="modalname"
-                                                            name="name" value="<%=address.name %>" />
-                                                    </div>
-                                                    <div class="form-group p_star">
-                                                        <input type="text" class="form-control" id="modalnumber"
-                                                            name="mobileNumber" value="<%= address.mobile %>" />
-                                                    </div>
-                                                    <div class="form-group p_star">
-                                                        <input type="text" class="form-control" id="email" name="email"
-                                                            value="<%= address.email %>" />
-                                                    </div>
-                                                    <div class="form-group p_star">
-                                                        <input type="text" class="form-control" id="add1"
-                                                            name="addressLine" value="<%=address.addressLine%>" />
-                                                    </div>
-                                                    <div class="form-row">
-                                                        <div class="form-group col-md-6 p_star">
-                                                            <input type="text" class="form-control" id="add2"
-                                                                name="city" value="<%=address.city%>" />
-                                                        </div>
-                                                        <div class="form-group col-md-6 p_star">
-                                                            <input type="text" class="form-control" id="city"
-                                                                name="state" value="<%=address.state%>" />
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <input type="text" class="form-control" id="zip" name="pincode"
-                                                            value="<%=address.pincode%>" />
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <input type="hidden" class="form-control" id="shippingId"
-                                                            name="shippingId" value="<%=address._id%>" />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary"
-                                                data-bs-dismiss="modal">Close</button>
-                                            <input type="submit" class="btn btn-primary" value="Save">
-                                        </div>
-                                    </form>
-                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <% }) %>
+        </div>
     </div>
-
 
 
 
@@ -384,7 +445,9 @@
                         <div class="copyright_text">
                             <P><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
                                 Copyright &copy;
-                                <script>document.write(new Date().getFullYear());</script> All rights reserved | This
+                                <script>document.write(new Date().getFullYear());</script>
+                                All
+                                rights reserved | This
                                 template is made
                                 with <i class="ti-heart" aria-hidden="true"></i> by <a href="https://colorlib.com"
                                     target="_blank">Colorlib</a>
@@ -414,7 +477,6 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@1.16.1/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
 
 
 

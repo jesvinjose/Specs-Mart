@@ -61,7 +61,7 @@ const loadCategories = async (req, res) => {
 //loading Products Page
 const loadProducts = async (req, res) => {
     try {
-        // console.log("hiiiiiiiiiiii");
+        console.log("hiiiiiiiiiiii");
         const productData = await Product.find()
         // console.log("check1",productData);
         // console.log("pro", productData)
@@ -163,6 +163,8 @@ const changeStatus = async (req, res) => {
         // console.log(user);
         if (action == 'block') {
             user.blockStatus = true;
+            // req.session.user=null;
+            // delete req.session.user;
             await user.save();
         }
         else {
@@ -345,37 +347,85 @@ const updateCarousel = async (req, res) => {
 }
 
 //Updating the Product Details
-const updateProduct = async (req, res) => {
+// const updateProduct = async (req, res) => {
 
+//     try {
+//         const id = req.session.editProductId;
+//         const existingProduct = await Product.findById(id);
+
+//         // console.log("Hi here-------------------------------");
+//         const name = req.body.productName;
+//         const productCategory = req.body.productCategory
+//         const description = req.body.productDescription;
+//         const price = req.body.price;
+//         const count = req.body.stockCount;
+//         const productBrand = req.body.productBrand
+
+//         const files = req.files;
+//         const productImages = [];
+
+//         if (files && files.length > 0) {
+//             files.forEach((file) => {
+//                 const image = file.filename;
+//                 productImages.push(image);
+//             });
+//         } else {
+//             productImages.push(existingProduct.imageUrls[0]);
+//         }
+
+//         await Product.findByIdAndUpdate({ _id: id }, { $set: { productName: name, productDescription: description, productCategory: productCategory, price: price, stockCount: count, imageUrls: productImages, productBrand: productBrand } })
+//         res.redirect('/admin/products')
+//     } catch (error) {
+//         console.log(error);
+//     }
+// }
+
+const updateProduct = async (req, res) => {
     try {
+        const categoryData = await Category.find()
         const id = req.session.editProductId;
-        // console.log("Hi here-------------------------------");
+        const existingProduct = await Product.findById(id);
+
         const name = req.body.productName;
-        const productCategory = req.body.productCategory
+        const productCategory = req.body.productCategory;
         const description = req.body.productDescription;
         const price = req.body.price;
         const count = req.body.stockCount;
-        const productBrand = req.body.productBrand
+        const productBrand = req.body.productBrand;
 
         const files = req.files;
-        const productImages = [];
+        const productImages = [...existingProduct.imageUrls]; // Create a copy of existing images
 
         if (files && files.length > 0) {
             files.forEach((file) => {
                 const image = file.filename;
                 productImages.push(image);
             });
-        } else {
-            const existingProduct = await Product.findById(id);
-            productImages.push(existingProduct.imageUrls[0]);
         }
 
-        await Product.findByIdAndUpdate({ _id: id }, { $set: { productName: name, productDescription: description, productCategory: productCategory, price: price, stockCount: count, imageUrls: productImages, productBrand: productBrand } })
-        res.redirect('/admin/products')
+        await Product.findByIdAndUpdate(
+            { _id: id },
+            {
+                $set: {
+                    productName: name,
+                    productDescription: description,
+                    productCategory: productCategory,
+                    price: price,
+                    stockCount: count,
+                    imageUrls: productImages,
+                    productBrand: productBrand,
+                },
+            }
+        );
+        //   res.redirect('/admin/products');
+        // Refresh the existingProduct variable with the updated data
+        const updatedProduct = await Product.findById(id);
+        res.render('editProduct', { product: [updatedProduct], category: categoryData });
     } catch (error) {
         console.log(error);
     }
-}
+};
+
 
 
 
@@ -557,7 +607,7 @@ const saveProducttoDB = async (req, res) => {
         });
         const productData = await product.save();
         // console.log(productData);
-        res.redirect('/admin/products')
+        res.redirect('/admin/product')
 
     } catch (error) {
         console.log(error);
@@ -626,9 +676,8 @@ const updateStatus = async (req, res) => {
             const productIds = orderData.product.map((product) => product.id);
             user.boughtBy.push(...productIds);
             await user.save();
-            for(let i=0;i<productIds.length;i++)
-            {
-                const product=await Product.findById(productIds[i]);
+            for (let i = 0; i < productIds.length; i++) {
+                const product = await Product.findById(productIds[i]);
                 product.boughtBy.push(userId)
                 await product.save();
             }
@@ -647,7 +696,29 @@ const updateStatus = async (req, res) => {
 };
 
 
+const removeIndexImage = async (req, res) => {
+    try {
+        const imageName = req.body.imageUrlName;
+        const id = req.body.prodId
+        console.log(imageName);
+        console.log(id, "-------prodId-----------");
+        const product = await Product.findById(id)
+        console.log(product, "-----------productDetails-----------");
+        for (let i = 0; i < product.imageUrls.length; i++) {
+            if (product.imageUrls[i] === imageName) {
+                product.imageUrls.splice(i, 1)
+                console.log("Hi success controller-----------");
+                await product.save();
+                res.json({
+                    status: 'success'
+                })
+            }
+        }
 
+    } catch (error) {
+        console.log(error);
+    }
+}
 
 
 
@@ -708,5 +779,6 @@ module.exports = {
     loadCarouselRegister,
     loadOrders,
     loadOrderDetails,
-    updateStatus
+    updateStatus,
+    removeIndexImage
 }
