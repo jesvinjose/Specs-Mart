@@ -12,9 +12,10 @@ const validator = require('validator');
 const Razorpay = require('razorpay')
 const Coupon = require('../models/couponModel')
 const Offer = require('../models/offerModel')
-
+const PDFDocument = require('pdfkit');
 
 const mongoose = require('mongoose');
+const { Schema, model } = mongoose;
 
 
 //To sent otps during user registration
@@ -88,6 +89,7 @@ const loadLogin = async (req, res) => {
 //To load otplogin Page
 const loadOtpLogIn = async (req, res) => {
   try {
+    
     res.render('otplogin');
   } catch (error) {
     console.log(error.message);
@@ -698,7 +700,7 @@ const loadCheckOut = async (req, res) => {
         // res.redirect('/empty-cart');
 
       } else {
-        res.render('checkout', { userData: data, shippingAddresses: shippingAddresses, billingAddresses: billingAddresses, products: productsCheck, subtotal, couponData,walletamount: userobj.wallet.balance })
+        res.render('checkout', { userData: data, shippingAddresses: shippingAddresses, billingAddresses: billingAddresses, products: productsCheck, subtotal, couponData, walletamount: userobj.wallet.balance })
 
       }
     }
@@ -879,10 +881,10 @@ const placeOrder = async (req, res) => {
     subtotal = isNaN(subtotal) ? 0 : Number(subtotal); // Check if subtotal is NaN and provide a default value
     // console.log(couponCode,"11111111111111111");
     const validCoupon = await Coupon.findOne({ couponCode: couponCode })
-    const usedWallet=req.body.usedWalletAmount;
+    const usedWallet = req.body.usedWalletAmount;
     // usedWallet=isNaN(usedWallet) ? 0:Number(usedWallet)
     // const usedWallet=req.body.usedWallet; // Declare and assign usedWallet value
-    console.log(usedWallet,"11111111111111111");
+    console.log(usedWallet, "11111111111111111");
 
     var paymentMethod = req.body.paymentMethod;
     // console.log(paymentMethod);
@@ -949,7 +951,7 @@ const placeOrder = async (req, res) => {
         orderId: generateOrderId(),
         total: subtotal,
         paymentMethod: paymentMethod,
-        usedWallet:usedWallet
+        usedWallet: usedWallet
       });
 
       user.wallet.balance = user.wallet.balance - usedWallet;
@@ -967,7 +969,7 @@ const placeOrder = async (req, res) => {
       // console.log(orderItems);
 
       res.json({ success: true, order: newOrder });
-    } 
+    }
     else if (paymentMethod == 'wallet') {
 
       // console.log("Hi wallet....");
@@ -977,7 +979,7 @@ const placeOrder = async (req, res) => {
       }
       else {
         user.wallet.balance = user.wallet.balance - usedWallet;
-        console.log(user.wallet.balance,"---------------------uwb");
+        console.log(user.wallet.balance, "---------------------uwb");
         var newOrder = new Order({
           userId: user._id,
           product: orderItems,
@@ -986,7 +988,7 @@ const placeOrder = async (req, res) => {
           orderId: generateOrderId(),
           total: subtotal,
           paymentMethod: paymentMethod,
-          usedWallet:usedWallet
+          usedWallet: usedWallet
         });
 
         user.cart = [];
@@ -1031,7 +1033,7 @@ const placeOrder = async (req, res) => {
             orderId: options.receipt,
             total: subtotal,
             paymentMethod: paymentMethod,
-            usedWallet:usedWallet
+            usedWallet: usedWallet
           });
 
           await newOrder.save();
@@ -1230,13 +1232,13 @@ const placeOrder = async (req, res) => {
 //     const validCoupon = await Coupon.findOne({ couponCode: couponCode })
 
 //     var paymentMethod = req.body.paymentMethod;
-    
+
 //     if (!req.session.user || !req.session.user._id) {
 //       throw new Error('User data is missing or invalid');
 //     }
-    
+
 //     const user = await User.findById(req.session.user._id);
-    
+
 //     if (!user) {
 //       throw new Error('User not found');
 //     }
@@ -1334,7 +1336,7 @@ const placeOrder = async (req, res) => {
 //         });
 
 //         await newOrder.save();
-        
+
 //         user.wallet.balance = isNaN(user.wallet.balance) ? 0 : user.wallet.balance - usedWallet;
 //         console.log(user.wallet.balance, "-----------------------balance");
 //         user.cart = [];
@@ -1359,18 +1361,7 @@ const placeOrder = async (req, res) => {
 
 
 
-const fetchWalletBalance=async(req, res) => {
-  const walletBalance = retrieveWalletBalance(); // Implement this function to retrieve the wallet balance
-  // Send the wallet balance as a response
-  res.json({ walletBalance });
-}
 
-function retrieveWalletBalance()
-{
-  const data=req.session.user;
-  const user=User.findById(data._id)
-  return user.wallet.balance;
-}
 
 const loadConfirmation = async (req, res) => {
   try {
@@ -1639,14 +1630,24 @@ const applyCoupon = async (req, res) => {
       throw new Error("Invalid Coupon")
     }
     else {
-      // const user=await User.findById(data._id)
-      // validCoupon.usedBy.push(user);
-      var discountAmount = validCoupon.discountAmount
-      var updatedTotal = totalAmount - validCoupon.discountAmount;
+      if (totalAmount >= 3000) {
+        // const user=await User.findById(data._id)
+        // validCoupon.usedBy.push(user);
+        var discountAmount = validCoupon.discountAmount
+        var updatedTotal = totalAmount - validCoupon.discountAmount;
+        res.status(200).json({ updatedTotal, discountAmount });
+      }
+      else
+      {
+        var updatedTotal = totalAmount;
+        var p='A Minimum purchase of 3000 required for applying the coupon'
+        res.status(200).json({ updatedTotal, p });
+      }
     }
-    res.status(200).json({ updatedTotal, discountAmount });
+    
   } catch (error) {
     console.log(error);
+    res.status(400).json({ error: error.message });
   }
 
 }
@@ -1883,6 +1884,173 @@ const loadeditDetails = async (req, res) => {
   }
 }
 
+const downloadInvoice = async (req, res) => {
+  try {
+    const orderId = req.query.id;
+
+    // Retrieve the necessary data from the database based on the order ID
+    const orderDetails = await Order.findOne({ _id: orderId });
+
+    // Create a new PDF document
+    const doc = new PDFDocument();
+
+    // Set response headers for PDF download
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', `attachment; filename="invoice_${orderId}.pdf"`);
+
+    // Pipe the PDF document to the response
+    doc.pipe(res);
+
+    // Define colors
+    const violetColor = '#7E53C1';
+    const greyColor = '#757575';
+    const whiteColor = '#FFFFFF';
+
+    // Add content to the PDF document
+    doc.font('Helvetica-Bold').fontSize(24).fillColor(violetColor).text('Invoice', { align: 'center' });
+    doc.moveDown();
+
+    // Add order details
+    doc.font('Helvetica-Bold').fontSize(16).fillColor(violetColor).text('Order Details');
+    doc.moveDown();
+    doc.font('Helvetica').fontSize(12).fillColor(greyColor);
+    doc.text(`Order ID: ${orderDetails.orderId}`);
+    doc.text(`Total: ${orderDetails.total}`);
+    doc.text(`Payment Method: ${orderDetails.paymentMethod}`);
+    doc.text(`Status: ${orderDetails.status}`);
+    doc.text(`Order Date: ${orderDetails.date}`);
+    doc.moveDown();
+
+    // Add product details
+    doc.font('Helvetica-Bold').fontSize(16).fillColor(violetColor).text('Product Details');
+    doc.moveDown();
+    doc.font('Helvetica').fontSize(12).fillColor(greyColor);
+    orderDetails.product.forEach((product, index) => {
+      doc.text(`Product ${index + 1}: ${product.name}`);
+      doc.text(`Price: ${product.price}`);
+      doc.text(`Quantity: ${product.quantity}`);
+      doc.moveDown();
+    });
+
+    // Add billing address
+    doc.font('Helvetica-Bold').fontSize(16).fillColor(violetColor).text('Billing Address');
+    doc.moveDown();
+    doc.font('Helvetica').fontSize(12).fillColor(greyColor);
+    const billingAddress = await BillingAddress.findOne({ _id: orderDetails.billingaddress });
+    doc.text(`Name: ${billingAddress.name}`);
+    doc.text(`Mobile: ${billingAddress.mobile}`);
+    doc.text(`Email: ${billingAddress.email}`);
+    doc.text(`Address Line: ${billingAddress.addressLine}`);
+    doc.text(`City: ${billingAddress.city}`);
+    doc.text(`State: ${billingAddress.state}`);
+    doc.text(`Pincode: ${billingAddress.pincode}`);
+    doc.moveDown();
+
+    // Add shipping address
+    doc.font('Helvetica-Bold').fontSize(16).fillColor(violetColor).text('Shipping Address');
+    doc.moveDown();
+    doc.font('Helvetica').fontSize(12).fillColor(greyColor);
+    const shippingAddress = await ShippingAddress.findOne({ _id: orderDetails.shippingaddress });
+    doc.text(`Name: ${shippingAddress.name}`);
+    doc.text(`Mobile: ${shippingAddress.mobile}`);
+    doc.text(`Email: ${shippingAddress.email}`);
+    doc.text(`Address Line: ${shippingAddress.addressLine}`);
+    doc.text(`City: ${shippingAddress.city}`);
+    doc.text(`State: ${shippingAddress.state}`);
+    doc.text(`Pincode: ${shippingAddress.pincode}`);
+    doc.moveDown();
+
+    // Finalize the PDF document
+    doc.end();
+  } catch (error) {
+    console.log(error);
+    res.status(500).send('Failed to download invoice');
+  }
+};
+
+
+
+// const downloadInvoice = async (req, res) => {
+//   try {
+//     const orderId = req.query.id;
+//     console.log(orderId,"---------------oid----------------");
+//     console.log(typeof(orderId),"sdfghjkl");
+//     // Retrieve the necessary data from the database based on the order ID
+//     const orderDetails=await Order.findOne({_id:orderId})
+//     console.log(orderDetails,"op-y");
+//     // const orderData = await Order.findById(orderId).populate('billingaddress').populate('shippingaddress');
+//     // console.log(orderData,"----------------od================");
+
+//     // Create a new PDF document
+//     const doc = new PDFDocument();
+
+//     // Set response headers for PDF download
+//     res.setHeader('Content-Type', 'application/pdf');
+//     res.setHeader('Content-Disposition', `attachment; filename="invoice_${orderId}.pdf"`);
+
+//     // Pipe the PDF document to the response
+//     doc.pipe(res);
+
+//     // Add content to the PDF document
+//     doc.font('Helvetica-Bold').fontSize(24).text('Invoice', { align: 'center' });
+//     doc.moveDown();
+
+//     // Add order details
+//     doc.font('Helvetica-Bold').fontSize(16).text('Order Details');
+//     doc.moveDown();
+//     doc.text(`Order ID: ${orderDetails.orderId}`);
+//     doc.text(`Total: ${orderDetails.total}`);
+//     doc.text(`Payment Method: ${orderDetails.paymentMethod}`);
+//     doc.text(`Status: ${orderDetails.status}`);
+//     doc.text(`Order Date: ${orderDetails.date}`);
+//     doc.moveDown();
+
+//     // Add product details
+//     doc.font('Helvetica-Bold').fontSize(16).text('Product Details');
+//     doc.moveDown();
+//     orderDetails.product.forEach((product, index) => {
+//       doc.text(`Product ${index + 1}: ${product.name}`);
+//       doc.text(`Price: ${product.price}`);
+//       doc.text(`Quantity: ${product.quantity}`);
+//       doc.moveDown();
+//     });
+
+//     // Add billing address
+//     doc.font('Helvetica-Bold').fontSize(16).text('Billing Address');
+//     doc.moveDown();
+//     const billingAddress = await BillingAddress.findOne({_id:orderDetails.billingaddress});
+//     // console.log(billingAddress,"-------------------biA--------------");
+//     doc.text(`Name: ${billingAddress.name}`);
+//     doc.text(`Mobile: ${billingAddress.mobile}`);
+//     doc.text(`Email: ${billingAddress.email}`);
+//     doc.text(`Address Line: ${billingAddress.addressLine}`);
+//     doc.text(`City: ${billingAddress.city}`);
+//     doc.text(`State: ${billingAddress.state}`);
+//     doc.text(`Pincode: ${billingAddress.pincode}`);
+//     doc.moveDown();
+
+//     // Add shipping address
+//     doc.font('Helvetica-Bold').fontSize(16).text('Shipping Address');
+//     doc.moveDown();
+//     const shippingAddress = await ShippingAddress.findOne({_id:orderDetails.shippingaddress});
+//     // console.log(shippingAddress,"-------------------shA");
+//     doc.text(`Name: ${shippingAddress.name}`);
+//     doc.text(`Mobile: ${shippingAddress.mobile}`);
+//     doc.text(`Email: ${shippingAddress.email}`);
+//     doc.text(`Address Line: ${shippingAddress.addressLine}`);
+//     doc.text(`City: ${shippingAddress.city}`);
+//     doc.text(`State: ${shippingAddress.state}`);
+//     doc.text(`Pincode: ${shippingAddress.pincode}`);
+//     doc.moveDown();
+
+//     // Finalize the PDF document
+//     doc.end();
+//   } catch (error) {
+//     console.log(error);
+//     res.status(500).send('Failed to download invoice');
+//   }
+// };
+
 module.exports = {
   loadLogin,
   loadSignUp,
@@ -1914,7 +2082,6 @@ module.exports = {
   setBillingAddress,
   setShippingAddress,
   placeOrder,
-  fetchWalletBalance,
   loadConfirmation,
   loadProfile,
   loadMyOrders,
@@ -1928,5 +2095,6 @@ module.exports = {
   saveBillingAddressinCheckout,
   saveShippingAddressinCheckout,
   applyCoupon,
-  loadeditDetails
+  loadeditDetails,
+  downloadInvoice
 }

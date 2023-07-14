@@ -24,6 +24,14 @@
     <link rel="stylesheet" href="css/slick.css">
     <!-- style CSS -->
     <link rel="stylesheet" href="css/style.css">
+    <style>
+        .logo-img {
+            height: 50px;
+            width: 100px;
+            max-width: none;
+            /* Override the max-width property */
+        }
+    </style>
 </head>
 
 <body>
@@ -33,7 +41,8 @@
             <div class="row align-items-center justify-content-center">
                 <div class="col-lg-12">
                     <nav class="navbar navbar-expand-lg navbar-light">
-                        <a class="navbar-brand" href="index.html"> <img src="img/logo.png" alt="logo"> </a>
+                        <a class="navbar-brand" href="home.ejs"> <img src="img/logo.png" class="logo-img" alt="logo">
+                        </a>
                         <button class="navbar-toggler" type="button" data-toggle="collapse"
                             data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                             aria-expanded="false" aria-label="Toggle navigation">
@@ -56,7 +65,7 @@
                                     <div class="dropdown-menu" aria-labelledby="navbarDropdown_1">
                                         <a class="dropdown-item" href="product_list.html"> product list</a>
                                         <a class="dropdown-item" href="single-product.html">product details</a>
-                                        
+
                                     </div>
                                 </li>
                                 <li class="nav-item dropdown">
@@ -65,9 +74,9 @@
                                         pages
                                     </a>
                                     <div class="dropdown-menu" aria-labelledby="navbarDropdown_2">
-                                        <a class="dropdown-item" href="login.html"> 
+                                        <a class="dropdown-item" href="login.html">
                                             login
-                                            
+
                                         </a>
                                         <a class="dropdown-item" href="checkout.html">product checkout</a>
                                         <a class="dropdown-item" href="cart.html">shopping cart</a>
@@ -75,7 +84,7 @@
                                         <a class="dropdown-item" href="elements.html">elements</a>
                                     </div>
                                 </li>
-                                
+
                                 <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle" href="blog.html" id="navbarDropdown_2"
                                         role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -86,7 +95,7 @@
                                         <a class="dropdown-item" href="single-blog.html">Single blog</a>
                                     </div>
                                 </li>
-                                
+
                                 <li class="nav-item">
                                     <a class="nav-link" href="contact.html">Contact</a>
                                 </li>
@@ -150,10 +159,12 @@
                                 Please Enter the OTP</h3>
                             <form class="row contact_form" action="/otpverify" method="post" novalidate="novalidate">
                                 <div class="col-md-12 form-group p_star">
-                                    <% if (typeof footer !== 'undefined') { %>
-                                        <div class="error-message"><%= footer %></div>
-                                    <% } %>
-                                </div>      
+                                    <% if (typeof footer !=='undefined' ) { %>
+                                        <div class="error-message">
+                                            <%= footer %>
+                                        </div>
+                                        <% } %>
+                                </div>
                                 <div class="col-md-12 form-group p_star">
                                     <input type="text" class="form-control" id="otp" name="otp" value=""
                                         placeholder="Enter OTP">
@@ -184,11 +195,9 @@
                                 <a href="index.html"><img src="img/logo.png" alt="#"></a>
                             </div>
                             <div class="footer_menu_item">
-                                <a href="index.html">Home</a>
+                                <a href="/home">Home</a>
                                 <a href="about.html">About</a>
-                                <a href="product_list.html">Products</a>
-                                <a href="#">Pages</a>
-                                <a href="blog.html">Blog</a>
+                                <a href='/fullproducts'>Products</a>
                                 <a href="contact.html">Contact</a>
                             </div>
                         </div>
@@ -204,15 +213,19 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="copyright_part">
             <div class="container">
                 <div class="row ">
                     <div class="col-lg-12">
                         <div class="copyright_text">
                             <P><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="ti-heart" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
-<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></P>
+                                Copyright &copy;
+                                <script>document.write(new Date().getFullYear());</script> All rights reserved | This
+                                template is made with <i class="ti-heart" aria-hidden="true"></i> by <a
+                                    href="https://colorlib.com" target="_blank">Colorlib</a>
+                                <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                            </P>
                             <div class="copyright_link">
                                 <a href="#">Turms & Conditions</a>
                                 <a href="#">FAQ</a>
@@ -252,5 +265,5 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
     <!-- custom js -->
     <script src="js/custom.js"></script>
 </body>
-    
+
 </html>

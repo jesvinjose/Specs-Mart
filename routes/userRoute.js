@@ -79,7 +79,6 @@ userRoute.post('/saveBillingAddressinCheckout', userController.saveBillingAddres
 userRoute.post('/saveShippingAddressinCheckout', userController.saveShippingAddressinCheckout)
 
 userRoute.get('/editDetails',userController.loadeditDetails)
-
-userRoute.get('/fetchWalletBalance',userController.fetchWalletBalance)
+userRoute.get('/downloadOrderInvoice',userController.downloadInvoice)
 
 module.exports=userRoute

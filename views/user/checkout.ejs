@@ -564,8 +564,10 @@
                     </span>
                   </div>
                   <div>
-                    <p class="text-success" id="saveText" style="display: none;">Congrats, You Have Saved Rs: <span
+                    <p class="text-success" id="saveText1" style="display: none;">Congrats, You Have Saved Rs: <span
                         id="discountAmount"></span></p>
+                    <p class="text-success" id="saveText2" style="display: block;"></p><span
+                      id="minimumPurchaseBarrier"></span></p>
 
 
 
@@ -782,6 +784,7 @@
     document.addEventListener('DOMContentLoaded', function () {
       const applyCouponBtn = document.getElementById('applyCouponBtn');
       const discountAmountElement = document.getElementById('discountAmount');
+      const pElement = document.getElementById('minimumPurchaseBarrier');
       let isCouponApplied = false;
 
       applyCouponBtn.addEventListener('click', function (e) {
@@ -812,9 +815,19 @@
               // Change the button text to "Cancel Coupon"
               applyCouponBtn.innerText = 'Cancel Coupon';
               isCouponApplied = true;
-              discountAmountElement.innerText = data.discountAmount;
+              if(typeof data.discountAmount!== 'undefined')
+              {
+                discountAmountElement.innerText = data.discountAmount;
+              saveText1.style.display = 'block';
+              }
+
+
+              console.log(typeof (data.p));
               // Show the saveText element
-              saveText.style.display = 'block';
+              if (typeof data.p !== 'undefined') {
+                pElement.innerText = data.p;
+                saveText2.style.display = 'block';
+              }
 
             })
             .catch(error => {
@@ -1035,8 +1048,8 @@
       document.getElementById('applyButton').style.display = 'block';
     }
     function updateWalletBalance() {
-      let max =  parseFloat('<%=walletamount%>');
-      console.log(max,"-----------------------------");
+      let max = parseFloat('<%=walletamount%>');
+      console.log(max, "-----------------------------");
       localStorage.setItem('walletToggle', false)
       document.getElementById('closeButton').style.display = 'block';
       document.getElementById('applyButton').style.display = 'none';

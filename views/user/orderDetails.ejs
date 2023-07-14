@@ -235,7 +235,10 @@
                         <tr>
                             <th>Payment Method</th>
                             <td>
-                              <span><%= orderData[0].paymentMethod %> <% if (orderData[0].usedWallet > 0) { %>+ Wallet<% } %> </span>  
+                                <span>
+                                    <%= orderData[0].paymentMethod %>
+                                        <% if (orderData[0].usedWallet> 0) { %>+ Wallet<% } %>
+                                </span>
                             </td>
                         </tr>
                         <tr>
@@ -364,22 +367,31 @@
     </div>
 
 
-    <div class="container-fluid" style="margin-bottom: 20px;">
-        <% if (orderData[0].status==='pending' || orderData[0].status==='Shipped' ) { %>
-            <a href="/cancelOrder?id=<%= orderData[0]._id %>">
-                <button type="submit">Cancel Order</button>
-            </a>
-            <% } else if (orderData[0].status==='Cancelled' ) { %>
-                <p>Order Cancelled</p>
-                <% } else if (Date.now() < new Date(orderData[0].returnEndDate)) { %>
-                    <a href="/returnOrder?id=<%= orderData[0]._id %>">
-                        <button type="submit">Return Order</button>
-                    </a>
-                    <% } %>
 
-
-
+    <div class="container-fluid" style="display: flex;">
+        <div class="container-fluid" style="margin-bottom: 20px; display:flex;">
+            <% if (orderData[0].status==='pending' || orderData[0].status==='Shipped' ) { %>
+                <a href="/cancelOrder?id=<%= orderData[0]._id %>">
+                    <button type="submit">Cancel Order</button>
+                </a>
+                <% } else if (orderData[0].status==='Cancelled' ) { %>
+                    <p>Order Cancelled</p>
+                    <% } else if (Date.now() < new Date(orderData[0].returnEndDate).getTime()) { %>
+                        <a href="/returnOrder?id=<%= orderData[0]._id %>">
+                            <button type="submit">Return Order</button>
+                        </a>
+                        <% } %>
+        </div>
+        <div class="container-fluid" style="margin-bottom: 20px; display:flex;">
+            <% if (orderData[0].status.trim()==='Delivered' ) { %>
+                <a href="/downloadOrderInvoice?id=<%= orderData[0]._id %>">
+                    <button type="submit">Download Invoice</button>
+                    <!-- Debug statement -->
+                </a>
+                <% } %>
+        </div>
     </div>
+
 
 
 
