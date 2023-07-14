@@ -396,7 +396,113 @@
                             </div>
                         </div>
                     </div>
+                    <div class="adding-address d-flex">
+                        <div class="accordion-item" style="margin-bottom: 50px">
+                            <h2 class="accordion-header" id="flush-headingThree">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#flush-collapseThree" aria-expanded="false"
+                                    aria-controls="flush-collapseThree">
+                                    ADD BILLING ADDRESS
+                                </button>
+                            </h2>
+                            <div id="flush-collapseThree" class="accordion-collapse collapse"
+                                aria-labelledby="flush-headingThree" data-bs-parent="#accordionFlushExample">
+                                <div class="accordion-body">
+                                    <form action="/addbillingaddress" method="post">
+                                        <div class="form-group p_star">
+                                            <input type="text" class="form-control" id="first" name="name"
+                                                placeholder="Enter Name" />
+                                        </div>
+                                        <div class="form-group p_star">
+                                            <input type="text" class="form-control" id="number" name="mobileNumber"
+                                                placeholder="Mobile number" />
+                                        </div>
+                                        <div class="form-group p_star">
+                                            <input type="text" class="form-control" id="email" name="email"
+                                                placeholder="Email Address" />
+                                        </div>
+                                        <div class="form-group p_star">
+                                            <input type="text" class="form-control" id="add1" name="addressLine"
+                                                placeholder="Address" />
+                                        </div>
+                                        <div class="form-group p_star">
+                                            <input type="text" class="form-control" id="add2" name="city"
+                                                placeholder="City" />
+                                        </div>
+                                        <div class="form-group p_star">
+                                            <input type="text" class="form-control" id="city" name="state"
+                                                placeholder="State" />
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="text" class="form-control" id="zip" name="pincode"
+                                                placeholder="Postcode/ZIP" />
+                                        </div>
+                                        <button type="submit" href="" class="btn btn-outline-primary-2 mt-1"
+                                            style="padding: 10px 20px; font-size: 16px; text-decoration: none; border-radius: 5px; border: 2px solid #007bff; color: #007bff;">
+                                            <span>Save</span>
+                                        </button>
+                                    </form>
+                                </div>
+                                <div class="col-md-6">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item" style="margin-bottom: 50px">
+                            <h2 class="accordion-header" id="flush-headingFour">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#flush-collapseFour" aria-expanded="false"
+                                    aria-controls="flush-collapseFour">
+                                    ADD SHIPPING ADDRESS
+                                </button>
+                            </h2>
+                            <div id="flush-collapseFour" class="accordion-collapse collapse"
+                                aria-labelledby="flush-headingFour" data-bs-parent="#accordionFlushExample">
+                                <div class="accordion-body">
+                                    <form action="/addshippingaddress" method="post">
+                                        <div class="form-group p_star">
+                                            <input type="text" class="form-control" id="first" name="name"
+                                                placeholder="Enter Name" />
+                                        </div>
+                                        <div class="form-group p_star">
+                                            <input type="text" class="form-control" id="number" name="mobileNumber"
+                                                placeholder="Mobile number" />
+                                        </div>
+                                        <div class="form-group p_star">
+                                            <input type="text" class="form-control" id="email" name="email"
+                                                placeholder="Email Address" />
+                                        </div>
+                                        <div class="form-group p_star">
+                                            <input type="text" class="form-control" id="add1" name="addressLine"
+                                                placeholder="Address" />
+                                        </div>
+                                        <div class="form-group p_star">
+                                            <input type="text" class="form-control" id="add2" name="city"
+                                                placeholder="City" />
+                                        </div>
+                                        <div class="form-group p_star">
+                                            <input type="text" class="form-control" id="city" name="state"
+                                                placeholder="State" />
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="text" class="form-control" id="zip" name="pincode"
+                                                placeholder="Postcode/ZIP" />
+                                        </div>
+                                        <button type="submit" href="" class="btn btn-outline-primary-2 mt-1"
+                                            style="padding: 10px 20px; font-size: 16px; text-decoration: none; border-radius: 5px; border: 2px solid #007bff; color: #007bff;">
+                                            <span>Save</span>
+                                        </button>
+                                    </form>
+
+                                </div>
+                                <div class="col-md-6">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+
+
             </div>
         </div>
     </div>
@@ -477,6 +583,11 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@1.16.1/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+
+
+    </script>
 
 
 

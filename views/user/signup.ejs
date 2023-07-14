@@ -50,7 +50,7 @@
                                     <a class="nav-link" href="about">about</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="/fullproducts">All items</a>
+                                    <a class="nav-link" href="/fullproducts">Products</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link" href="contact">Contact</a>
@@ -61,29 +61,32 @@
                         <div class="hearer_icon d-flex align-items-center">
                             <!-- Other icons... -->
 
-                            <% if (locals.userData.blockStatus==false) { %>
-                                <a href="/addwishlist" class="wishlist-link">
-                                    <i class="fas fa-heart"></i>
-                                    <span class="wishlist-count"></span>
-                                </a>
-        
-                                <a href="/addtocart">
-                                    <i class="flaticon-shopping-cart-black-shape"></i>
-                                </a>
-                                <a href="/profile">
-                                    <img src="/img/285645_user_icon.png" height="25px" width="25px" style="margin-left:20px;" alt=""> 
-                                </a>
-        
-                                <a href="/logout">
-                                    <i class="logout-icon">&#128075;</i>
-                                </a>
-        
-                            <% }else { %>
-                             
-                                <a href="/login">
-                                    <i class="login-icon">&#128274;</i>
-                                </a>
-                                <% } %>
+                            <% if (typeof userData=='undefined' ){%>
+                                <p></p>
+                                <%} else if(userData.blockStatus==false) { %>
+                                    <a href="/addwishlist" class="wishlist-link">
+                                        <i class="fas fa-heart"></i>
+                                        <span class="wishlist-count"></span>
+                                    </a>
+
+                                    <a href="/addtocart">
+                                        <i class="flaticon-shopping-cart-black-shape"></i>
+                                    </a>
+                                    <a href="/profile">
+                                        <img src="/img/285645_user_icon.png" height="25px" width="25px"
+                                            style="margin-left:20px;" alt="">
+                                    </a>
+
+                                    <a href="/logout">
+                                        <i class="logout-icon">&#128075;</i>
+                                    </a>
+
+                                    <% }else { %>
+
+                                        <a href="/login">
+                                            <i class="login-icon">&#128274;</i>
+                                        </a>
+                                        <% } %>
 
 
                         </div>
@@ -128,42 +131,48 @@
                         <div class="login_part_form_iner">
                             <h3>Welcome! <br>
                                 Please fill your details</h3>
-                            <form class="row contact_form" action="/signup" method="post" novalidate="novalidate" >                                                           
+                            <form class="row contact_form" action="/signup" method="post" novalidate="novalidate">
                                 <div class="col-md-12 form-group p_star">
-                                    <% if (typeof footer !== 'undefined') { %>
-                                        <div class="error-message"><%= footer %></div>
-                                    <% } %>
-                                </div>                                
-                                <div class="col-md-12 form-group p_star">
-                                    <input type="email" class="form-control" id="email" name="email" value=""
-                                        placeholder="Enter Email" required>
+                                    <% if (typeof footer !=='undefined' ) { %>
+                                        <div class="error-message">
+                                            <%= footer %>
+                                        </div>
+                                        <% } %>
                                 </div>
-                                <div class="col-md-12 form-group p_star">
-                                    <input type="text" class="form-control" id="mobile" name="mobile" value=""
-                                        placeholder="Enter Mobile number">
-                                </div>
-                                <div class="col-md-12 form-group p_star">
-                                    <input type="text" class="form-control" id="userName" name="userName" value=""
-                                        placeholder="Enter Username">
-                                </div>
-                                <div class="col-md-12 form-group p_star">
-                                    <input type="password" class="form-control" id="password" name="password" value=""
-                                        placeholder="Enter Password">
-                                </div>
-                                <div class="col-md-12 form-group p_star">
-                                    <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" value=""
-                                        placeholder="Confirm Password">
-                                </div>
-                                <div class="col-md-12 form-group">
-                                    <!-- <div class="creat_account d-flex align-items-center">
+                                    <div class="col-md-12 form-group p_star">
+                                    <input type="text" class="form-control" id="referalOTP" name="referalOTP" value=""
+                                        placeholder="Enter ReferalCode if available">
+                                    </div>
+                                    <div class="col-md-12 form-group p_star">
+                                        <input type="email" class="form-control" id="email" name="email" value=""
+                                            placeholder="Enter Email" required>
+                                    </div>
+                                    <div class="col-md-12 form-group p_star">
+                                        <input type="text" class="form-control" id="mobile" name="mobile" value=""
+                                            placeholder="Enter Mobile number">
+                                    </div>
+                                    <div class="col-md-12 form-group p_star">
+                                        <input type="text" class="form-control" id="userName" name="userName" value=""
+                                            placeholder="Enter Username">
+                                    </div>
+                                    <div class="col-md-12 form-group p_star">
+                                        <input type="password" class="form-control" id="password" name="password"
+                                            value="" placeholder="Enter Password">
+                                    </div>
+                                    <div class="col-md-12 form-group p_star">
+                                        <input type="password" class="form-control" id="confirmPassword"
+                                            name="confirmPassword" value="" placeholder="Confirm Password">
+                                    </div>
+                                    <!-- <div class="col-md-12 form-group"> -->
+                                        <!-- <div class="creat_account d-flex align-items-center">
                                         <input type="checkbox" id="f-option" name="selector">
                                         <label for="f-option">Remember me</label>
                                     </div> -->
-                                    <button a href="verifyotp" type="submit" value="submit" class="btn_3">
-                                        sign up
-                                    </button> 
-                                </div>
-  
+                                        <button a href="verifyotp" type="submit" value="submit" class="btn_3">
+                                            sign up
+                                        </button>
+                                    </div>
+
                             </form>
                         </div>
                     </div>
@@ -204,15 +213,19 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="copyright_part">
             <div class="container">
                 <div class="row ">
                     <div class="col-lg-12">
                         <div class="copyright_text">
                             <P><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="ti-heart" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
-<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></P>
+                                Copyright &copy;
+                                <script>document.write(new Date().getFullYear());</script> All rights reserved | This
+                                template is made with <i class="ti-heart" aria-hidden="true"></i> by <a
+                                    href="https://colorlib.com" target="_blank">Colorlib</a>
+                                <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                            </P>
                             <div class="copyright_link">
                                 <a href="#">Turms & Conditions</a>
                                 <a href="#">FAQ</a>
@@ -252,5 +265,5 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
     <!-- custom js -->
     <script src="js/custom.js"></script>
 </body>
-    
+
 </html>

@@ -147,6 +147,23 @@
                                 <span class="menu-title">Category</span>
                             </a>
                         </li>
+                        <li class="nav-small-cap">
+                            <a class="sidebar-link" href="/admin/coupons" aria-expanded="false">
+                                <!-- <span>
+                                <i class="ti ti-aperture"></i>
+                              </span>
+                              <span class="hide-menu">Sample Page</span> -->
+                                <i class="typcn typcn-user-add-outline menu-icon"></i>
+                                <span class="menu-title">Coupon</span>
+                            </a>
+                        </li>
+                        <li class="nav-small-cap">
+                            <a class="sidebar-link" href="/admin/offers" aria-expanded="false">
+
+                                <i class="typcn typcn-user-add-outline menu-icon"></i>
+                                <span class="menu-title">Offers</span>
+                            </a>
+                        </li>
                     </ul>
                     <!-- <div class="unlimited-access hide-menu bg-light-primary position-relative mb-7 mt-5 rounded">
             <div class="d-flex">
@@ -259,10 +276,10 @@
                     <% if (product[0].imageUrls && product[0].imageUrls.length> 0) { %>
                         <% for (let i=0; i < product[0].imageUrls.length; i++) { %>
                             <% const imageUrl=product[0].imageUrls[i]; %>
-                                <div class="preview-image" id="indexImage<%= imageUrl %>" style="display: inline;">
-                                    <img src="<%= imageUrl %>"  alt="Preview-Image<%= i %>" width="100" height="100">
+                                <div class="preview-image" id="indexImage<%= imageUrl.url %>" style="display: inline;">
+                                    <img src="<%= imageUrl.url %>"  alt="Preview-Image<%= i %>" width="100" height="100">
                                     <button type="button" class="remove-button"
-                                        onclick="removeIndeximage('<%= imageUrl %>','<%=product[0]._id%>')"
+                                        onclick="removeIndeximage('<%= imageUrl.url %>','<%=product[0]._id%>')"
                                         data-index="<%= i %>">Remove</button>
                                 </div>
                                 <% } %>

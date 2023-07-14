@@ -49,7 +49,9 @@ userRoute.post('/addtocart', userController.addToCart)
 userRoute.get('/remove-prodcart',auth.userBlock,userController.removeProductFromCartList)
 userRoute.post('/quantity', userController.quantityChange)
 
-userRoute.get('/checkout',auth.userBlock,auth.userBlock, userController.loadCheckOut)
+userRoute.get('/checkout',auth.userBlock, userController.loadCheckOut)
+
+userRoute.post('/applyCoupon',auth.userBlock,userController.applyCoupon)
 
 userRoute.post('/addbillingaddress', userController.addBillingAddress)
 userRoute.post('/addshippingaddress', userController.addShippingAddress)
@@ -75,5 +77,9 @@ userRoute.post('/saveShippingAddress', userController.saveShippingAddress)
 
 userRoute.post('/saveBillingAddressinCheckout', userController.saveBillingAddressinCheckout)
 userRoute.post('/saveShippingAddressinCheckout', userController.saveShippingAddressinCheckout)
+
+userRoute.get('/editDetails',userController.loadeditDetails)
+
+userRoute.get('/fetchWalletBalance',userController.fetchWalletBalance)
 
 module.exports=userRoute

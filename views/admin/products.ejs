@@ -185,6 +185,23 @@
                                 <span class="menu-title">Category</span>
                             </a>
                         </li>
+                        <li class="nav-small-cap">
+                            <a class="sidebar-link" href="/admin/coupons" aria-expanded="false">
+                                <!-- <span>
+                                <i class="ti ti-aperture"></i>
+                              </span>
+                              <span class="hide-menu">Sample Page</span> -->
+                                <i class="typcn typcn-user-add-outline menu-icon"></i>
+                                <span class="menu-title">Coupon</span>
+                            </a>
+                        </li>
+                        <li class="nav-small-cap">
+                            <a class="sidebar-link" href="/admin/offers" aria-expanded="false">
+
+                                <i class="typcn typcn-user-add-outline menu-icon"></i>
+                                <span class="menu-title">Offers</span>
+                            </a>
+                        </li>
                     </ul>
                     <!-- <div class="unlimited-access hide-menu bg-light-primary position-relative mb-7 mt-5 rounded">
             <div class="d-flex">
@@ -270,10 +287,7 @@
             </header>
             <!--  Header End -->
             <br>
-            <br>
-            <br>
-            <br>
-            <br>
+            <div class="container-fluid">
             <div class="row mb-3">
                 <div class="col-md-4">
                     <a href="/admin/addProduct" class="btn btn-primary">Add New Product</a>
@@ -307,7 +321,7 @@
                                             </td>
                                             <td>
                                                 <% if (product.imageUrls.length> 0) { %>
-                                                    <img src="<%= product.imageUrls[0] %>" alt="Product Image"
+                                                    <img src="<%= product.imageUrls[0].url %>" alt="Product Image"
                                                         width="50px" height="50px">
                                                     <% } %>
 
@@ -352,6 +366,7 @@
                 </div>
             </div>
         </div>
+    </div>
     </div>
     <script src="../assets/libs/jquery/dist/jquery.min.js"></script>
     <script src="../assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

@@ -1,8 +1,6 @@
 const mongoose = require('mongoose')
 const Review = require('./reviewModel');
 
-
-
 const productSchema = new mongoose.Schema({
 
     productName: {
@@ -17,13 +15,19 @@ const productSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    imageUrls: {
-        type: Array,
+    imageUrls: [{
+        public_id: {
+            type: String,
+            required: true
+        },
+        url: {
+            type: String,
+            required: true
+        }
+    }],
+    productBrand: {
+        type: String,
         required: true
-    },
-    productBrand:{
-        type:String,
-        required:true
     },
     productDescription: {
         type: String,
@@ -54,9 +58,20 @@ const productSchema = new mongoose.Schema({
     },
     quantity: {
         type: Number
+    },
+    offerPrice: {
+        type: Number,
+    },
+    offerPercentage: {
+        type: Number,
+        default: 0,
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now
     }
 
-})
+}, { timestamps: true })
 
 const Product = mongoose.model('Product', productSchema)
 module.exports = Product;

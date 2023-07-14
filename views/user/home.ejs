@@ -24,79 +24,98 @@
     <link rel="stylesheet" href="/css/slick.css">
     <!-- style CSS -->
     <link rel="stylesheet" href="/css/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha512-D4Tu/h0LB6Kjxlukqj49LMYy4eUIY7wbBEgLn+tXWdP58eKwHSCNQwZw1pPfR6XoC23z/dD2MXkr6VWpC1Bd+g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+        integrity="sha512-D4Tu/h0LB6Kjxlukqj49LMYy4eUIY7wbBEgLn+tXWdP58eKwHSCNQwZw1pPfR6XoC23z/dD2MXkr6VWpC1Bd+g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <style>
+        .category_offer {
+            font-size: 18px;
+            font-weight: bold;
+            color: #E83E8C;
+            margin-top: 10px;
+        }
+
+        .logo-img{
+            height: 50px;
+            width: 100px;
+            max-width: none;
+            /* Override the max-width property */
+        }
+    </style>
 
 </head>
 
 <body>
 
     <!--::header part start::-->
-<header class="main_menu home_menu">
-    <div class="container">
-        <div class="row align-items-center justify-content-center">
-            <div class="col-lg-12">
-                <nav class="navbar navbar-expand-lg navbar-light">
-                    <!-- Navbar code... -->
-                    <a class="navbar-brand" href="home.ejs"> <img src="img/logo.png" alt="logo"> </a>
-                    <button class="navbar-toggler" type="button" data-toggle="collapse"
-                        data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="menu_icon"><i class="fas fa-bars"></i></span>
-                    </button>
+    <header class="main_menu home_menu">
+        <div class="container">
+            <div class="row align-items-center justify-content-center">
+                <div class="col-lg-12">
+                    <nav class="navbar navbar-expand-lg navbar-light">
+                        <!-- Navbar code... -->
+                        <a class="navbar-brand" href="home.ejs"> <img src="img/logo.png" class="logo-img" alt="logo"> </a>
+                        <button class="navbar-toggler" type="button" data-toggle="collapse"
+                            data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                            aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="menu_icon"><i class="fas fa-bars"></i></span>
+                        </button>
 
-                    <div class="collapse navbar-collapse main-menu-item" id="navbarSupportedContent">
-                        <ul class="navbar-nav">
-                            <li class="nav-item">
-                                <a class="nav-link" href="/home">Home</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="about">about</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="/fullproducts">All items</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="contact">Contact</a>
-                            </li>
-                        </ul>
-                    </div>
+                        <div class="collapse navbar-collapse main-menu-item" id="navbarSupportedContent">
+                            <ul class="navbar-nav">
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/home">Home</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="about">about</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/fullproducts">Products</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="contact">Contact</a>
+                                </li>
+                            </ul>
+                        </div>
 
-                    <div class="hearer_icon d-flex align-items-center">
-                        <!-- Other icons... -->
-                        
-                    <% if (locals.userData.blockStatus==false) { %>
-                        <a href="/addwishlist" class="wishlist-link">
-                            <i class="fas fa-heart"></i>
-                            <span class="wishlist-count"></span>
-                        </a>
+                        <div class="hearer_icon d-flex align-items-center">
+                            <!-- Other icons... -->
 
-                        <a href="/addtocart">
-                            <i class="flaticon-shopping-cart-black-shape"></i>
-                        </a>
-                        <a href="/profile">
-                            <img src="/img/285645_user_icon.png" height="25px" width="25px" style="margin-left:20px;" alt=""> 
-                        </a>
+                            <% if (locals.userData.blockStatus==false) { %>
+                                <a href="/addwishlist" class="wishlist-link">
+                                    <i class="fas fa-heart"></i>
+                                    <span class="wishlist-count"></span>
+                                </a>
 
-                        <a href="/logout">
-                            <i class="logout-icon">&#128075;</i>
-                        </a>
+                                <a href="/addtocart">
+                                    <i class="flaticon-shopping-cart-black-shape"></i>
+                                </a>
+                                <a href="/profile">
+                                    <img src="/img/285645_user_icon.png" height="25px" width="25px"
+                                        style="margin-left:20px;" alt="">
+                                </a>
 
-                    <% }else { %>
-                     
-                        <a href="/login">
-                            <i class="login-icon">&#128274;</i>
-                        </a>
-                        <% } %>
-                  
-                 
-                    </div>
-                </nav>
+                                <a href="/logout">
+                                    <i class="logout-icon">&#128075;</i>
+                                </a>
+
+                                <% }else { %>
+
+                                    <a href="/login">
+                                        <i class="login-icon">&#128274;</i>
+                                    </a>
+                                    <% } %>
+
+
+                        </div>
+                    </nav>
+                </div>
             </div>
         </div>
-    </div>
-    <!-- Search input code... -->
-</header>
-<!-- Header part end-->
+        <!-- Search input code... -->
+    </header>
+    <!-- Header part end-->
 
 
     <!-- banner part start-->
@@ -126,285 +145,165 @@
     <section class="single_product_list">
         <div class="container">
             <div class="row">
-                <% categories.forEach(function(category,i) { %>
-
-                    <% if(!category.isDisabled) {%>
-
-                    <div class="col-lg-12">
-
-                        <div class="single_product_iner">
-                            <div class="row align-items-center justify-content-between">
-                                <div class="col-lg-6 col-sm-6">
-                                    <div class="single_product_img">
-                                        <img src="/admin/<%= category.categoryImage[0] %>" class="img-fluid" alt="#">
-
-                                        <img src="img/product_overlay.png" alt="#" class="product_overlay img-fluid">
-                                    </div>
-                                </div>
-                                <div class="col-lg-5 col-sm-6">
-                                    <div class="single_product_content">
-                                        <h5>
-                                            <%= category.categoryDescription %>
-                                        </h5>
-                                        <h2><a href="single-product">
-                                                <%= category.categoryName %>'s Collection
-                                            </a></h2>
-                                        <a href="/product_list?category=<%= category.categoryName %>" class="btn_3">
-                                            Explore Now
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- <div class="single_product_iner">
-                                    <div class="row align-items-center justify-content-between">
-                                        <div class="col-lg-6 col-sm-6">
-                                            <div class="single_product_img">
-                                                <img src="img/single_product_2.jpg" class="img-fluid" alt="#">
-                                                <img src="img/product_overlay.png" alt="#"
-                                                    class="product_overlay img-fluid">
+                <% categories.forEach(function(category, i) { %>
+                    <% if (!category.isDisabled) { %>
+                        <% let categoryOffer=offers.find(offer=> String(offer.category._id) === String(category._id));
+                            %>
+                            <% if (i % 2===0) { %>
+                                <div class="col-lg-12">
+                                    <div class="single_product_iner">
+                                        <div class="row align-items-center justify-content-between">
+                                            <div class="col-lg-6 col-sm-6">
+                                                <div class="single_product_img">
+                                                    <img src="/admin/<%= category.categoryImage[0] %>" class="img-fluid"
+                                                        alt="#">
+                                                    <img src="img/product_overlay.png" alt="#"
+                                                        class="product_overlay img-fluid">
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="col-lg-5 col-sm-6">
-                                            <div class="single_product_content">
-                                                <h5><%= category.categoryDescription %></h5>
-                                                <h2> <a href="single-product">
-                                                       Men's Collection
-                                                    </a> </h2>
-                                                <a href="product_list" class="btn_3">Explore Now</a>
+                                            <div class="col-lg-5 col-sm-6">
+                                                <div class="single_product_content">
+                                                    <h5>
+                                                        <%= category.categoryDescription %>
+                                                    </h5>
+                                                    <% if (categoryOffer) { %>
+                                                        <h1 class="category_offer">
+                                                            <%= categoryOffer.percentage %> % Off
+                                                        </h1>
+                                                        <% const stars = Math.floor(categoryOffer.percentage / 20); %>
+                                                        <% for (let i = 0; i < stars; i++) { %>
+                                                          <i class="fas fa-star"></i>
+                                                        <% } %>
+                                                        <% const remainingPercentage = categoryOffer.percentage % 20; %>
+                                                        <% if (remainingPercentage > 0) { %>
+                                                          <i class="fas fa-star-half-alt"></i>
+                                                        <% } %>
+                                                        <% } %>
+                                                            <h2><a href="single-product">
+                                                                    <%= category.categoryName %>'s Collection
+                                                                </a></h2>
+                                                            <a href="/product_list?category=<%= category.categoryName %>"
+                                                                class="btn_3">
+                                                                Explore Now
+                                                            </a>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div> -->
-
-                        <!-- <div class="single_product_iner">
-                        <div class="row align-items-center justify-content-between">
-                            <div class="col-lg-6 col-sm-6">
-                                <div class="single_product_img">
-                                    <img src="img/single_product_3.jpg" class="img-fluid" alt="#">
-                                    <img src="img/product_overlay.png" alt="#" class="product_overlay img-fluid">
                                 </div>
-                            </div>
-                            <div class="col-lg-5 col-sm-6">
-                                <div class="single_product_content">
-                                    <h5>Started from $10</h5>
-                                    <h2> <a href="single-product">Kid's Collection
-                                        </a> </h2>
-                                    <a href="product_list" class="btn_3">Explore Now</a>
-                                </div>
-                            </div>
-                        </div>
-                        </div> -->
-                    </div>
-                    
-                    <% } %>
-
-                    <% }) %>
+                                <% } else { %>
+                                    <div class="col-lg-12">
+                                        <div class="single_product_iner">
+                                            <div class="row align-items-center justify-content-between">
+                                                <div class="col-lg-5 col-sm-6">
+                                                    <div class="single_product_content">
+                                                        <h5>
+                                                            <%= category.categoryDescription %>
+                                                        </h5>
+                                                        <% if (categoryOffer) { %>
+                                                            <h1 class="category_offer">
+                                                                <%= categoryOffer.percentage %> % Off
+                                                            </h1>
+                                                            <% const stars = Math.floor(categoryOffer.percentage / 20); %>
+                                                            <% for (let i = 0; i < stars; i++) { %>
+                                                              <i class="fas fa-star"></i>
+                                                            <% } %>
+                                                            <% const remainingPercentage = categoryOffer.percentage % 20; %>
+                                                            <% if (remainingPercentage > 0) { %>
+                                                              <i class="fas fa-star-half-alt"></i>
+                                                            <% } %>
+                                                          
+                                                            <% } %>
+                                                                <h2><a href="single-product">
+                                                                        <%= category.categoryName %>'s Collection
+                                                                    </a></h2>
+                                                                <a href="/product_list?category=<%= category.categoryName %>"
+                                                                    class="btn_3">
+                                                                    Explore Now
+                                                                </a>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6 col-sm-6">
+                                                    <div class="single_product_img">
+                                                        <img src="/admin/<%= category.categoryImage[0] %>"
+                                                            class="img-fluid" alt="#">
+                                                        <img src="img/product_overlay.png" alt="#"
+                                                            class="product_overlay img-fluid">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <% } %>
+                                        <% } %>
+                                            <% }) %>
             </div>
         </div>
     </section>
+
+
+
     <!-- trending item start-->
     <section class="trending_items">
         <div class="container">
             <div class="row">
                 <div class="col-lg-12">
                     <div class="section_tittle text-center">
-                        <h2>Suggestions</h2>
+                        <h2>New Arrivals</h2>
                     </div>
                 </div>
             </div>
             <div class="row">
-                <div class="col-lg-4 col-sm-6">
-                    <div class="single_product_item">
-                        <div class="single_product_item_thumb">
-                            <img src="/img/tranding_item/tranding_item_1.jpg" alt="#" class="img-fluid">
+                <% products.forEach((product, index)=> { %>
+                    <% if (!product.isDisabled) { %>
+                        <div class="col-lg-4 col-sm-6">
+                            <div class="single_product_item">
+                                <div class="single_product_item_thumb">
+                                    <img src="<%= product.imageUrls[0].url %>" alt="#" class="img-fluid">
+                                </div>
+                                <h3> <a href="/single-product/<%= product._id %>">
+                                        <%= product.productName %>
+                                    </a> </h3>
+                                <p>Rs. <%= product.price %>
+                                </p>
+                            </div>
                         </div>
-                        <h3> <a href="single-product.html">Cervical pillow for airplane
-                                car office nap pillow</a> </h3>
-                        <p>From $5</p>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-sm-6">
-                    <div class="single_product_item">
-                        <img src="/img/tranding_item/tranding_item_2.jpg" alt="#" class="img-fluid">
-                        <h3> <a href="single-product.html">Foam filling cotton slow rebound pillows</a> </h3>
-                        <p>From $5</p>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-sm-6">
-                    <div class="single_product_item">
-                        <img src="/img/tranding_item/tranding_item_3.jpg" alt="#" class="img-fluid">
-                        <h3> <a href="single-product.html">Memory foam filling cotton Slow rebound pillows</a> </h3>
-                        <p>From $5</p>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-sm-6">
-                    <div class="single_product_item">
-                        <img src="/img/tranding_item/tranding_item_4.jpg" alt="#" class="img-fluid">
-                        <h3> <a href="single-product">Cervical pillow for airplane
-                                car office nap pillow</a> </h3>
-                        <p>From $5</p>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-sm-6">
-                    <div class="single_product_item">
-                        <img src="/img/tranding_item/tranding_item_5.jpg" alt="#" class="img-fluid">
-                        <h3> <a href="single-product">Foam filling cotton slow rebound pillows</a> </h3>
-                        <p>From $5</p>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-sm-6">
-                    <div class="single_product_item">
-                        <img src="/img/tranding_item/tranding_item_6.jpg" alt="#" class="img-fluid">
-                        <h3> <a href="single-product">Memory foam filling cotton Slow rebound pillows</a> </h3>
-                        <p>From $5</p>
-                    </div>
-                </div>
+                        <% if ((index + 1) % 3===0) { %>
+            </div>
+            <div class="row">
+                <% } %>
+                    <% } %>
+                        <% }); %>
             </div>
         </div>
     </section>
     <!-- trending item end-->
 
-    <!-- client review part here -->
-    <section class="client_review">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-lg-8">
-                    <div class="client_review_slider owl-carousel">
-                        <div class="single_client_review">
-                            <div class="client_img">
-                                <img src="/img/client.png" alt="#">
-                            </div>
-                            <p>"Working in conjunction with humanitarian aid agencies, we have supported programmes to
-                                help alleviate human suffering.</p>
-                            <h5>- Micky Mouse</h5>
-                        </div>
-                        <div class="single_client_review">
-                            <div class="client_img">
-                                <img src="/img/client_1.png" alt="#">
-                            </div>
-                            <p>"Working in conjunction with humanitarian aid agencies, we have supported programmes to
-                                help alleviate human suffering.</p>
-                            <h5>- Micky Mouse</h5>
-                        </div>
-                        <div class="single_client_review">
-                            <div class="client_img">
-                                <img src="/img/client_2.png" alt="#">
-                            </div>
-                            <p>"Working in conjunction with humanitarian aid agencies, we have supported programmes to
-                                help alleviate human suffering.</p>
-                            <h5>- Micky Mouse</h5>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    <!-- client review part end -->
-
-
-    <!-- feature part here -->
-    <section class="feature_part section_padding">
-        <div class="container">
-            <div class="row justify-content-between">
-                <div class="col-lg-6">
-                    <div class="feature_part_tittle">
-                        <h3>Credibly innovate granular
-                            internal or organic sources
-                            whereas standards.</h3>
-                    </div>
-                </div>
-                <div class="col-lg-5">
-                    <div class="feature_part_content">
-                        <p>Seamlessly empower fully researched growth strategies and interoperable internal or “organic”
-                            sources. Credibly innovate granular internal or “organic” sources whereas high standards in
-                            web-readiness.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="row justify-content-center">
-                <div class="col-lg-3 col-sm-6">
-                    <div class="single_feature_part">
-                        <img src="/img/icon/feature_icon_1.svg" alt="#">
-                        <h4>Credit Card Support</h4>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-sm-6">
-                    <div class="single_feature_part">
-                        <img src="/img/icon/feature_icon_2.svg" alt="#">
-                        <h4>Online Order</h4>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-sm-6">
-                    <div class="single_feature_part">
-                        <img src="/img/icon/feature_icon_3.svg" alt="#">
-                        <h4>Free Delivery</h4>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-sm-6">
-                    <div class="single_feature_part">
-                        <img src="img/icon/feature_icon_4.svg" alt="#">
-                        <h4>Product with Gift</h4>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    <!-- feature part end -->
-
-    <!-- subscribe part here -->
-    <section class="subscribe_part section_padding">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-lg-8">
-                    <div class="subscribe_part_content">
-                        <h2>Get promotions & updates!</h2>
-                        <p>Seamlessly empower fully researched growth strategies and interoperable internal or “organic”
-                            sources credibly innovate granular internal .</p>
-                        <div class="subscribe_form">
-                            <input type="email" placeholder="Enter your mail">
-                            <a href="#" class="btn_1">Subscribe</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    <!-- subscribe part end -->
 
     <!--::footer_part start::-->
     <footer class="footer_part">
-        <div class="footer_iner">
+        <div class="footer_iner section_bg">
             <div class="container">
-                <div class="col-lg-4">
-                    <div class="social_icon row justify-content-between align-items-center">
-                        <a href="#"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-google-plus-g"></i></a>
-                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
-                    </div>
-                </div>
-                <!-- </div> -->
-            </div>
-        </div>
-
-        <div class="copyright_part">
-            <div class="container">
-                <div class="row ">
-                    <div class="col-lg-12">
-                        <div class="copyright_text">
-                            <P><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-                                Copyright &copy;
-                                <script>document.write(new Date().getFullYear());</script> All rights reserved | This
-                                template is made with <i class="ti-heart" aria-hidden="true"></i> by <a
-                                    href="https://colorlib.com" target="_blank">Colorlib</a>
-                                <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-                            </P>
-                            <div class="copyright_link">
-                                <a href="#">Turms & Conditions</a>
-                                <a href="#">FAQ</a>
+                <div class="row justify-content-between align-items-center">
+                    <div class="col-lg-8">
+                        <div class="footer_menu">
+                            <div class="footer_logo">
+                                <a href="index.html"><img src="img/logo.png" class="logo-img" alt="#"></a>
                             </div>
+                            <div class="footer_menu_item">
+                                <a href="/home">Home</a>
+                                <a href="about.html">About</a>
+                                <a href='/fullproducts'>Products</a>
+                                <a href="contact.html">Contact</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="social_icon">
+                            <a href="#"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#"><i class="fab fa-instagram"></i></a>
+                            <a href="#"><i class="fab fa-google-plus-g"></i></a>
+                            <a href="#"><i class="fab fa-linkedin-in"></i></a>
                         </div>
                     </div>
                 </div>

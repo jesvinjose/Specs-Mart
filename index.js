@@ -6,9 +6,15 @@ const multer=require('multer')
 const express=require('express');                          //to run the server using app
 const session = require('express-session');
 const Razorpay=require('razorpay');
+const cloudinary=require('cloudinary');
 
-const ejs=require('ejs')
+const ejs=require('ejs');
 
+cloudinary.config({ 
+  cloud_name: 'dz0rmyh4n', 
+  api_key: '891497115833535', 
+  api_secret: 'IeuiwEaiE1XmHihxOi4NG9kqwiQ' 
+});
 
 const app=express();
 

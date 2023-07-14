@@ -5,6 +5,7 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
     <title>Specs-Mart</title>
     <link rel="icon" href="/img/favicon.png">
     <!-- Bootstrap CSS -->
@@ -37,8 +38,6 @@
             max-width: 800px;
             margin: 0 auto;
             padding: 20px;
-            display: flex;
-            flex-wrap: wrap;
             gap: 50px;
             /* Add a gap of 50px between the cards */
         }
@@ -61,7 +60,6 @@
         }
 
         .product-card {
-            display: flex;
             align-items: center;
             margin-bottom: 10px;
         }
@@ -93,6 +91,13 @@
         .table tbody+tbody {
             border-top: 2px solid #dee2e6;
         }
+
+        .logo-img {
+            height: 50px;
+            width: 100px;
+            max-width: none;
+            /* Override the max-width property */
+        }
     </style>
 
 
@@ -111,7 +116,9 @@
                 <div class="col-lg-12">
                     <nav class="navbar navbar-expand-lg navbar-light">
                         <!-- Navbar code... -->
-                        <a class="navbar-brand" href="home.ejs"> <img src="/img/logo.png" alt="logko"> </a>
+                        <a class="navbar-brand" href="/home">
+                            <img src="/img/logo.png" class="logo-img" alt="logo">
+                        </a>
                         <button class="navbar-toggler" type="button" data-toggle="collapse"
                             data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                             aria-expanded="false" aria-label="Toggle navigation">
@@ -127,7 +134,7 @@
                                     <a class="nav-link" href="about">about</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="/fullproducts">All items</a>
+                                    <a class="nav-link" href="/fullproducts">Products</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link" href="contact">Contact</a>
@@ -143,24 +150,25 @@
                                     <i class="fas fa-heart"></i>
                                     <span class="wishlist-count"></span>
                                 </a>
-        
+
                                 <a href="/addtocart">
                                     <i class="flaticon-shopping-cart-black-shape"></i>
                                 </a>
                                 <a href="/profile">
-                                    <img src="/img/285645_user_icon.png" height="25px" width="25px" style="margin-left:20px;" alt=""> 
+                                    <img src="/img/285645_user_icon.png" height="25px" width="25px"
+                                        style="margin-left:20px;" alt="">
                                 </a>
-        
+
                                 <a href="/logout">
                                     <i class="logout-icon">&#128075;</i>
                                 </a>
-        
-                            <% }else { %>
-                             
-                                <a href="/login">
-                                    <i class="login-icon">&#128274;</i>
-                                </a>
-                                <% } %>
+
+                                <% }else { %>
+
+                                    <a href="/login">
+                                        <i class="login-icon">&#128274;</i>
+                                    </a>
+                                    <% } %>
 
 
                         </div>
@@ -193,7 +201,7 @@
                                     <%= orderData[0].product[i].name %>
                                 </td>
                                 <td>
-                                    <img src="/admin/<%= orderData[0].product[i].image %>"
+                                    <img src="<%= orderData[0].product[i].image %>"
                                         alt="<%= orderData[0].product[i].name %>" width="50" height="50">
                                 </td>
                                 <td>
@@ -219,7 +227,7 @@
                             </td>
                         </tr>
                         <tr>
-                            <th>Total</th>
+                            <th>Total (COD/Razorpay)</th>
                             <td>
                                 <%= orderData[0].total %>
                             </td>
@@ -227,7 +235,7 @@
                         <tr>
                             <th>Payment Method</th>
                             <td>
-                                <%= orderData[0].paymentMethod %>
+                              <span><%= orderData[0].paymentMethod %> <% if (orderData[0].usedWallet > 0) { %>+ Wallet<% } %> </span>  
                             </td>
                         </tr>
                         <tr>
@@ -356,46 +364,26 @@
     </div>
 
 
-    <div class="container-fluid" style="display: flex; margin-bottom: 20px;">
-        <% if (orderData[0].status === 'pending' || orderData[0].status === 'Shipped') { %>
-    <a href="/cancelOrder?id=<%= orderData[0]._id %>">
-        <button type="submit">Cancel Order</button>
-    </a>
-<% } else if (orderData[0].status === 'Cancelled') { %>
-    <p>Order Cancelled</p>
-<% } else if (Date.now() < new Date(orderData[0].returnEndDate)) { %>
-    <a href="/returnOrder?id=<%= orderData[0]._id %>">
-        <button type="submit">Return Order</button>
-    </a>
-<% } %>
-
-
-
-</div>
+    <div class="container-fluid" style="margin-bottom: 20px;">
+        <% if (orderData[0].status==='pending' || orderData[0].status==='Shipped' ) { %>
+            <a href="/cancelOrder?id=<%= orderData[0]._id %>">
+                <button type="submit">Cancel Order</button>
+            </a>
+            <% } else if (orderData[0].status==='Cancelled' ) { %>
+                <p>Order Cancelled</p>
+                <% } else if (Date.now() < new Date(orderData[0].returnEndDate)) { %>
+                    <a href="/returnOrder?id=<%= orderData[0]._id %>">
+                        <button type="submit">Return Order</button>
+                    </a>
+                    <% } %>
 
 
 
     </div>
 
-    <!-- subscribe part here -->
-    <section class="subscribe_part section_padding">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-lg-8">
-                    <div class="subscribe_part_content">
-                        <h2>Get promotions & updates!</h2>
-                        <p>Seamlessly empower fully researched growth strategies and interoperable internal or “organic”
-                            sources credibly innovate granular internal .</p>
-                        <div class="subscribe_form">
-                            <input type="email" placeholder="Enter your mail">
-                            <a href="#" class="btn_1">Subscribe</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    <!-- subscribe part end -->
+
+
+    </div>
 
 
     <!--::footer_part start::-->
@@ -414,27 +402,6 @@
             </div>
         </div>
 
-        <div class="copyright_part">
-            <div class="container">
-                <div class="row ">
-                    <div class="col-lg-12">
-                        <div class="copyright_text">
-                            <P><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-                                Copyright &copy;
-                                <script>document.write(new Date().getFullYear());</script> All rights reserved | This
-                                template is made with <i class="ti-heart" aria-hidden="true"></i> by <a
-                                    href="https://colorlib.com" target="_blank">Colorlib</a>
-                                <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-                            </P>
-                            <div class="copyright_link">
-                                <a href="#">Turms & Conditions</a>
-                                <a href="#">FAQ</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
     </footer>
     <!--::footer_part end::-->
 

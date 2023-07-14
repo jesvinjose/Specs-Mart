@@ -42,6 +42,13 @@
       -moz-appearance: textfield;
       appearance: textfield;
     }
+
+    .logo-img {
+            height: 50px;
+            width: 100px;
+            max-width: none;
+            /* Override the max-width property */
+        }
   </style>
 </head>
 
@@ -53,7 +60,7 @@
         <div class="col-lg-12">
           <nav class="navbar navbar-expand-lg navbar-light">
             <!-- Navbar code... -->
-            <a class="navbar-brand" href="home.ejs"> <img src="img/logo.png" alt="logo"> </a>
+            <a class="navbar-brand" href="home.ejs"> <img src="img/logo.png" class="logo-img" alt="logo"> </a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
               aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
               <span class="menu_icon"><i class="fas fa-bars"></i></span>
@@ -68,7 +75,7 @@
                   <a class="nav-link" href="about">about</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="/fullproducts">All items</a>
+                  <a class="nav-link" href="/fullproducts">Products</a>
                 </li>
                 <li class="nav-item">
                   <a class="nav-link" href="contact">Contact</a>
@@ -119,7 +126,7 @@
       <div class="row">
         <div class="col-lg-12">
           <div class="breadcrumb_iner">
-            <h2>cart list</h2>
+            <h2>cart</h2>
           </div>
         </div>
       </div>
@@ -238,14 +245,12 @@
           <div class="col-lg-8">
             <div class="footer_menu">
               <div class="footer_logo">
-                <a href="index.html"><img src="/img/logo.png" alt="#"></a>
+                <a href="index.html"><img src="/img/logo.png" class="logo-img" alt="#"></a>
               </div>
               <div class="footer_menu_item">
-                <a href="index.html">Home</a>
+                <a href="/home">Home</a>
                 <a href="about.html">About</a>
-                <a href="product_list.html">Products</a>
-                <a href="#">Pages</a>
-                <a href="blog.html">Blog</a>
+                <a href="/fullproducts">Products</a>
                 <a href="contact.html">Contact</a>
               </div>
             </div>

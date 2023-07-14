@@ -7,6 +7,27 @@
     <title>Admin:Specs-Mart</title>
     <link rel="shortcut icon" type="image" href="../admin/assets/images/logos/dark-logo.png" />
     <link rel="stylesheet" href="../admin/assets/css/styles.min.css" />
+
+    <style>
+        .image-preview-container {
+            display: flex;
+
+            margin-bottom: 20px;
+
+            width: 100px;
+            max-width: 400px;
+        }
+
+        .image-preview {
+            height: 100px;
+            width: 100px;
+            margin-bottom: 10px;
+            margin-left: 2rem;
+            border-radius: 5px;
+            object-fit: cover;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
+        }
+    </style>
 </head>
 
 <body>
@@ -82,6 +103,23 @@
                               <span class="hide-menu">Sample Page</span> -->
                                 <i class="typcn typcn-user-add-outline menu-icon"></i>
                                 <span class="menu-title">Category</span>
+                            </a>
+                        </li>
+                        <li class="nav-small-cap">
+                            <a class="sidebar-link" href="/admin/coupons" aria-expanded="false">
+                                <!-- <span>
+                                <i class="ti ti-aperture"></i>
+                              </span>
+                              <span class="hide-menu">Sample Page</span> -->
+                                <i class="typcn typcn-user-add-outline menu-icon"></i>
+                                <span class="menu-title">Coupon</span>
+                            </a>
+                        </li>
+                        <li class="nav-small-cap">
+                            <a class="sidebar-link" href="/admin/offers" aria-expanded="false">
+
+                                <i class="typcn typcn-user-add-outline menu-icon"></i>
+                                <span class="menu-title">Offers</span>
                             </a>
                         </li>
                     </ul>
@@ -192,24 +230,27 @@
 
                 <div class="mb-3">
                     <label for="Category" class="form-label">Product Category</label>
-                    <select class="form-control" id="productCategory" name="productCategory" placeholder="Select Product Category">
-                         
-                        <% for( let index = 0; index < category.length; index++ ) { %>
-                            
-                        <option value="<%= category[index].categoryName %>"> <%= category[index].categoryName  %> </option>
-                        <% } %>
-                
-                      </select>
+                    <select class="form-control" id="productCategory" name="productCategory"
+                        placeholder="Select Product Category">
+
+                        <% for( let index=0; index < category.length; index++ ) { %>
+
+                            <option value="<%= category[index].categoryName %>">
+                                <%= category[index].categoryName %>
+                            </option>
+                            <% } %>
+
+                    </select>
                 </div>
 
                 <div class="mb-3">
                     <label for="Brand" class="form-label">Product Brand</label>
-                
-                         
+
+
                     <input type="text" name="brand" placeholder="Enter Product Brand">
                     <br><br>
-                
-                      </select>
+
+                    </select>
                 </div>
 
                 <input type="number" name="stockCount" placeholder="Enter the Stock Count">
@@ -223,11 +264,13 @@
 
             </form>
 
-            <!-- <% if(typeof message!=='undefined' ) { %>
-                <p style="color: red;">
-                    <%=message %>
-                </p>
-                <% } %> -->
+            <!-- <div class="image-preview-container">
+                <img id="preview1" class="image-preview" src="#" alt="Image Preview" style="display: none;">
+                <img id="preview2" class="image-preview" src="#" alt="Image Preview" style="display: none;">
+                <img id="preview3" class="image-preview" src="#" alt="Image Preview" style="display: none;">
+                <img id="preview4" class="image-preview" src="#" alt="Image Preview" style="display: none;">
+            </div> -->
+            
         </div>
     </div>
     <script src="../assets/libs/jquery/dist/jquery.min.js"></script>
@@ -237,6 +280,44 @@
     <script src="../assets/libs/apexcharts/dist/apexcharts.min.js"></script>
     <script src="../assets/libs/simplebar/dist/simplebar.js"></script>
     <script src="../assets/js/dashboard.js"></script>
+
+    <script>
+        // // Image preview code
+        // function previewImage(event, imageNumber) {
+        //     var preview = document.getElementById(`preview${imageNumber}`);
+        //     var file = event.target.files[0];
+        //     var reader = new FileReader();
+
+        //     reader.onload = function () {
+        //         preview.src = reader.result;
+        //         preview.style.display = "block";
+        //     }
+
+        //     if (file) {
+        //         reader.readAsDataURL(file);
+        //     } else {
+        //         preview.src = "#";
+        //         preview.style.display = "none";
+        //     }
+        // }
+
+        // // Add event listeners for image previews
+        // document.getElementById("image1").addEventListener("change", function (event) {
+        //     previewImage(event, 1);
+        // });
+
+        // document.getElementById("image2").addEventListener("change", function (event) {
+        //     previewImage(event, 2);
+        // });
+
+        // document.getElementById("image3").addEventListener("change", function (event) {
+        //     previewImage(event, 3);
+        // });
+
+        // document.getElementById("image4").addEventListener("change", function (event) {
+        //     previewImage(event, 4);
+        // });
+    </script>
 </body>
 
 </html>

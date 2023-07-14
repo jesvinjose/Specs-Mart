@@ -24,73 +24,81 @@
   <link rel="stylesheet" href="/css/slick.css">
   <!-- style CSS -->
   <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .logo-img {
+      height: 50px;
+      width: 100px;
+      max-width: none;
+      /* Override the max-width property */
+    }
+  </style>
+
 </head>
 
 <body>
-    <!--::header part start::-->
-    <header class="main_menu home_menu">
-      <div class="container">
-          <div class="row align-items-center justify-content-center">
-              <div class="col-lg-12">
-                  <nav class="navbar navbar-expand-lg navbar-light">
-                      <!-- Navbar code... -->
-                      <a class="navbar-brand" href="home.ejs"> <img src="img/logo.png" alt="logo"> </a>
-                      <button class="navbar-toggler" type="button" data-toggle="collapse"
-                          data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                          aria-expanded="false" aria-label="Toggle navigation">
-                          <span class="menu_icon"><i class="fas fa-bars"></i></span>
-                      </button>
-  
-                      <div class="collapse navbar-collapse main-menu-item" id="navbarSupportedContent">
-                          <ul class="navbar-nav">
-                              <li class="nav-item">
-                                  <a class="nav-link" href="/home">Home</a>
-                              </li>
-                              <li class="nav-item">
-                                  <a class="nav-link" href="about">about</a>
-                              </li>
-                              <li class="nav-item">
-                                  <a class="nav-link" href="/fullproducts">All items</a>
-                              </li>
-                              <li class="nav-item">
-                                  <a class="nav-link" href="contact">Contact</a>
-                              </li>
-                          </ul>
-                      </div>
-  
-                      <div class="hearer_icon d-flex align-items-center">
-                          <!-- Other icons... -->
-                          
-                          <% if (locals.userData.blockStatus==false) { %>
-                            <a href="/addwishlist" class="wishlist-link">
-                                <i class="fas fa-heart"></i>
-                                <span class="wishlist-count"></span>
-                            </a>
-    
-                            <a href="/addtocart">
-                                <i class="flaticon-shopping-cart-black-shape"></i>
-                            </a>
-                            <a href="/profile">
-                                <img src="/img/285645_user_icon.png" height="25px" width="25px" style="margin-left:20px;" alt=""> 
-                            </a>
-    
-                            <a href="/logout">
-                                <i class="logout-icon">&#128075;</i>
-                            </a>
-    
-                        <% }else { %>
-                         
-                            <a href="/login">
-                                <i class="login-icon">&#128274;</i>
-                            </a>
-                            <% } %>
-  
-                      </div>
-                  </nav>
-              </div>
-          </div>
+  <!--::header part start::-->
+  <header class="main_menu home_menu">
+    <div class="container">
+      <div class="row align-items-center justify-content-center">
+        <div class="col-lg-12">
+          <nav class="navbar navbar-expand-lg navbar-light">
+            <!-- Navbar code... -->
+            <a class="navbar-brand" href="home.ejs"> <img src="img/logo.png" class="logo-img" alt="logo"> </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+              aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="menu_icon"><i class="fas fa-bars"></i></span>
+            </button>
+
+            <div class="collapse navbar-collapse main-menu-item" id="navbarSupportedContent">
+              <ul class="navbar-nav">
+                <li class="nav-item">
+                  <a class="nav-link" href="/home">Home</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="about">about</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/fullproducts">Products</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="contact">Contact</a>
+                </li>
+              </ul>
+            </div>
+
+            <div class="hearer_icon d-flex align-items-center">
+              <!-- Other icons... -->
+
+              <% if (locals.userData.blockStatus==false) { %>
+                <a href="/addwishlist" class="wishlist-link">
+                  <i class="fas fa-heart"></i>
+                  <span class="wishlist-count"></span>
+                </a>
+
+                <a href="/addtocart">
+                  <i class="flaticon-shopping-cart-black-shape"></i>
+                </a>
+                <a href="/profile">
+                  <img src="/img/285645_user_icon.png" height="25px" width="25px" style="margin-left:20px;" alt="">
+                </a>
+
+                <a href="/logout">
+                  <i class="logout-icon">&#128075;</i>
+                </a>
+
+                <% }else { %>
+
+                  <a href="/login">
+                    <i class="login-icon">&#128274;</i>
+                  </a>
+                  <% } %>
+
+            </div>
+          </nav>
+        </div>
       </div>
-      <!-- Search input code... -->
+    </div>
+    <!-- Search input code... -->
   </header>
   <!-- Header part end-->
 
@@ -108,204 +116,185 @@
   </section>
   <!-- breadcrumb part end-->
 
-  <!--================ confirmation part start =================-->   
-      <section class="confirmation_part section_padding">
-        <div class="container">
-          <div class="row">
-            <div class="col-lg-12">
-              <div class="confirmation_tittle">
-                <span style="font-size: x-large">
-                  <i class="fas fa-check-circle"></i>Thank you. Your order has been received.
-                </span>
-              </div>
-            </div>
-            <div class="col-lg-6 col-lx-4">
-              <div class="single_confirmation_details">
-                <h4>order info</h4>
-                <ul>
-                  <li>
-                    <p>order number</p><span>:<%=order.orderId %></span>
-                  </li>
-                  <li>
-                    <p>date</p><span>: <%=order.date %></span>
-                  </li>
-                  <li>
-                    <p>total</p><span>: Rs.<%= order.total%> </span>
-                  </li>
-                  <li>
-                    <p>payment method</p><span>: <%=order.paymentMethod%></span>
-                  </li>
-                </ul>
-              </div>
-            </div>
-            <div class="col-lg-6 col-lx-4">
-              <div class="single_confirmation_details">
-                <h4>Billing Address</h4>
-                <ul>
-                  <li>
-                    <p>Name</p><span>: <%=BillingAddress[0].name%></span>
-                  </li>
-                  <li>
-                    <p>Mobile</p><span>: <%= BillingAddress[0].mobile%> </span>
-                  </li>
-                  <li>
-                    <p>Address</p><span>: <%= BillingAddress[0].addressLine%> </span>
-                  </li>
-                  <li>
-                    <p>City</p><span>: <%= BillingAddress[0].city%> </span>
-                  </li>
-                  <li>
-                    <p>State</p><span>: <%= BillingAddress[0].state %> </span>
-                  </li>
-                  <li>
-                    <p>Pincode</p><span>: <%=BillingAddress[0].pincode %> </span>
-                  </li>
-                </ul>
-              </div>
-            </div>
-            <div class="col-lg-6 col-lx-4">
-              <div class="single_confirmation_details">
-                <h4>shipping Address</h4>
-                <ul>
-                  <li>
-                    <p>Name</p><span>: <%= ShippingAddress[0].name %> </span>
-                  </li>
-                  <li>
-                    <p>Mobile</p><span>: <%= ShippingAddress[0].mobile%> </span>
-                  </li>
-                  <li>
-                    <p>Address</p><span>: <%= ShippingAddress[0].addressLine%> </span>
-                  </li>
-                  <li>
-                    <p>City</p><span>: <%= ShippingAddress[0].city%> </span>
-                  </li>
-                  <li>
-                    <p>State</p><span>: <%= ShippingAddress[0].state %> </span>
-                  </li>
-                  <li>
-                    <p>Pincode</p><span>: <%=ShippingAddress[0].pincode %></span>
-                  </li>
-                </ul>
-              </div>
-            </div>
+  <!--================ confirmation part start =================-->
+  <section class="confirmation_part section_padding">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="confirmation_tittle">
+            <span style="font-size: x-large">
+              <i class="fas fa-check-circle"></i>Thank you. Your order has been received.
+            </span>
           </div>
-          <div class="row">
-            <div class="col-lg-12">
-              <div class="order_details_iner">
-                <h3>Order Details</h3>
-                <table class="table table-borderless">
-                  <thead>
+        </div>
+        <div class="col-lg-6 col-lx-4">
+          <div class="single_confirmation_details">
+            <h4>order info</h4>
+            <ul>
+              <li>
+                <p>order number</p><span>:<%=order.orderId %></span>
+              </li>
+              <li>
+                <p>date</p><span>: <%=order.date %></span>
+              </li>
+              <li>
+                <p>total</p><span>: Rs.<%= order.total%> </span>
+              </li>
+              <li><p>payment method</p><span>: <%= order.paymentMethod %><% if (order.usedWallet > 0) { %>+ Wallet<% } %></span>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-lg-6 col-lx-4">
+          <div class="single_confirmation_details">
+            <h4>Billing Address</h4>
+            <ul>
+              <li>
+                <p>Name</p><span>: <%=BillingAddress[0].name%></span>
+              </li>
+              <li>
+                <p>Mobile</p><span>: <%= BillingAddress[0].mobile%> </span>
+              </li>
+              <li>
+                <p>Address</p><span>: <%= BillingAddress[0].addressLine%> </span>
+              </li>
+              <li>
+                <p>City</p><span>: <%= BillingAddress[0].city%> </span>
+              </li>
+              <li>
+                <p>State</p><span>: <%= BillingAddress[0].state %> </span>
+              </li>
+              <li>
+                <p>Pincode</p><span>: <%=BillingAddress[0].pincode %> </span>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-lg-6 col-lx-4">
+          <div class="single_confirmation_details">
+            <h4>shipping Address</h4>
+            <ul>
+              <li>
+                <p>Name</p><span>: <%= ShippingAddress[0].name %> </span>
+              </li>
+              <li>
+                <p>Mobile</p><span>: <%= ShippingAddress[0].mobile%> </span>
+              </li>
+              <li>
+                <p>Address</p><span>: <%= ShippingAddress[0].addressLine%> </span>
+              </li>
+              <li>
+                <p>City</p><span>: <%= ShippingAddress[0].city%> </span>
+              </li>
+              <li>
+                <p>State</p><span>: <%= ShippingAddress[0].state %> </span>
+              </li>
+              <li>
+                <p>Pincode</p><span>: <%=ShippingAddress[0].pincode %></span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="order_details_iner">
+            <h3>Order Details</h3>
+            <table class="table table-borderless">
+              <thead>
+                <tr>
+                  <th scope="col" colspan="2">Product</th>
+                  <th scope="col" colspan="2">Image</th>
+                  <th scope="col">Quantity</th>
+                  <th scope="col">Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% order.product.forEach(function(product,index){%>
+                  <tr>
+                    <th colspan="2"><span>
+                        <%=product.name %>
+                      </span></th>
+                    <th colspan="2"><span><img src="<%=product.image%>" height="80px" width="80px"></span></th>
+                    <th>x<%=product.quantity %>
+                    </th>
+                    <th> <span>
+                        <%=product.quantity*product.price %>
+                      </span></th>
+                  </tr>
+                  <%}) %>
                     <tr>
-                      <th scope="col" colspan="2">Product</th>
-                      <th scope="col" colspan="2">Image</th>
-                      <th scope="col">Quantity</th>
-                      <th scope="col">Total</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <% order.product.forEach(function(product,index){%>
-                    <tr>
-                      <th colspan="2"><span><%=product.name %></span></th>
-                      <th colspan="2"><span><img src="/admin/<%=product.image%>" height="80px" width="80px"></span></th>
-                      <th>x<%=product.quantity %></th>
-                      <th> <span><%=product.quantity*product.price %></span></th>
-                    </tr>
-                    <%}) %>
-                    <tr>
-                      <th colspan="3">Subtotal</th>
+                      <th colspan="3">Subtotal (COD/Razorpay): </th>
                       <th> <span>Rs. <%= order.total%></span></th>
                     </tr>
-                  </tbody>
-                </table>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!--================ confirmation part end =================-->
+
+  <!--::footer_part start::-->
+  <footer class="footer_part">
+    <div class="footer_iner section_bg">
+      <div class="container">
+        <div class="row justify-content-between align-items-center">
+          <div class="col-lg-8">
+            <div class="footer_menu">
+              <div class="footer_logo">
+                <a href="index.html"><img src="/img/logo.png" class="logo-img" alt="#"></a>
+              </div>
+              <div class="footer_menu_item">
+                <a href="/home">Home</a>
+                <a href="about.html">About</a>
+                <a href="/fullproducts">Products</a>
+                <a href="contact.html">Contact</a>
               </div>
             </div>
           </div>
-        </div>
-      </section>
-      <!--================ confirmation part end =================-->
-
-      <!--::footer_part start::-->
-      <footer class="footer_part">
-        <div class="footer_iner section_bg">
-          <div class="container">
-            <div class="row justify-content-between align-items-center">
-              <div class="col-lg-8">
-                <div class="footer_menu">
-                  <div class="footer_logo">
-                    <a href="index.html"><img src="/img/logo.png" alt="#"></a>
-                  </div>
-                  <div class="footer_menu_item">
-                    <a href="index.html">Home</a>
-                    <a href="about.html">About</a>
-                    <a href="product_list.html">Products</a>
-                    <a href="#">Pages</a>
-                    <a href="blog.html">Blog</a>
-                    <a href="contact.html">Contact</a>
-                  </div>
-                </div>
-              </div>
-              <div class="col-lg-4">
-                <div class="social_icon">
-                  <a href="#"><i class="fab fa-facebook-f"></i></a>
-                  <a href="#"><i class="fab fa-instagram"></i></a>
-                  <a href="#"><i class="fab fa-google-plus-g"></i></a>
-                  <a href="#"><i class="fab fa-linkedin-in"></i></a>
-                </div>
-              </div>
+          <div class="col-lg-4">
+            <div class="social_icon">
+              <a href="#"><i class="fab fa-facebook-f"></i></a>
+              <a href="#"><i class="fab fa-instagram"></i></a>
+              <a href="#"><i class="fab fa-google-plus-g"></i></a>
+              <a href="#"><i class="fab fa-linkedin-in"></i></a>
             </div>
           </div>
         </div>
+      </div>
+    </div>
 
-        <div class="copyright_part">
-          <div class="container">
-            <div class="row ">
-              <div class="col-lg-12">
-                <div class="copyright_text">
-                  <P><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-                    Copyright &copy;
-                    <script>document.write(new Date().getFullYear());</script> All rights reserved | This template is
-                    made with <i class="ti-heart" aria-hidden="true"></i> by <a href="https://colorlib.com"
-                      target="_blank">Colorlib</a>
-                    <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-                  </P>
-                  <div class="copyright_link">
-                    <a href="#">Turms & Conditions</a>
-                    <a href="#">FAQ</a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </footer>
-      <!--::footer_part end::-->
+  </footer>
+  <!--::footer_part end::-->
 
-      <!-- jquery plugins here-->
-      <script src="/js/jquery-1.12.1.min.js"></script>
-      <!-- popper js -->
-      <script src="/js/popper.min.js"></script>
-      <!-- bootstrap js -->
-      <script src="/js/bootstrap.min.js"></script>
-      <!-- easing js -->
-      <script src="/js/jquery.magnific-popup.js"></script>
-      <!-- swiper js -->
-      <script src="/js/swiper.min.js"></script>
-      <!-- swiper js -->
-      <script src="/js/mixitup.min.js"></script>
-      <!-- particles js -->
-      <script src="/js/owl.carousel.min.js"></script>
-      <script src="/js/jquery.nice-select.min.js"></script>
-      <!-- slick js -->
-      <script src="/js/slick.min.js"></script>
-      <script src="/js/jquery.counterup.min.js"></script>
-      <script src="/js/waypoints.min.js"></script>
-      <script src="/js/contact.js"></script>
-      <script src="/js/jquery.ajaxchimp.min.js"></script>
-      <script src="/js/jquery.form.js"></script>
-      <script src="/js/jquery.validate.min.js"></script>
-      <script src="/js/mail-script.js"></script>
-      <!-- custom js -->
-      <script src="/js/custom.js"></script>
+  <!-- jquery plugins here-->
+  <script src="/js/jquery-1.12.1.min.js"></script>
+  <!-- popper js -->
+  <script src="/js/popper.min.js"></script>
+  <!-- bootstrap js -->
+  <script src="/js/bootstrap.min.js"></script>
+  <!-- easing js -->
+  <script src="/js/jquery.magnific-popup.js"></script>
+  <!-- swiper js -->
+  <script src="/js/swiper.min.js"></script>
+  <!-- swiper js -->
+  <script src="/js/mixitup.min.js"></script>
+  <!-- particles js -->
+  <script src="/js/owl.carousel.min.js"></script>
+  <script src="/js/jquery.nice-select.min.js"></script>
+  <!-- slick js -->
+  <script src="/js/slick.min.js"></script>
+  <script src="/js/jquery.counterup.min.js"></script>
+  <script src="/js/waypoints.min.js"></script>
+  <script src="/js/contact.js"></script>
+  <script src="/js/jquery.ajaxchimp.min.js"></script>
+  <script src="/js/jquery.form.js"></script>
+  <script src="/js/jquery.validate.min.js"></script>
+  <script src="/js/mail-script.js"></script>
+  <!-- custom js -->
+  <script src="/js/custom.js"></script>
 </body>
 
 </html>

@@ -29,81 +29,88 @@
     .hidden {
       display: none;
     }
+
     .menu_fixed {
-    position: relative;
-    
-}
+      position: relative;
+
+    }
+
+    .logo-img {
+      height: 50px;
+      width: 100px;
+      max-width: none;
+      /* Override the max-width property */
+    }
   </style>
 
 
 </head>
 
 <body>
-    <!--::header part start::-->
-    <header class="main_menu home_menu">
-      <div class="container">
-          <div class="row align-items-center justify-content-center">
-              <div class="col-lg-12">
-                  <nav class="navbar navbar-expand-lg navbar-light">
-                      <!-- Navbar code... -->
-                      <a class="navbar-brand" href="home.ejs"> <img src="img/logo.png" alt="logo"> </a>
-                      <button class="navbar-toggler" type="button" data-toggle="collapse"
-                          data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                          aria-expanded="false" aria-label="Toggle navigation">
-                          <span class="menu_icon"><i class="fas fa-bars"></i></span>
-                      </button>
-  
-                      <div class="collapse navbar-collapse main-menu-item" id="navbarSupportedContent">
-                          <ul class="navbar-nav">
-                              <li class="nav-item">
-                                  <a class="nav-link" href="/home">Home</a>
-                              </li>
-                              <li class="nav-item">
-                                  <a class="nav-link" href="about">about</a>
-                              </li>
-                              <li class="nav-item">
-                                  <a class="nav-link" href="/fullproducts">All items</a>
-                              </li>
-                              <li class="nav-item">
-                                  <a class="nav-link" href="contact">Contact</a>
-                              </li>
-                          </ul>
-                      </div>
-  
-                      <div class="hearer_icon d-flex align-items-center">
-                          <!-- Other icons... -->
-                          
-                          <% if (locals.userData.blockStatus==false) { %>
-                            <a href="/addwishlist" class="wishlist-link">
-                                <i class="fas fa-heart"></i>
-                                <span class="wishlist-count"></span>
-                            </a>
-    
-                            <a href="/addtocart">
-                                <i class="flaticon-shopping-cart-black-shape"></i>
-                            </a>
-                            <a href="/profile">
-                                <img src="/img/285645_user_icon.png" height="25px" width="25px" style="margin-left:20px;" alt=""> 
-                            </a>
-    
-                            <a href="/logout">
-                                <i class="logout-icon">&#128075;</i>
-                            </a>
-    
-                        <% }else { %>
-                         
-                            <a href="/login">
-                                <i class="login-icon">&#128274;</i>
-                            </a>
-                            <% } %>
-  
-  
-                      </div>
-                  </nav>
-              </div>
-          </div>
+  <!--::header part start::-->
+  <header class="main_menu home_menu">
+    <div class="container">
+      <div class="row align-items-center justify-content-center">
+        <div class="col-lg-12">
+          <nav class="navbar navbar-expand-lg navbar-light">
+            <!-- Navbar code... -->
+            <a class="navbar-brand" href="home.ejs"> <img src="img/logo.png" class="logo-img" alt="logo"> </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+              aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="menu_icon"><i class="fas fa-bars"></i></span>
+            </button>
+
+            <div class="collapse navbar-collapse main-menu-item" id="navbarSupportedContent">
+              <ul class="navbar-nav">
+                <li class="nav-item">
+                  <a class="nav-link" href="/home">Home</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="about">about</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/fullproducts">Products</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="contact">Contact</a>
+                </li>
+              </ul>
+            </div>
+
+            <div class="hearer_icon d-flex align-items-center">
+              <!-- Other icons... -->
+
+              <% if (locals.userData.blockStatus==false) { %>
+                <a href="/addwishlist" class="wishlist-link">
+                  <i class="fas fa-heart"></i>
+                  <span class="wishlist-count"></span>
+                </a>
+
+                <a href="/addtocart">
+                  <i class="flaticon-shopping-cart-black-shape"></i>
+                </a>
+                <a href="/profile">
+                  <img src="/img/285645_user_icon.png" height="25px" width="25px" style="margin-left:20px;" alt="">
+                </a>
+
+                <a href="/logout">
+                  <i class="logout-icon">&#128075;</i>
+                </a>
+
+                <% }else { %>
+
+                  <a href="/login">
+                    <i class="login-icon">&#128274;</i>
+                  </a>
+                  <% } %>
+
+
+            </div>
+          </nav>
+        </div>
       </div>
-      <!-- Search input code... -->
+    </div>
+    <!-- Search input code... -->
   </header>
   <!-- Header part end-->
 
@@ -125,15 +132,28 @@
   <section class="checkout_area section_padding">
     <div class="container">
       <div class="cupon_area">
-        <div class="check_title">
-          <h2>
-            Have a coupon?
-            <a href="#">Click here to enter your code</a>
-          </h2>
+        <div class="dropdown show">
+          <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Available Coupons
+          </a>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+
+            <% couponData.forEach(function(coupon) { %>
+              <% if(coupon.isDisabled===false && coupon.startDate <=new Date() && coupon.endDate>= new Date()){ %>
+                <a class="dropdown-item coupon-item" href="#" data-coupon-code="<%= coupon.couponCode %>">
+                  <%= coupon.couponName %>
+                </a>
+                <% } %>
+                  <% }) %>
+          </div>
         </div>
-        <input type="text" placeholder="Enter coupon code" />
-        <a class="tp_btn" href="#">Apply Coupon</a>
       </div>
+      <input type="text" disabled style="font-size: smaller;" id="couponCodeInput" placeholder="Coupon From DropDown" />
+      <a class="tp_btn" href="#" id="applyCouponBtn">Apply Coupon</a>
+
+
+
       <div class="billing_details">
         <div class="row">
           <div class="col-lg-8">
@@ -183,15 +203,16 @@
                             <input type="text" class="form-control" id="zip" name="pincode"
                               value="<%=address.pincode %>" />
                           </div>
-                          <div class="form-group"> 
+                          <div class="form-group">
                             <label style="padding-right: 50px;">
                               <input type="radio" name="selectedAddress1" onclick="setbillingAddress()"
                                 value="<%= address._id %>">
                               Select Address
                             </label>
-                            <button type="button" class="btn btn-primary" style="background-color: #8e7c8c; border: none;" data-bs-toggle="modal"
-                            data-bs-target="#staticBackdrop<%= address._id %>"
-                            onclick="editAddress('<%= address._id %>')">Edit</button>
+                            <button type="button" class="btn btn-primary"
+                              style="background-color: #8e7c8c; border: none;" data-bs-toggle="modal"
+                              data-bs-target="#staticBackdrop<%= address._id %>"
+                              onclick="editAddress('<%= address._id %>')">Edit</button>
 
                             <!-- Modal for edit address -->
                             <div class="modal fade" id="staticBackdrop<%= address._id %>" data-bs-backdrop="static"
@@ -323,9 +344,10 @@
                                 value="<%= address._id %>">
                               Select Address
                             </label>
-                            <button type="button" class="btn btn-primary" style="background-color: #8e7c8c; border: none;" data-bs-toggle="modal"
-                            data-bs-target="#staticBackdrop<%= address._id %>"
-                            onclick="editAddress('<%= address._id %>')">Edit</button>
+                            <button type="button" class="btn btn-primary"
+                              style="background-color: #8e7c8c; border: none;" data-bs-toggle="modal"
+                              data-bs-target="#staticBackdrop<%= address._id %>"
+                              onclick="editAddress('<%= address._id %>')">Edit</button>
 
                             <!-- Modal for edit address -->
                             <div class="modal fade" id="staticBackdrop<%= address._id %>" data-bs-backdrop="static"
@@ -536,16 +558,17 @@
                 </table>
 
                 <div class="summary-details">
-                  <!-- <div class="subtotal">
-                    Subtotal: <span>Rs. <%= subtotal %></span>
-                  </div> -->
-                  <!-- <div class="shipping">
-                    Shipping: <span>Flat rate: Rs. 50.00</span>
-                  </div> -->
                   <div class="total" style="margin-bottom: 20px; ">
                     Total:Rs. <span id="subtotal">
                       <%= subtotal %>
                     </span>
+                  </div>
+                  <div>
+                    <p class="text-success" id="saveText" style="display: none;">Congrats, You Have Saved Rs: <span
+                        id="discountAmount"></span></p>
+
+
+
                   </div>
                 </div>
 
@@ -630,32 +653,55 @@
                   </table>
                 </div>
               </div>
+              <div class="check3">
+                Wallet Balance:
+                <span id="walletBalance">
+                  <%=walletamount %>
+                </span>
+              </div>
+              <!-- <form action="" method="" onsubmit="return updateSubtotal(event)">
+                <input type="number" min="0" max="<%=userData.wallet.balance %>" placeholder="Wallet amount to be used"
+                  value="0" id="walletAmountInput" oninput="updateWalletBalance()">
+                <button type="submit" id="applyButton">Apply</button>
+              </form> -->
 
 
-              <div class="payment_item1">
-                <div class="radion_btn1">
-                  <input type="radio" id="f-option5" name="selector1" value="cod" onclick="setPaymentmode();"
-                    class="paymentCheckbox" />
-                  <label for="f-option5">COD</label>
-                  <div class="check1"></div>
+              <input type="number" min="0" max="<%=walletamount %>" id="walletInput"
+                onkeydown="preventKeyEvents(event)">
+              <button type="button" id="applyButton" onclick="updateWalletBalance()">Apply</button>
+              <p id="walletMessage"></p>
+
+              <button type="button" id="closeButton" onclick="refundWalletBalance()">Close</button>
+
+
+              <div id="paymentOptionsContainer">
+                <div class="payment_item1">
+                  <div class="radion_btn1">
+                    <input type="radio" id="f-option5" name="selector1" value="cod" onclick="setPaymentmode();"
+                      class="paymentCheckbox" />
+                    <label for="f-option5">COD</label>
+                    <div class="check1"></div>
+                  </div>
+                </div>
+
+                <div class="payment_item2">
+                  <div class="radion_btn2">
+                    <input type="radio" id="f-option6" name="selector1" value="gpay" onclick="setPaymentmode();"
+                      class="paymentCheckbox" />
+                    <label for="f-option6">RazorPay</label>
+                    <div class="check2"></div>
+                  </div>
                 </div>
               </div>
-              <div class="payment_item2">
-                <div class="radion_btn2">
-                  <input type="radio" id="f-option6" name="selector1" value="gpay" onclick="setPaymentmode();"
-                    class="paymentCheckbox" />
-                  <label for="f-option6">RazorPay </label>
-                  <div class="check2"></div>
-                </div>
-              </div>
-              <div class="payment_item3">
+
+              <!-- <div class="payment_item3">
                 <div class="radion_btn3">
                   <input type="radio" id="f-option7" name="selector1" value="wallet" onclick="setPaymentmode();"
                     class="paymentCheckbox" />
                   <label for="f-option7">Wallet </label>
-                  <div class="check3"></div>
+                  <div class="check3"</div>
                 </div>
-              </div>
+              </div> -->
               <!-- <form > -->
               <button id="placeOrderButton" class="hidden" onclick="placeOrder();">
                 <a>Place Order</a>
@@ -678,14 +724,12 @@
           <div class="col-lg-8">
             <div class="footer_menu">
               <div class="footer_logo">
-                <a href="index.html"><img src="/img/logo.png" alt="#"></a>
+                <a href="index.html"><img src="/img/logo.png" class="logo-img" alt="#"></a>
               </div>
               <div class="footer_menu_item">
-                <a href="index.html">Home</a>
+                <a href="/home">Home</a>
                 <a href="about.html">About</a>
-                <a href="product_list.html">Products</a>
-                <a href="#">Pages</a>
-                <a href="blog.html">Blog</a>
+                <a href="/fullproducts">Products</a>
                 <a href="contact.html">Contact</a>
               </div>
             </div>
@@ -702,27 +746,7 @@
       </div>
     </div>
 
-    <div class="copyright_part">
-      <div class="container">
-        <div class="row ">
-          <div class="col-lg-12">
-            <div class="copyright_text">
-              <P><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-                Copyright &copy;
-                <script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made
-                with <i class="ti-heart" aria-hidden="true"></i> by <a href="https://colorlib.com"
-                  target="_blank">Colorlib</a>
-                <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-              </P>
-              <div class="copyright_link">
-                <a href="#">Turms & Conditions</a>
-                <a href="#">FAQ</a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+
   </footer>
   <!--::footer_part end::-->
 
@@ -752,6 +776,69 @@
   <script src="/js/mail-script.js"></script>
   <!-- custom js -->
   <script src="/js/custom.js"></script>
+
+  <!--Apply Coupon-->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const applyCouponBtn = document.getElementById('applyCouponBtn');
+      const discountAmountElement = document.getElementById('discountAmount');
+      let isCouponApplied = false;
+
+      applyCouponBtn.addEventListener('click', function (e) {
+        e.preventDefault();
+
+        // Retrieve the total amount from the page (replace with your actual method of retrieving the total)
+        const totalAmount = parseFloat(document.getElementById('subtotal').innerText);
+
+        // Retrieve the coupon code from the input field (replace with your actual input field ID if different)
+        const couponCode = document.getElementById('couponCodeInput').value;
+
+        if (!isCouponApplied) {
+          // Initiate the fetch call to apply the coupon
+          fetch('/applyCoupon', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ couponCode: couponCode, totalAmount: totalAmount })
+          })
+            .then(response => response.json())
+            .then(data => {
+              // Update the page with the updated total amount
+              console.log(data, "1233333333333");
+              document.getElementById('subtotal').innerText = data.updatedTotal
+                ;
+
+              // Change the button text to "Cancel Coupon"
+              applyCouponBtn.innerText = 'Cancel Coupon';
+              isCouponApplied = true;
+              discountAmountElement.innerText = data.discountAmount;
+              // Show the saveText element
+              saveText.style.display = 'block';
+
+            })
+            .catch(error => {
+              console.error('Error:', error);
+            });
+        } else {
+
+          // Refresh the page to remove the applied coupon (replace with your actual page refresh method)
+          window.location.reload();
+        }
+      });
+    });
+
+    function preventKeyEvents(event) {
+      const arrowKeys = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'];
+
+      if (event.key === 'Enter' || arrowKeys.includes(event.key)) {
+        event.preventDefault();
+        event.target.blur(); // Remove focus from the input field
+      }
+    }
+
+
+  </script>
 
   <script>
     // Get all the input fields
@@ -783,6 +870,9 @@
     async function placeOrder() {
       var selectedPaymentMode = document.querySelector('input[name="selector1"]:checked').value;
       const subtotal = document.getElementById("subtotal").textContent.replace("Rs. ", "");
+      // Retrieve the coupon code from the input field (replace with your actual input field ID if different)
+      const couponCode = document.getElementById('couponCodeInput').value;
+      const enteredAmount = parseFloat(document.getElementById('walletInput').value);
 
       const response = await fetch('/placeorder', {
         method: 'POST',
@@ -791,7 +881,9 @@
         },
         body: JSON.stringify({
           paymentMethod: selectedPaymentMode,
-          subtotal: subtotal
+          subtotal: subtotal,
+          couponCode: couponCode,
+          usedWalletAmount: enteredAmount
         })
       })
         .then(response => response.json())
@@ -930,17 +1022,103 @@
       if (address1 && address2 && payment) {
         toggleButton()
       }
-
-
-
     }
 
+    localStorage.setItem('walletToggle', true)
+    const walletToggle = JSON.parse(localStorage.getItem('walletToggle'))
+    if (walletToggle === false) {
+      document.getElementById('closeButton').style.display = 'block';
+      document.getElementById('applyButton').style.display = 'none';
+    }
+    else {
+      document.getElementById('closeButton').style.display = 'none';
+      document.getElementById('applyButton').style.display = 'block';
+    }
+    function updateWalletBalance() {
+      let max =  parseFloat('<%=walletamount%>');
+      console.log(max,"-----------------------------");
+      localStorage.setItem('walletToggle', false)
+      document.getElementById('closeButton').style.display = 'block';
+      document.getElementById('applyButton').style.display = 'none';
+      console.log("Entered in function");
 
+      const enteredAmount = parseFloat(document.getElementById('walletInput').value);
 
+      const totalAmount = parseFloat(document.getElementById('subtotal').innerText);
+      const y = totalAmount;
+      console.log(totalAmount, "------------subtotal");
 
+      const x = document.getElementById('walletMessage');
 
+      console.log(enteredAmount, "--------enteredAmount");
+
+      console.log(max, "--------max");
+
+      if (Number(totalAmount) < Number(max)) {
+        console.log("Main if");
+        if (enteredAmount > totalAmount) {
+          x.textContent = `Do not need to use more than ${totalAmount}`;
+        } else {
+          x.textContent = `Used amount of ${enteredAmount}`;
+          if (enteredAmount === totalAmount) {
+            document.getElementById('placeOrderButton').style.display = 'block';
+            document.getElementById('f-option5').style.display = 'none';
+            document.getElementById('f-option6').style.display = 'none';
+            // Add the "Wallet" payment option dynamically
+            const walletPaymentOption = document.createElement('div');
+            walletPaymentOption.classList.add('payment_item3');
+            walletPaymentOption.innerHTML = `
+          <div class="radion_btn3">
+            <input type="radio" id="f-option7" name="selector1" value="wallet" onclick="setPaymentmode();"
+              class="paymentCheckbox" />
+            <label for="f-option7">Wallet</label>
+            <div class="check3"></div>
+          </div>
+        `;
+            document.getElementById('paymentOptionsContainer').appendChild(walletPaymentOption);
+          }
+          document.getElementById('subtotal').innerText = Number(totalAmount) - Number(enteredAmount);
+        }
+      } else {
+        if (enteredAmount <= max) {
+          console.log(max, "--------max");
+          console.log("inside if");
+          x.textContent = `Used wallet amount of ${enteredAmount}`;
+          document.getElementById('subtotal').innerText = Number(totalAmount) - Number(enteredAmount);
+        } else {
+          console.log("inside else");
+          x.textContent = `Cannot use more than ${max}`;
+        }
+      }
+    }
+
+    function refundWalletBalance() {
+      const enteredAmount = parseFloat(document.getElementById('walletInput').value);
+      const totalAmount = parseFloat(document.getElementById('subtotal').innerText);
+      localStorage.setItem('walletToggle', true)
+      document.getElementById('closeButton').style.display = 'none';
+      document.getElementById('applyButton').style.display = 'block';
+      document.getElementById('subtotal').innerText = Number(totalAmount) + Number(enteredAmount);
+    }
 
   </script>
+
+  <script>
+    // JavaScript code to populate coupon code in input field
+    document.addEventListener('DOMContentLoaded', function () {
+      const couponItems = document.querySelectorAll('.coupon-item');
+      const couponCodeInput = document.getElementById('couponCodeInput');
+
+      couponItems.forEach(function (couponItem) {
+        couponItem.addEventListener('click', function (e) {
+          e.preventDefault();
+          const couponCode = this.getAttribute('data-coupon-code');
+          couponCodeInput.value = couponCode;
+        });
+      });
+    });
+  </script>
+
   <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
 

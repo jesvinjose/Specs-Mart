@@ -79,8 +79,20 @@ const userSchema = new mongoose.Schema({
               },
           },
       ],
+      referalOTP: {
+         type: mongoose.Schema.Types.ObjectId,
+         ref: 'User',
+      }
   },
 },{ versionKey: 'version' });
+
+// Pre-save middleware function to set the referalOTP field
+userSchema.pre('save', function (next) {
+   if (!this.referalOTP) {
+      this.referalOTP = this._id;
+   }
+   next();
+});
 
 const User = mongoose.model('User', userSchema);
 module.exports = User;

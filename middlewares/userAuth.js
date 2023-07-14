@@ -8,11 +8,11 @@ const userBlock = async (req, res, next) => {
             const user = await User.findById(userData._id);
             // console.log(user,"---------------");
             if (user.blockStatus == false) {
-                console.log("Hello-------------------");
+                // console.log("Hello-------------------");
                 next()
             }
             else {
-                console.log("Hiiiiiiiiiiiii------------");
+                // console.log("Hiiiiiiiiiiiii------------");
                 res.redirect('/logout')
             }
         }

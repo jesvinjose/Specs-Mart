@@ -14,13 +14,24 @@ const Order = require('../models/orderModel')
 const BillingAddress = require('../models/billingAddressModel')
 const ShippingAddress = require('../models/shippingAddressModel');
 const { request } = require('express');
-
+const Coupon = require('../models/couponModel')
+const Offer = require('../models/offerModel');
+const cloudinary = require('cloudinary')
 
 
 //loading Add Category Page
 const loadCategoryRegister = async (req, res) => {
     try {
         res.render('addCategory')
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+//loading Add Coupon Page
+const loadCouponRegister = async (req, res) => {
+    try {
+        res.render('addCoupon')
     } catch (error) {
         console.log(error);
     }
@@ -35,6 +46,30 @@ const loadProductRegister = async (req, res) => {
         console.log(error);
     }
 }
+
+const productOfferCreate = async (req, res) => {
+    try {
+        // console.log("Hi------ProdOffer------------");
+        const productData = await Product.find({});
+        res.render("adminProductOfferCreate", {
+            data: productData,
+        });
+    } catch (error) {
+        console.log(error.message);
+    }
+};
+
+const categoryOfferCreate = async (req, res) => {
+    try {
+        const categoryData = await Category.find({});
+        res.render("adminCategoryOfferCreate", {
+            data: categoryData,
+        });
+    } catch (error) {
+        console.log(error.message);
+    }
+};
+
 
 //loading Add Carousel Page
 const loadCarouselRegister = async (req, res) => {
@@ -58,14 +93,41 @@ const loadCategories = async (req, res) => {
     }
 }
 
+const offerlistload = async (req, res) => {
+    try {
+        const offerdata = await Offer.find();
+        if (offerdata.length > 0) {
+            res.render("offers", { offers: offerdata, text: "" });
+        } else {
+            res.render("offers", { offers: offerdata, text: "No offers have been added" });
+        }
+    } catch (error) {
+        console.log(error.message);
+    }
+};
+
+
+
+//loading Coupons Page
+const loadCoupons = async (req, res) => {
+    try {
+        // console.log("hiiiiiiiiiiii");
+        const couponData = await Coupon.find()
+        // console.log("check1================", couponData);
+        res.render('coupons', { coupons: couponData })
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 //loading Products Page
 const loadProducts = async (req, res) => {
     try {
-        console.log("hiiiiiiiiiiii");
+        // console.log("hiiiiiiiiiiii");
         const productData = await Product.find()
         // console.log("check1",productData);
         // console.log("pro", productData)
-
+        // console.log(productData[0].imageUrls[0].url, "2222222222222222222222222");
         res.render('products', { products: productData })
     } catch (error) {
         console.log(error);
@@ -204,6 +266,30 @@ const disableOrEnableCategory = async (req, res) => {
     }
 }
 
+const disableOrEnableCoupon = async (req, res) => {
+    try {
+        // console.log("hitting Disable=======================================================");
+        const { couponId, action } = req.body;
+        // const couponname=req.body.couponName
+        // const action=req.body.action
+
+        // console.log("Hello", action);
+        const coupon = await Coupon.findById(couponId)
+        // console.log("Hi" + coupon);
+        if (action == 'Disable') {
+            coupon.isDisabled = true;
+        }
+        else {
+            coupon.isDisabled = false;
+        }
+        await coupon.save();
+        res.json({ success: true, message: 'Disable status updated successfully' });
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+}
+
 //Changing the Enable-Disable Status for the Carousel
 
 const disableOrEnableCarousel = async (req, res) => {
@@ -280,6 +366,26 @@ const editLoadCategory = async (req, res) => {
     }
 }
 
+const editLoadCoupon = async (req, res) => {
+    try {
+        const id = req.query.id;
+        req.session.editCouponId = req.query.id;
+        // console.log("Hi---------",id);
+        const couponData = await Coupon.find({ _id: id })
+        //  console.log("Hi hitting Edit load------",couponData);
+        // console.log(couponData,"----------------cd------------");
+
+        // Convert startDate and endDate to strings in "YYYY-MM-DD" format
+        const startDate = couponData[0].startDate.toISOString().split('T')[0];
+        const endDate = couponData[0].endDate.toISOString().split('T')[0];
+
+        res.render('editCoupon', { coupon: couponData, startDate: startDate, endDate: endDate })
+
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 //Loading the Edit Load Page and Passing the current Product-data to the page
 const editLoadProduct = async (req, res) => {
     try {
@@ -288,6 +394,7 @@ const editLoadProduct = async (req, res) => {
         const productData = await Product.find({ _id: id })
         const categoryData = await Category.find()
         // console.log(categoryData);
+        // console.log(productData[0].imageUrls, "333333333333333");
         res.render('editProduct', { product: productData, category: categoryData })
     } catch (error) {
         console.log(error);
@@ -317,6 +424,24 @@ const updateCategory = async (req, res) => {
 
         await Category.findByIdAndUpdate({ _id: id }, { $set: { categoryName: name, categoryDescription: description, categoryImage } });
         res.redirect('/admin/categories')
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+//Updating the Coupon Details
+const updateCoupon = async (req, res) => {
+    try {
+        // console.log('update coupon here')
+        const id = req.session.editCouponId;
+        const couponName = req.body.couponName;
+        const couponCode = req.body.couponCode;
+        const discountAmount = req.body.discountAmount;
+        const startDate = req.body.startDate;
+        const endDate = req.body.endDate;
+
+        await Coupon.findByIdAndUpdate({ _id: id }, { $set: { couponName: couponName, couponCode: couponCode, discountAmount: discountAmount, startDate: startDate, endDate: endDate } });
+        res.redirect('/admin/coupons')
     } catch (error) {
         console.log(error);
     }
@@ -396,11 +521,20 @@ const updateProduct = async (req, res) => {
         const files = req.files;
         const productImages = [...existingProduct.imageUrls]; // Create a copy of existing images
 
+        // Upload image to Cloudinary
+
+
         if (files && files.length > 0) {
-            files.forEach((file) => {
-                const image = file.filename;
-                productImages.push(image);
-            });
+            for (const file of files) {
+                const image = file.path;
+                const result = await cloudinary.uploader.upload(image, {
+                    folder: "Products"
+                });
+                productImages.push({
+                    public_id: result.public_id,
+                    url: result.secure_url
+                });
+            };
         }
 
         await Product.findByIdAndUpdate(
@@ -426,7 +560,85 @@ const updateProduct = async (req, res) => {
     }
 };
 
+const addProductOffer = async (req, res) => {
+    try {
+        const offerName = req.body.name;
+        const offerPercentage = parseInt(req.body.percentage, 10);
+        // console.log(offerPercentage, "------------------op-------------------");
+        const product = req.body.product;
+        if (!offerName || !offerPercentage || !product) {
+            return res.status(400).send("Missing required fields");
+        }
+        const lowerOfferName = offerName.toLowerCase();
+        const offerExist = await Offer.findOne({ name: lowerOfferName });
+        if (!offerExist) {
+            const existingProduct = await Product.findById(product);
+            const originalProductPrice = existingProduct.offerPrice;
+            const newPrice = Math.round(originalProductPrice * ((100 - (existingProduct.offerPercentage + offerPercentage)) / 100));
 
+            console.log("Original Product Price:", originalProductPrice);
+            console.log("New Price:", newPrice);
+            await Product.findByIdAndUpdate(product, { $set: { price: newPrice } });
+            await Product.findByIdAndUpdate(product, { $set: { offerPercentage: existingProduct.offerPercentage + offerPercentage } });
+            const newOffer = new Offer({
+                name: offerName,
+                percentage: offerPercentage,
+                product: product,
+            });
+            await newOffer.save();
+            res.redirect("/admin/offers");
+        } else {
+            res.redirect("/admin/productOfferCreate");
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Internal Server Error");
+    }
+};
+
+
+const addCategoryOffer = async (req, res) => {
+    try {
+        const offerName = req.body.name;
+        const offerPercentage = parseInt(req.body.percentage, 10);
+        const category = req.body.category;
+        // console.log(category);
+        const c = await Category.findById(category)
+        // console.log(c.categoryName);
+        console.log(offerName, offerPercentage, category, "3 exists-------------");
+        if (!offerName || !offerPercentage || !category) {
+            return res.status(400).send("Missing required fields");
+        }
+        const lowerOfferName = offerName.toLowerCase();
+        const offerExist = await Offer.findOne({ name: lowerOfferName });
+        // console.log(offerExist, "55555555555555555");
+        if (!offerExist) {
+            console.log("inside !offerExist");
+            const products = await Product.find({ productCategory: c.categoryName });
+            for (let i = 0; i < products.length; i++) {
+                const product = products[i];
+                product.price = Math.round(product.offerPrice - (product.offerPrice * (product.offerPercentage + offerPercentage)) / 100);
+                product.offerPercentage = product.offerPercentage + offerPercentage;
+                await product.save();
+                //   console.log(product, "10101010");
+            }
+
+            const newOffer = new Offer({
+                name: offerName,
+                percentage: offerPercentage,
+                category: category,
+            });
+            await newOffer.save();
+            res.redirect("/admin/offers");
+        } else {
+            res.redirect("/admin/categoryOfferCreate");
+        }
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Internal Server Error");
+    }
+};
 
 
 //Log Out Functionality
@@ -495,8 +707,6 @@ const verifyLogin = async (req, res) => {
 
 //Adding new Carousel to DataBase
 
-
-
 const saveCarouseltoDB = async (req, res) => {
     try {
         const files = req.files;
@@ -526,6 +736,92 @@ const saveCarouseltoDB = async (req, res) => {
 
 
 
+const saveCoupontoDB = async (req, res) => {
+    try {
+
+        // console.log(req.body.couponCode);
+        // console.log(req.body.couponName);
+        // console.log(req.body.discountAmount);
+        // console.log(req.body.startDate);
+        // console.log(req.body.endDate);
+        const couponName = req.body.couponName;
+        const couponCode = req.body.couponCode;
+        const discountAmount = req.body.discountAmount;
+        const startDate = req.body.startDate;
+        const endDate = req.body.endDate;
+
+        // Check if the coupon already exists (case-insensitive)
+        const existingCoupon = await Coupon.findOne({
+            couponName: { $regex: new RegExp(`^${couponName}$`, 'i') }
+        });
+
+        if (existingCoupon) {
+            return res.status(400).json({ error: 'Coupon already exists' });
+        }
+
+        const coupon = new Coupon({
+            couponName: couponName,
+            couponCode: couponCode,
+            discountAmount: discountAmount,
+            startDate,
+            endDate
+        });
+
+        await coupon.save();
+        res.redirect('/admin/coupons');
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+// const saveCategorytoDB = async (req, res) => {
+//     try {
+
+//         const files =req.files
+//         const categoryimage = [];
+
+//         // if (!req.files || !Array.isArray(req.files)) {
+//         //     return res.status(400).json({ error: 'No files found' });
+//         // }
+
+//         for (const file of files) {
+//             const image = file.filename;
+//             // Upload image to Cloudinary
+//             const result = await cloudinary.uploader.upload(image, {
+//                 folder: "Categories"
+//             });
+
+//             // Push public_id and url to categoryImage array
+//             categoryimage.push({
+//                 public_id: result.public_id,
+//                 url: result.secure_url}
+//             );
+//         };
+
+//         const categoryname = req.body.categoryName;
+//         const categorydescription = req.body.categoryDescription;
+
+//            // Check if the category already exists (case-insensitive)
+//         const existingCategory = await Category.findOne({
+//             categoryName: { $regex: new RegExp(`^${categoryname}$`, 'i') }
+//         });
+
+//         if (existingCategory) {
+//             return res.status(400).json({ error: 'Category already exists' });
+//         }
+
+//         const category = new Category({
+//             categoryName: categoryname,
+//             categoryImage: categoryimage,
+//             categoryDescription: categorydescription,
+//         });
+
+//         await category.save();
+//         res.redirect('/admin/categories');
+//     } catch (error) {
+//         console.log(error);
+//     }
+// };
 
 const saveCategorytoDB = async (req, res) => {
     try {
@@ -562,20 +858,26 @@ const saveCategorytoDB = async (req, res) => {
     }
 };
 
-
 //Adding new Product to DataBase
 const saveProducttoDB = async (req, res) => {
-    // console.log('hitting');
     try {
-        // console.log(req.body);
         const files = req.files;
-        const productimages = [];
+        const productImages = [];
 
-        files.forEach((file) => {
-            const image = file.filename;
-            productimages.push(image);
-        });
+        for (const file of files) {
+            const image = file.path;
 
+            // Upload image to Cloudinary
+            const result = await cloudinary.uploader.upload(image, {
+                folder: "Products"
+            });
+
+            // Push public_id and url to productImages array
+            productImages.push({
+                public_id: result.public_id,
+                url: result.secure_url
+            });
+        }
 
         const productname = req.body.productName;
         const productprice = req.body.price;
@@ -583,17 +885,15 @@ const saveProducttoDB = async (req, res) => {
         const productdescription = req.body.productDescription;
         const productquantity = req.body.stockCount;
         const productBrand = req.body.brand;
+        const offerPrice = req.body.price;
 
-        // console.log(productBrand,"--------------------");
-        // console.log(productname);
-
-        // Check if the category already exists (case-insensitive)
+        // Check if the product already exists
         const existingProduct = await Product.findOne({
-            productName: { $regex: new RegExp(`^${productname}$`, 'i') }
+            productName: { $regex: new RegExp(`^${productname}$`, "i") }
         });
 
         if (existingProduct) {
-            return res.status(400).json({ error: 'Product already exists' });
+            return res.status(400).json({ error: "Product already exists" });
         }
 
         const product = new Product({
@@ -603,16 +903,93 @@ const saveProducttoDB = async (req, res) => {
             productBrand: productBrand,
             productDescription: productdescription,
             stockCount: productquantity,
-            imageUrls: productimages
+            imageUrls: productImages,
+            offerPrice: offerPrice
         });
-        const productData = await product.save();
-        // console.log(productData);
-        res.redirect('/admin/product')
 
+        await product.save();
+        res.redirect("/admin/product");
     } catch (error) {
         console.log(error);
     }
-}
+};
+
+// const saveProducttoDB = async (req, res) => {
+//     try {
+//         const files = req.files;
+//         const productImages = [];
+
+//         for (const file of files) {
+//             const image = file.path;
+
+//             // Upload image to Cloudinary with cropping
+//             const result = await uploadImage(image);
+
+//             // Push public_id and url to productImages array
+//             productImages.push({
+//                 public_id: result.public_id,
+//                 url: result.secure_url
+//             });
+//         }
+
+//         const productname = req.body.productName;
+//         const productprice = req.body.price;
+//         const productcategory = req.body.productCategory;
+//         const productdescription = req.body.productDescription;
+//         const productquantity = req.body.stockCount;
+//         const productBrand = req.body.brand;
+//         const offerPrice = req.body.price;
+
+//         // Check if the product already exists
+//         const existingProduct = await Product.findOne({
+//             productName: { $regex: new RegExp(`^${productname}$`, "i") }
+//         });
+
+//         if (existingProduct) {
+//             return res.status(400).json({ error: "Product already exists" });
+//         }
+
+//         const product = new Product({
+//             productName: productname,
+//             price: productprice,
+//             productCategory: productcategory,
+//             productBrand: productBrand,
+//             productDescription: productdescription,
+//             stockCount: productquantity,
+//             imageUrls: productImages,
+//             offerPrice: offerPrice
+//         });
+
+//         await product.save();
+//         res.redirect("/admin/product");
+
+//     } catch (error) {
+//         console.log(error);
+//     }
+// };
+
+// Function to upload image with cropping
+// const uploadImage = (image) => {
+//     return new Promise((resolve, reject) => {
+//         cloudinary.uploader.upload(
+//             image,
+//             {
+//                 folder: "Products",
+//                 width: 400,
+//                 height: 600,
+//                 crop: "fill",
+//             },
+//             (error, result) => {
+//                 if (error) {
+//                     reject(error);
+//                 } else {
+//                     resolve(result);
+//                 }
+//             }
+//         );
+//     });
+// };
+
 
 const deleteCategory = async (req, res) => {
     try {
@@ -623,6 +1000,74 @@ const deleteCategory = async (req, res) => {
         console.log(error.message);
     }
 }
+
+const deleteCoupon = async (req, res) => {
+    try {
+        const id = new ObjectId(req.query.id);
+        await Coupon.findByIdAndDelete(id);
+        res.redirect('/admin/coupons');
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+const deleteProductOffer = async (req, res) => {
+    try {
+        const offerDoc = await Offer.findById(req.params.id);
+        //   console.log(offerDoc,"+++++++++++++++++++++++++");
+        const offerValidProductId = offerDoc.product;
+        //   console.log(offerValidProductId,"-------------------------");
+        const productData = await Product.findById({ _id: offerValidProductId });
+        //   console.log(productData,"======================================");
+        const newOffer = productData.offerPercentage - offerDoc.percentage
+        const newPrice = (100 - newOffer) * productData.offerPrice / 100
+        //   const newPrice=((100+productData.offerPercentage)/100)*productData.offerPrice;
+        const previousProductPrice = productData.offerPrice;
+        // console.log(previousProductPrice);
+        await Product.findByIdAndUpdate({ _id: offerValidProductId }, { $set: { price: newPrice } });
+        await Product.findByIdAndUpdate({ _id: offerValidProductId }, { $set: { offerPercentage: newOffer } });
+        await Offer.deleteOne({ _id: req.params.id });
+        //   const offerdata = await Offer.find();
+        //   if(offerdata.length>0){
+        //     res.render("offers", { offers: offerdata ,text:""});
+        //   }else{
+        //     res.render("offers", { offers: offerdata,text:"All offers have been deleted" });
+        //   } 
+        res.redirect("/admin/offers");
+    } catch (error) {
+        console.log(error.message);
+    }
+};
+
+
+const deleteCategoryOffer = async (req, res) => {
+    try {
+        const offerDoc = await Offer.findById(req.params.id);
+        // console.log(offerDoc,"123456789");
+        // console.log(offerDoc.category,"9877");
+        const c = await Category.findById(offerDoc.category);
+        // console.log(c.categoryName,"[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[");
+        const products = await Product.find({ productCategory: c.categoryName });
+
+        products.forEach((product) => {
+            const newOffer = product.offerPercentage - offerDoc.percentage;
+            const newPrice = (100 - newOffer) * product.offerPrice / 100;
+
+            product.price = newPrice;
+            product.offerPercentage = newOffer;
+            product.save();
+        });
+
+        await Offer.deleteOne({ _id: req.params.id });
+
+        res.redirect("/admin/offers");
+    } catch (error) {
+        console.log(error.message);
+    }
+};
+
+
+
 
 const deleteProduct = async (req, res) => {
     try {
@@ -700,12 +1145,12 @@ const removeIndexImage = async (req, res) => {
     try {
         const imageName = req.body.imageUrlName;
         const id = req.body.prodId
-        console.log(imageName);
-        console.log(id, "-------prodId-----------");
+        // console.log(imageName);
+        // console.log(id, "-------prodId-----------");
         const product = await Product.findById(id)
-        console.log(product, "-----------productDetails-----------");
+        // console.log(product, "-----------productDetails-----------");
         for (let i = 0; i < product.imageUrls.length; i++) {
-            if (product.imageUrls[i] === imageName) {
+            if (product.imageUrls[i].url === imageName) {
                 product.imageUrls.splice(i, 1)
                 console.log("Hi success controller-----------");
                 await product.save();
@@ -780,5 +1225,19 @@ module.exports = {
     loadOrders,
     loadOrderDetails,
     updateStatus,
-    removeIndexImage
+    removeIndexImage,
+    loadCoupons,
+    loadCouponRegister,
+    saveCoupontoDB,
+    disableOrEnableCoupon,
+    editLoadCoupon,
+    updateCoupon,
+    deleteCoupon,
+    offerlistload,
+    productOfferCreate,
+    addProductOffer,
+    deleteProductOffer,
+    categoryOfferCreate,
+    addCategoryOffer,
+    deleteCategoryOffer
 }

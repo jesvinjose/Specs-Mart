@@ -10,33 +10,39 @@ const bcrypt = require('bcrypt');
 const session = require('express-session')
 const validator = require('validator');
 const Razorpay = require('razorpay')
+const Coupon = require('../models/couponModel')
+const Offer = require('../models/offerModel')
+
 
 const mongoose = require('mongoose');
 
 
-
+//To sent otps during user registration
 const nodemailer = require('nodemailer'); // Import Nodemailer for sending emails
 const { ObjectId } = require('mongodb');
-const billingAddress = require('../models/billingAddressModel');
+// const billingAddress = require('../models/billingAddressModel');
 
 
 let userData
 
+//To load Home Page
 const loadHome = async (req, res) => {
   try {
     const categoryData = await Category.find({ isDisabled: false })
     // console.log(categoryData,"categoryData=====================================");
     // console.log(req.session.user,"-----------session----------");
-
+    const latestProducts = await Product.find().sort({ createdAt: -1 }).limit(6);
+    const offerData = await Offer.find({ category: { $exists: true } }).populate("category");
+    // console.log(offerData,"hi--------------------------");
     if (req.session.user) {
       let data = req.session.user;
       const currentuser = await User.findById(data._id);
       // console.log(currentuser,"-------------if------------------");
-      res.render('home', { userData: currentuser, categories: categoryData })
+      res.render('home', { userData: currentuser, categories: categoryData, products: latestProducts, offers: offerData })
 
     } else {
-      console.log("----else----------");
-      res.render('home', { userData: "", categories: categoryData });
+      // console.log("----else----------");
+      res.render('home', { userData: "", categories: categoryData, products: latestProducts, offers: offerData });
     }
 
   } catch (error) {
@@ -44,8 +50,7 @@ const loadHome = async (req, res) => {
   }
 };
 
-
-
+//To load Product Detail Page
 const loadProductDetail = async (req, res) => {
   try {
     // console.log("Hitting Product Detail--------------------------");
@@ -70,7 +75,7 @@ const loadProductDetail = async (req, res) => {
   }
 }
 
-
+//To load Login Page
 const loadLogin = async (req, res) => {
   try {
     // console.log("Hi LoadLogin");
@@ -80,6 +85,7 @@ const loadLogin = async (req, res) => {
   }
 };
 
+//To load otplogin Page
 const loadOtpLogIn = async (req, res) => {
   try {
     res.render('otplogin');
@@ -88,6 +94,7 @@ const loadOtpLogIn = async (req, res) => {
   }
 }
 
+//To logout and render login page again
 const loadLogOut = async (req, res) => {
   try {
     req.session.destroy();
@@ -98,6 +105,8 @@ const loadLogOut = async (req, res) => {
     console.log(error);
   }
 }
+
+//To load signUp Page
 const loadSignUp = async (req, res) => {
   try {
     res.render('signup');
@@ -106,6 +115,8 @@ const loadSignUp = async (req, res) => {
   }
 };
 
+
+//To load verifyotp Page
 const loadVerifyOtp = async (req, res) => {
   try {
     res.render('verifyotp');
@@ -114,6 +125,7 @@ const loadVerifyOtp = async (req, res) => {
   }
 };
 
+//To bcrypt the password entered during signup (called in verifyOtp function)
 const securePassword = async (password) => {
   try {
     const passwordHash = await bcrypt.hash(password, 8);
@@ -123,7 +135,7 @@ const securePassword = async (password) => {
   }
 };
 
-// Function to generate a random OTP
+// Function to generate a random OTP during user signup and otplogins
 const generateOTP = function () {
   return Math.floor(100000 + Math.random() * 900000);
 }
@@ -134,7 +146,21 @@ const sendOtp = async (req, res) => {
     // console.log(req.body);
     req.session.signUp = req.body;
     // console.log(req.session.signUp);
-    const { userName, email, mobile, password, confirmPassword } = req.body;
+    const { referalOTP, userName, email, mobile, password, confirmPassword } = req.body;
+    // console.log(req.session.signUp,"----------sU------------");
+    // console.log(req.body,'------------body-------------');
+    if (referalOTP) {
+      if (!mongoose.Types.ObjectId.isValid(referalOTP)) {
+        return res.render("signup", { footer: "Invalid referral OTP" });
+      }
+      const existingUser = await User.findById(referalOTP);
+      if (!existingUser) {
+        return res.render("signup", { footer: "Invalid referral OTP" });
+      }
+      // Add wallet balance of 200 to the referred user
+      existingUser.wallet.balance += 200;
+      await existingUser.save();
+    }
 
     // Validate email
     if (!email || !validator.isEmail(email)) {
@@ -175,7 +201,6 @@ const sendOtp = async (req, res) => {
           req.session.saveOtp = null;
         }, 60 * 1000);
       } else {
-        // res.render("verifyotp", { footer: "" })
         res.redirect('/verifyotp')
       }
     } else {
@@ -227,6 +252,14 @@ const verifyOtp = async (req, res) => {
       blockStatus: false,
       isVerified: true
     });
+
+    // Add wallet balance of 100 to the new user
+    if (req.session.signUp.referalOTP) {
+      newUser.wallet.balance = 100;
+    }
+
+    // Set referral OTP as ObjectId of the newly created user
+    newUser.wallet.referalOTP = newUser._id;
     await newUser.save();
     req.session.signUp = null;
     res.render("login", { footer: "Account Created Successfully, Please Login" });
@@ -448,7 +481,7 @@ const addWishList = async (req, res) => {
       return;
     }
     if (userData.blockStatus == true) {
-      log("hi-------blocked")
+      // log("hi-------blocked")
       res.json('userblocked')
       return;
     }
@@ -632,8 +665,10 @@ const loadCheckOut = async (req, res) => {
       const data = req.session.user;
       const shippingAddresses = await ShippingAddress.find({ userId: data._id })
       const billingAddresses = await BillingAddress.find({ userId: data._id })
+      const userobj = await User.findOne({ _id: userData._id })
       // console.log(billingAddresses,"----------------Billing Addresses---------------");
       // console.log(shippingAddresses,"----------------shippingAddress----------------");
+      var couponData = await Coupon.find({ usedBy: { $ne: data._id } });
       const userWithCartDetails = await User.findById(data._id)
         .populate({
           path: 'cart',
@@ -663,7 +698,7 @@ const loadCheckOut = async (req, res) => {
         // res.redirect('/empty-cart');
 
       } else {
-        res.render('checkout', { userData: data, shippingAddresses: shippingAddresses, billingAddresses: billingAddresses, products: productsCheck, subtotal })
+        res.render('checkout', { userData: data, shippingAddresses: shippingAddresses, billingAddresses: billingAddresses, products: productsCheck, subtotal, couponData,walletamount: userobj.wallet.balance })
 
       }
     }
@@ -771,7 +806,8 @@ const addBillingAddress = async (req, res) => {
     });
 
     await billingAddress.save();
-    res.redirect('/checkout')
+    // res.redirect('/checkout')
+    res.redirect('back'); // Reload the current page
   } catch (error) {
     res.status(500).send();
     console.log(error.message);
@@ -797,7 +833,8 @@ const addShippingAddress = async (req, res) => {
     });
 
     await shippingAddress.save();
-    res.redirect('/checkout')
+    // res.redirect('/checkout')
+    res.redirect('back'); // Reload the current page
   } catch (error) {
     res.status(500).send();
     console.log(error.message);
@@ -838,7 +875,14 @@ const placeOrder = async (req, res) => {
   try {
     // console.log("working")
     let subtotal = req.body.subtotal;
+    let couponCode = req.body.couponCode;
     subtotal = isNaN(subtotal) ? 0 : Number(subtotal); // Check if subtotal is NaN and provide a default value
+    // console.log(couponCode,"11111111111111111");
+    const validCoupon = await Coupon.findOne({ couponCode: couponCode })
+    const usedWallet=req.body.usedWalletAmount;
+    // usedWallet=isNaN(usedWallet) ? 0:Number(usedWallet)
+    // const usedWallet=req.body.usedWallet; // Declare and assign usedWallet value
+    console.log(usedWallet,"11111111111111111");
 
     var paymentMethod = req.body.paymentMethod;
     // console.log(paymentMethod);
@@ -883,7 +927,7 @@ const placeOrder = async (req, res) => {
           name: product.productName,
           price: product.price,
           quantity: item.quantity,
-          image: product.imageUrls[0],
+          image: product.imageUrls[0].url,
           brand: product.productBrand
         };
         orderItems.push(orderItem);
@@ -905,24 +949,35 @@ const placeOrder = async (req, res) => {
         orderId: generateOrderId(),
         total: subtotal,
         paymentMethod: paymentMethod,
+        usedWallet:usedWallet
       });
+
+      user.wallet.balance = user.wallet.balance - usedWallet;
 
       user.cart = [];
       await user.save();
 
       await newOrder.save();
 
+      if (validCoupon) {
+        validCoupon.usedBy.push(user._id);
+        // console.log(validCoupon);
+        await validCoupon.save();
+      }
       // console.log(orderItems);
-      res.json({ success: true, order: newOrder });
-    } else if (paymentMethod == 'wallet') {
 
-      console.log("Hi wallet....");
+      res.json({ success: true, order: newOrder });
+    } 
+    else if (paymentMethod == 'wallet') {
+
+      // console.log("Hi wallet....");
       if (subtotal > user.wallet.balance) {
         // console.log("Hi wallet balance....");
         return res.status(400).json({ error: 'Insufficient balance in the wallet' });
       }
       else {
-        user.wallet.balance = user.wallet.balance - subtotal;
+        user.wallet.balance = user.wallet.balance - usedWallet;
+        console.log(user.wallet.balance,"---------------------uwb");
         var newOrder = new Order({
           userId: user._id,
           product: orderItems,
@@ -931,12 +986,19 @@ const placeOrder = async (req, res) => {
           orderId: generateOrderId(),
           total: subtotal,
           paymentMethod: paymentMethod,
+          usedWallet:usedWallet
         });
 
         user.cart = [];
         await user.save();
-
+        // console.log(user,"new user------------------");
         await newOrder.save();
+
+        if (validCoupon) {
+          validCoupon.usedBy.push(user._id);
+          // console.log(validCoupon);
+          await validCoupon.save();
+        }
 
         // console.log(orderItems);
         res.json({ success: true, order: newOrder });
@@ -958,6 +1020,9 @@ const placeOrder = async (req, res) => {
           var instance = new Razorpay({ key_id: 'rzp_test_ORkJ65oKPb4Z48', key_secret: 'AYEvrnuXqhkw3DJ5NO71mzWQ' })
           const order = await instance.orders.create(options);
 
+          // console.log(user._id, "1");
+          // console.log(orderItems, "2");
+          console.log(req.session.user.billingDetail, "3");
           var newOrder = new Order({
             userId: user._id,
             product: orderItems,
@@ -966,12 +1031,14 @@ const placeOrder = async (req, res) => {
             orderId: options.receipt,
             total: subtotal,
             paymentMethod: paymentMethod,
+            usedWallet:usedWallet
           });
 
           await newOrder.save();
           // console.log(options.receipt, "-----optionsReceipt------------");
 
           // console.log(order, "------------newOrder--------------");
+          user.wallet.balance = user.wallet.balance - usedWallet;
           user.cart = [];
           await user.save();
           // console.log(user, "-------------user------------");
@@ -981,6 +1048,13 @@ const placeOrder = async (req, res) => {
           //   order,
           //   amount: options.amount
           // });
+
+          if (validCoupon) {
+            validCoupon.usedBy.push(user._id);
+            // console.log(validCoupon);
+            await validCoupon.save();
+          }
+
           res.json({ success: true, order: order, amount: options.amount, newOrder });
         } catch (error) {
           res.status(500).json({ error: 'An error occurred while creating the order' });
@@ -1005,9 +1079,302 @@ const placeOrder = async (req, res) => {
   }
 }
 
+
+// const placeOrder = async (req, res) => {
+//   try {
+//     let subtotal = req.body.subtotal;
+//     let couponCode = req.body.couponCode;
+//     subtotal = isNaN(subtotal) ? 0 : Number(subtotal);
+//     const validCoupon = await Coupon.findOne({ couponCode: couponCode });
+
+//     const paymentMethod = req.body.paymentMethod;
+//     const userData = req.session.user;
+//     const user = await User.findById(userData._id);
+//     const productDetails = await Product.find({});
+//     const productsInCart = user.cart.map((item) => ({
+//       productId: item.products,
+//       quantity: item.quantity,
+//     }));
+
+//     let hasInsufficientStock = false;
+//     for (const item of productsInCart) {
+//       const product = productDetails.find((p) => p._id.toString() === item.productId);
+//       if (product && item.quantity > product.stockCount) {
+//         hasInsufficientStock = true;
+//         break;
+//       }
+//     }
+//     if (hasInsufficientStock) {
+//       return res.status(400).json({ error: 'Insufficient stock for one or more products' });
+//     }
+
+//     const orderItems = [];
+//     for (const item of productsInCart) {
+//       const product = productDetails.find((p) => p._id.toString() === item.productId.toString());
+//       if (product) {
+//         product.stockCount -= item.quantity;
+//         await product.save();
+//         const orderItem = {
+//           id: product._id,
+//           name: product.productName,
+//           price: product.price,
+//           quantity: item.quantity,
+//           image: product.imageUrls[0].url,
+//           brand: product.productBrand
+//         };
+//         orderItems.push(orderItem);
+//       }
+//     }
+
+//     function generateOrderId() {
+//       return Math.floor(Math.random() * 100000000);
+//     }
+
+//     if (paymentMethod === 'cod') {
+//       if (validCoupon) {
+//         validCoupon.usedBy.push(user._id);
+//         await validCoupon.save();
+//       }
+
+//       const newOrder = new Order({
+//         userId: user._id,
+//         product: orderItems,
+//         billingaddress: req.session.user.billingDetail,
+//         shippingaddress: req.session.user.shippingDetail,
+//         orderId: generateOrderId(),
+//         total: subtotal,
+//         paymentMethod: paymentMethod,
+//       });
+
+//       user.wallet.balance -= subtotal;
+//       user.cart = [];
+//       await Promise.all([user.save(), newOrder.save()]);
+
+//       res.json({ success: true, order: newOrder });
+//     } else if (paymentMethod === 'wallet') {
+//       if (subtotal > user.wallet.balance) {
+//         return res.status(400).json({ error: 'Insufficient balance in the wallet' });
+//       }
+
+//       if (validCoupon) {
+//         validCoupon.usedBy.push(user._id);
+//         await validCoupon.save();
+//       }
+
+//       const newOrder = new Order({
+//         userId: user._id,
+//         product: orderItems,
+//         billingaddress: req.session.user.billingDetail,
+//         shippingaddress: req.session.user.shippingDetail,
+//         orderId: generateOrderId(),
+//         total: subtotal,
+//         paymentMethod: paymentMethod,
+//       });
+
+//       user.wallet.balance -= subtotal;
+//       user.cart = [];
+//       await Promise.all([user.save(), newOrder.save()]);
+
+//       res.json({ success: true, order: newOrder });
+//     } else if (paymentMethod === 'gpay') {
+//       try {
+//         const options = {
+//           amount: subtotal * 100,
+//           currency: "INR",
+//           receipt: generateOrderId(),
+//         };
+
+//         const instance = new Razorpay({ key_id: 'rzp_test_ORkJ65oKPb4Z48', key_secret: 'AYEvrnuXqhkw3DJ5NO71mzWQ' });
+//         const order = await instance.orders.create(options);
+
+//         if (validCoupon) {
+//           validCoupon.usedBy.push(user._id);
+//           await validCoupon.save();
+//         }
+
+//         const newOrder = new Order({
+//           userId: user._id,
+//           product: orderItems,
+//           billingaddress: req.session.user.billingDetail,
+//           shippingaddress: req.session.user.shippingDetail,
+//           orderId: options.receipt,
+//           total: subtotal,
+//           paymentMethod: paymentMethod,
+//         });
+
+//         user.cart = [];
+//         await Promise.all([user.save(), newOrder.save()]);
+
+//         res.json({ success: true, order: order, amount: options.amount, newOrder });
+//       } catch (error) {
+//         res.status(500).json({ error: 'An error occurred while creating the order' });
+//       }
+//     } else {
+//       res.status(400).json({ error: 'Invalid payment method' });
+//     }
+//   } catch (error) {
+//     console.log(error);
+//     res.status(500).json({ error: 'An error occurred while placing the order' });
+//   }
+// };
+
+
+// const placeOrder = async (req, res) => {
+//   try {
+//     let subtotal = req.body.subtotal;
+//     let couponCode = req.body.couponCode;
+//     // Convert usedWallet to a valid number or default to 0
+//     const usedWallet = isNaN(req.body.usedWallet) ? 0 : parseFloat(req.body.usedWallet);
+//     console.log(usedWallet, "11111111111111111");
+//     subtotal = isNaN(subtotal) ? 0 : Number(subtotal); // Check if subtotal is NaN and provide a default value
+//     const validCoupon = await Coupon.findOne({ couponCode: couponCode })
+
+//     var paymentMethod = req.body.paymentMethod;
+    
+//     if (!req.session.user || !req.session.user._id) {
+//       throw new Error('User data is missing or invalid');
+//     }
+    
+//     const user = await User.findById(req.session.user._id);
+    
+//     if (!user) {
+//       throw new Error('User not found');
+//     }
+
+//     const productDetails = await Product.find({});
+//     const productsInCart = user.cart.map((item) => ({
+//       productId: item.products,
+//       quantity: item.quantity,
+//     }));
+
+//     let hasInsufficientStock = false;
+
+//     for (const item of productsInCart) {
+//       const product = productDetails.find((p) => p._id.toString() === item.productId);
+
+//       if (product && item.quantity > product.stockCount) {
+//         hasInsufficientStock = true;
+//         break;
+//       }
+//     }
+
+//     if (hasInsufficientStock) {
+//       return res.status(400).json({ error: 'Insufficient stock for one or more products' });
+//     }
+
+//     const orderItems = [];
+
+//     for (const item of productsInCart) {
+//       const product = productDetails.find((p) => p._id.toString() === item.productId.toString());
+
+//       if (product) {
+//         product.stockCount -= item.quantity;
+//         await product.save();
+//         const orderItem = {
+//           id: product._id,
+//           name: product.productName,
+//           price: product.price,
+//           quantity: item.quantity,
+//           image: product.imageUrls[0].url,
+//           brand: product.productBrand
+//         };
+//         orderItems.push(orderItem);
+//       }
+//     }
+
+//     function generateOrderId() {
+//       return Math.floor(Math.random() * 100000000)
+//     }
+
+//     if (paymentMethod == 'cod') {
+//       var newOrder = new Order({
+//         userId: user._id,
+//         product: orderItems,
+//         billingaddress: req.session.user.billingDetail,
+//         shippingaddress: req.session.user.shippingDetail,
+//         orderId: generateOrderId(),
+//         total: subtotal,
+//         paymentMethod: paymentMethod,
+//       });
+
+//       user.wallet.balance = isNaN(user.wallet.balance) ? 0 : user.wallet.balance - usedWallet;
+//       console.log(user.wallet.balance, "-----------------------balance");
+//       user.cart = [];
+//       await user.save();
+
+//       await newOrder.save();
+
+//       if (validCoupon) {
+//         validCoupon.usedBy.push(user._id);
+//         console.log(validCoupon);
+//         await validCoupon.save();
+//       }
+
+//       res.json({ success: true, order: newOrder });
+//     } else {
+//       // Handle other payment methods like 'gpay'
+//       try {
+//         const options = {
+//           amount: subtotal * 100,  // amount in the smallest currency unit
+//           currency: "INR",
+//           receipt: generateOrderId(),
+//         };
+
+//         var instance = new Razorpay({ key_id: 'rzp_test_ORkJ65oKPb4Z48', key_secret: 'AYEvrnuXqhkw3DJ5NO71mzWQ' })
+//         const order = await instance.orders.create(options);
+
+//         var newOrder = new Order({
+//           userId: user._id,
+//           product: orderItems,
+//           billingaddress: req.session.user.billingDetail,
+//           shippingaddress: req.session.user.shippingDetail,
+//           orderId: options.receipt,
+//           total: subtotal,
+//           paymentMethod: paymentMethod,
+//         });
+
+//         await newOrder.save();
+        
+//         user.wallet.balance = isNaN(user.wallet.balance) ? 0 : user.wallet.balance - usedWallet;
+//         console.log(user.wallet.balance, "-----------------------balance");
+//         user.cart = [];
+//         await user.save();
+
+//         if (validCoupon) {
+//           validCoupon.usedBy.push(user._id);
+//           console.log(validCoupon);
+//           await validCoupon.save();
+//         }
+
+//         res.json({ success: true, order: order, amount: options.amount, newOrder });
+//       } catch (error) {
+//         res.status(500).json({ error: 'An error occurred while creating the order' });
+//       }
+//     }
+//   } catch (error) {
+//     console.log(error);
+//     res.status(500).json({ error: 'An error occurred while placing the order' });
+//   }
+// }
+
+
+
+const fetchWalletBalance=async(req, res) => {
+  const walletBalance = retrieveWalletBalance(); // Implement this function to retrieve the wallet balance
+  // Send the wallet balance as a response
+  res.json({ walletBalance });
+}
+
+function retrieveWalletBalance()
+{
+  const data=req.session.user;
+  const user=User.findById(data._id)
+  return user.wallet.balance;
+}
+
 const loadConfirmation = async (req, res) => {
   try {
-    console.log("Hi load confirmation");
+    // console.log("Hi load confirmation");
     const userData = req.session.user;
     const orderId = req.query.orderId;
     // const order = JSON.parse(req.query.order);
@@ -1086,7 +1453,7 @@ const loadOrderDetails = async (req, res) => {
 const loadProductList = async (req, res) => {
   try {
     const categoryName = req.query.category;
-    console.log("Hi loadProductList----------");
+    // console.log("Hi loadProductList----------");
     const banners = await Carousel.find();
 
     // Sorting
@@ -1094,7 +1461,7 @@ const loadProductList = async (req, res) => {
     let sortOption = {};
     if (sort === 'price_low') {
       sortOption = { price: 1 }; // Sort by price in ascending order
-      console.log(sortOption,"--------------lowToHigh");
+      // console.log(sortOption, "--------------lowToHigh");
     } else if (sort === 'price_high') {
       sortOption = { price: -1 }; // Sort by price in descending order
     }
@@ -1120,7 +1487,7 @@ const loadProductList = async (req, res) => {
       .limit(limit);
 
     const count = await Product.countDocuments(query);
-
+    // console.log(products,"1111111111111");
     if (req.session.user != undefined) {
       let data = req.session.user;
       res.render('product_list', {
@@ -1242,8 +1609,8 @@ const cancelOrder = async (req, res) => {
     // console.log(user.wallet);
     // console.log(user.wallet.balance);
     // console.log(orderDetails.total);
-    if (orderDetails.paymentMethod === 'gpay' || orderDetails.paymentMethod === 'wallet') {
-      user.wallet.balance = user.wallet.balance + orderDetails.total;
+    if (orderDetails.paymentMethod === 'gpay' || orderDetails.paymentMethod === 'wallet' || orderDetails.paymentMethod === 'cod') {
+      user.wallet.balance = user.wallet.balance + orderDetails.usedWallet;
       await User.findByIdAndUpdate(userData._id, { 'wallet.balance': user.wallet.balance }, { new: true });
       const transaction = {
         date: new Date(),
@@ -1259,6 +1626,29 @@ const cancelOrder = async (req, res) => {
   } catch (error) {
     console.log(error);
   }
+}
+
+const applyCoupon = async (req, res) => {
+  try {
+    const { couponCode } = req.body;
+    const { totalAmount } = req.body;
+    const data = req.session.user;
+    const validCoupon = await Coupon.findOne({ couponCode: couponCode })
+    // console.log(validCoupon,"--------------------ValidCoupon--------------");
+    if (validCoupon === null) {
+      throw new Error("Invalid Coupon")
+    }
+    else {
+      // const user=await User.findById(data._id)
+      // validCoupon.usedBy.push(user);
+      var discountAmount = validCoupon.discountAmount
+      var updatedTotal = totalAmount - validCoupon.discountAmount;
+    }
+    res.status(200).json({ updatedTotal, discountAmount });
+  } catch (error) {
+    console.log(error);
+  }
+
 }
 
 const returnOrder = async (req, res) => {
@@ -1334,10 +1724,10 @@ const saveBillingAddress = async (req, res) => {
       const billingAddresses = await BillingAddress.find({ userId: userData._id })
       const shippingAddresses = await ShippingAddress.find({ userId: userData._id })
       res.render("addresses", { billingAddresses, shippingAddresses, userData })
-      console.log(BillingAddress, "------------edited--------------------");
+      // console.log(BillingAddress, "------------edited--------------------");
     }
   } catch (error) {
-    console.log("Error");
+    console.log(error);
   }
 }
 
@@ -1393,7 +1783,7 @@ const saveBillingAddressinCheckout = async (req, res) => {
       console.log(BillingAddress, "------------edited--------------------");
     }
   } catch (error) {
-    console.log("Error");
+    console.log(error);
   }
 }
 
@@ -1475,7 +1865,21 @@ const saveShippingAddressinCheckout = async (req, res) => {
       console.log(ShippingAddress, "------------edited--------------------");
     }
   } catch (error) {
-    console.log("Error");
+    console.log(error);
+  }
+}
+
+const loadeditDetails = async (req, res) => {
+  try {
+    if (req.session.user != undefined) {
+      let data = req.session.user;
+      res.render('editDetails', { userData: data })
+    }
+    else {
+      res.redirect('/home')
+    }
+  } catch (error) {
+    console.log(error);
   }
 }
 
@@ -1510,6 +1914,7 @@ module.exports = {
   setBillingAddress,
   setShippingAddress,
   placeOrder,
+  fetchWalletBalance,
   loadConfirmation,
   loadProfile,
   loadMyOrders,
@@ -1521,5 +1926,7 @@ module.exports = {
   saveBillingAddress,
   saveShippingAddress,
   saveBillingAddressinCheckout,
-  saveShippingAddressinCheckout
+  saveShippingAddressinCheckout,
+  applyCoupon,
+  loadeditDetails
 }
