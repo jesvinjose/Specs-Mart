@@ -54,6 +54,6 @@ app.set('views','./views')
 app.use(express.static(path.join(__dirname,'public')));
 
 
-app.listen(3094,function(){
-    console.log("Server is running:listento http://localhost:3094");
+app.listen(3000,function(){
+    console.log("Server is running:listento http://localhost:3000");
 })
