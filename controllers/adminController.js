@@ -1,7 +1,7 @@
 const User = require('../models/userModel')
 const bcrypt = require('bcrypt')
 const ejs = require('ejs')
-
+const fs = require('fs');
 const mongoose = require('mongoose');
 const { ObjectId } = mongoose.Types;
 
@@ -17,6 +17,7 @@ const { request } = require('express');
 const Coupon = require('../models/couponModel')
 const Offer = require('../models/offerModel');
 const cloudinary = require('cloudinary')
+const PDFDocument = require('pdfkit');
 
 
 //loading Add Category Page
@@ -1191,6 +1192,67 @@ const removeIndexImage = async (req, res) => {
 //   }
 // };
 
+//working
+const generateSalesReport = async (req, res) => {
+    try {
+      const { startDate, endDate } = req.body;
+
+      // Retrieve the sales data from the database based on the date range
+      const salesData = await Order.find({
+        date: { $gte: startDate, $lte: endDate },
+      }).populate('product.id');
+
+      // Create a new PDF document
+      const doc = new PDFDocument();
+
+      // Set response headers for PDF download
+      res.setHeader('Content-Type', 'application/pdf');
+      res.setHeader('Content-Disposition', `attachment; filename="sales_report.pdf"`);
+
+      // Pipe the PDF document to the response
+      doc.pipe(res);
+
+      // Sales report title
+      doc.font('Helvetica-Bold').fontSize(18).text('Sales Report', { align: 'center' });
+      doc.moveDown();
+
+      // Date range
+      doc.font('Helvetica').fontSize(14).text(`${startDate} - ${endDate}`, { align: 'center' });
+      doc.moveDown();
+
+      // Sales data table header
+      doc.font('Helvetica-Bold').fontSize(12).text('Date', { align: 'left' });
+      doc.font('Helvetica-Bold').fontSize(12).text('Order ID', { align: 'left' });
+      doc.font('Helvetica-Bold').fontSize(12).text('Payment Method', { align: 'left' });
+      doc.font('Helvetica-Bold').fontSize(12).text('Product Details', { align: 'left' });
+      doc.font('Helvetica-Bold').fontSize(12).text('Total', { align: 'left' });
+      doc.moveDown();
+
+      // Sales data table
+      salesData.forEach((order) => {
+        doc.font('Helvetica').fontSize(12).text(`Date: ${order.date.toDateString()}`, { align: 'left' });
+        doc.font('Helvetica').fontSize(12).text(`Order ID: ${order.orderId}`, { align: 'left' });
+        doc.font('Helvetica').fontSize(12).text(`Payment Method: ${order.paymentMethod}`, { align: 'left' });
+
+        order.product.forEach((product) => {
+          doc.font('Helvetica').fontSize(12).text(`Name: ${product.id.productName}`, { align: 'left' });
+          doc.font('Helvetica').fontSize(12).text(`Price: ₹${product.price}`, { align: 'left' });
+          doc.font('Helvetica').fontSize(12).text(`Quantity: ${product.quantity}`, { align: 'left' });
+          doc.font('Helvetica').fontSize(12).text('', { align: 'left' }); // Add an empty line after each product
+        });
+
+        doc.font('Helvetica').fontSize(12).text(`Total: ₹${order.total}`, { align: 'left' });
+        doc.moveDown();
+      });
+
+      // Finalize the PDF document
+      doc.end();
+    } catch (error) {
+      console.log(error);
+      res.status(500).send('Failed to generate sales report');
+    }
+  };
+
 
 
 
@@ -1239,5 +1301,7 @@ module.exports = {
     deleteProductOffer,
     categoryOfferCreate,
     addCategoryOffer,
-    deleteCategoryOffer
+    deleteCategoryOffer,
+    generateSalesReport,
+
 }

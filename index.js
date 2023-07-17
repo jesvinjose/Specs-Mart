@@ -7,7 +7,7 @@ const express=require('express');                          //to run the server u
 const session = require('express-session');
 const Razorpay=require('razorpay');
 const cloudinary=require('cloudinary');
-
+//mongodb://localhost:27017
 const ejs=require('ejs');
 
 cloudinary.config({ 

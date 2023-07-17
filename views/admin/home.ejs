@@ -106,27 +106,27 @@
             </li> -->
             <li class="nav-small-cap">
               <a class="sidebar-link" href="/admin/orders" aria-expanded="false">
-              <!-- <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+                <!-- <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
               <span class="hide-menu">EXTRA</span> -->
-              <i class="typcn typcn-user-add-outline menu-icon"></i>
-              <span class="menu-title">Orders</span>
-            </a>
+                <i class="typcn typcn-user-add-outline menu-icon"></i>
+                <span class="menu-title">Orders</span>
+              </a>
             </li>
             <li class="nav-small-cap">
               <a class="sidebar-link" href="/admin/carousels" aria-expanded="false">
-              <!-- <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+                <!-- <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
               <span class="hide-menu">EXTRA</span> -->
-              <i class="typcn typcn-user-add-outline menu-icon"></i>
-              <span class="menu-title">Carousels</span>
-            </a>
+                <i class="typcn typcn-user-add-outline menu-icon"></i>
+                <span class="menu-title">Carousels</span>
+              </a>
             </li>
             <li class="nav-small-cap">
               <a class="sidebar-link" href="/admin/users" aria-expanded="false">
-              <!-- <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+                <!-- <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
               <span class="hide-menu">EXTRA</span> -->
-              <i class="typcn typcn-user-add-outline menu-icon"></i>
-              <span class="menu-title">Users</span>
-            </a>
+                <i class="typcn typcn-user-add-outline menu-icon"></i>
+                <span class="menu-title">Users</span>
+              </a>
             </li>
             <li class="nav-small-cap">
               <a class="sidebar-link" href="/admin/product" aria-expanded="false">
@@ -161,10 +161,10 @@
             <li class="nav-small-cap">
               <a class="sidebar-link" href="/admin/offers" aria-expanded="false">
 
-                  <i class="typcn typcn-user-add-outline menu-icon"></i>
-                  <span class="menu-title">Offers</span>
+                <i class="typcn typcn-user-add-outline menu-icon"></i>
+                <span class="menu-title">Offers</span>
               </a>
-          </li>
+            </li>
           </ul>
           <!-- <div class="unlimited-access hide-menu bg-light-primary position-relative mb-7 mt-5 rounded">
             <div class="d-flex">
@@ -210,7 +210,7 @@
                   <img src="../admin/assets/images/profile/user-1.jpg" alt="" width="35" height="35"
                     class="rounded-circle">
                 </a>
-                <% if (typeof userData =='undefined' ) { %>
+                <% if (typeof userData=='undefined' ) { %>
                   <a href="/admin/logout">
                     <i class="logout-icon">&#128075;</i>
                     logout
@@ -250,19 +250,26 @@
           <div class="col-lg-8 d-flex align-items-strech">
             <div class="card w-100">
               <div class="card-body">
-                <div class="d-sm-flex d-block align-items-center justify-content-between mb-9">
-                  <div class="mb-3 mb-sm-0">
-                    <h5 class="card-title fw-semibold">Sales Overview</h5>
+                <div class="mb-9">
+                  <h5 class="card-title fw-semibold">Sales Report</h5>
+                  <div class="input-group" style="display: flex;">
+                    <div style="margin: 15px;">
+                      <p>Start Date</p>
+                      <input type="date" id="startDate" class="form-control" placeholder="Start Date">
+                    </div>
+                    <div style="margin: 15px;">
+                      <p>End Date</p>
+                      <input type="date" id="endDate" class="form-control" placeholder="End Date">
+                    </div>
+                    <!-- <span class="input-group-text">to</span> -->
+
                   </div>
-                  <div>
-                    <select class="form-select">
-                      <option value="1">March 2023</option>
-                      <option value="2">April 2023</option>
-                      <option value="3">May 2023</option>
-                      <option value="4">June 2023</option>
-                    </select>
-                  </div>
+                  <button onclick="generateReport()" class="btn btn-primary mt-3">Generate Report</button>
                 </div>
+
+
+
+
                 <div id="chart"></div>
               </div>
             </div>
@@ -623,8 +630,8 @@
         </div>
         <div class="py-6 px-6 text-center">
           <!-- <p class="mb-0 fs-4">Design and Developed by <a href="https://adminmart.com/" target="_blank" -->
-              <!-- class="pe-1 text-primary text-decoration-underline">AdminMart.com</a> Distributed by <a -->
-              <!-- href="https://themewagon.com">ThemeWagon</a></p> -->
+          <!-- class="pe-1 text-primary text-decoration-underline">AdminMart.com</a> Distributed by <a -->
+          <!-- href="https://themewagon.com">ThemeWagon</a></p> -->
         </div>
       </div>
     </div>
@@ -636,6 +643,45 @@
   <script src="../assets/libs/apexcharts/dist/apexcharts.min.js"></script>
   <script src="../assets/libs/simplebar/dist/simplebar.js"></script>
   <script src="../assets/js/dashboard.js"></script>
+
+  <script>
+    const generateReport = () => {
+      const startDate = document.getElementById('startDate').value;
+      const endDate = document.getElementById('endDate').value;
+
+      // Send a request to the server to generate the sales report
+      fetch('/generate-sales-report', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ startDate, endDate }),
+      })
+        .then((response) => response.blob())
+        .then((blob) => {
+          // Create a URL for the blob data
+          const url = URL.createObjectURL(blob);
+
+          // Create a link element
+          const link = document.createElement('a');
+          link.href = url;
+          link.download = 'sales_report.pdf';
+
+          // Programmatically click the link to initiate the download
+          link.click();
+
+          // Clean up the URL and link element
+          URL.revokeObjectURL(url);
+          link.remove();
+        })
+        .catch((error) => {
+          console.log(error);
+          // Handle any errors that occurred during the request
+        });
+    };
+  </script>
+
+
 </body>
 
 </html>

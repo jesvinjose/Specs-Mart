@@ -82,7 +82,7 @@
                         <div class="hearer_icon d-flex align-items-center">
                             <!-- Other icons... -->
 
-                            <% if (locals.userData.blockStatus==false) { %>
+                            <% if (locals.userData && locals.userData.blockStatus === false) { %>
                                 <a href="/addwishlist" class="wishlist-link">
                                     <i class="fas fa-heart"></i>
                                     <span class="wishlist-count"></span>
