@@ -265,6 +265,8 @@
 
                   </div>
                   <button onclick="generateReport()" class="btn btn-primary mt-3">Generate Report</button>
+                  <p id="message"></p>
+
                 </div>
 
 
@@ -645,9 +647,32 @@
   <script src="../assets/js/dashboard.js"></script>
 
   <script>
+
     const generateReport = () => {
-      const startDate = document.getElementById('startDate').value;
-      const endDate = document.getElementById('endDate').value;
+      const startDateInput = document.getElementById('startDate');
+      const endDateInput = document.getElementById('endDate');
+      const messageElement = document.getElementById('message');
+
+      // Get today's date
+      const today = new Date();
+      today.setHours(0, 0, 0, 0); // Set the time to midnight
+
+      // Get the selected dates from the inputs
+      const startDate = new Date(startDateInput.value);
+      const endDate = new Date(endDateInput.value);
+
+      // Validate the selected dates
+      if (startDate > today || endDate > today) {
+        const errorMessage = 'Invalid date selection. Dates must be within today.';
+        messageElement.innerHTML = errorMessage;
+        return;
+      }
+
+      if (startDate > endDate) {
+        const errorMessage = 'Invalid date range. Start date must be before end date.';
+        messageElement.innerHTML = errorMessage;
+        return;
+      }
 
       // Send a request to the server to generate the sales report
       fetch('/generate-sales-report', {
@@ -679,6 +704,44 @@
           // Handle any errors that occurred during the request
         });
     };
+
+  </script>
+
+  <script>
+    // const generateReport = () => {
+    //   const startDate = document.getElementById('startDate').value;
+    //   const endDate = document.getElementById('endDate').value;
+
+    //   // Send a request to the server to generate the sales report
+    //   fetch('/generate-sales-report', {
+    //     method: 'POST',
+    //     headers: {
+    //       'Content-Type': 'application/json',
+    //     },
+    //     body: JSON.stringify({ startDate, endDate }),
+    //   })
+    //     .then((response) => response.blob())
+    //     .then((blob) => {
+    //       // Create a URL for the blob data
+    //       const url = URL.createObjectURL(blob);
+
+    //       // Create a link element
+    //       const link = document.createElement('a');
+    //       link.href = url;
+    //       link.download = 'sales_report.pdf';
+
+    //       // Programmatically click the link to initiate the download
+    //       link.click();
+
+    //       // Clean up the URL and link element
+    //       URL.revokeObjectURL(url);
+    //       link.remove();
+    //     })
+    //     .catch((error) => {
+    //       console.log(error);
+    //       // Handle any errors that occurred during the request
+    //     });
+    // };
   </script>
 
 

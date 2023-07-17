@@ -4,6 +4,9 @@ const ejs = require('ejs')
 const fs = require('fs');
 const mongoose = require('mongoose');
 const { ObjectId } = mongoose.Types;
+const moment = require('moment');
+const path = require('path');
+
 
 
 const Category = require('../models/categoryModel');
@@ -645,7 +648,7 @@ const addCategoryOffer = async (req, res) => {
 //Log Out Functionality
 const loadLogout = async (req, res) => {
     try {
-        req.session.user = null;
+        req.session.adminUser = null;
         res.redirect('/admin')
     } catch (error) {
         console.log(error)
@@ -669,7 +672,7 @@ const verifyLogin = async (req, res) => {
                     res.render('login', { message: 'User is NOT ADMIN' });
                 }
                 else {
-                    req.session.user = userData._id;
+                    req.session.adminUser = userData._id;
                     res.redirect('/admin/home');
                     // console.log(req.session.user)
                 }
@@ -1192,66 +1195,191 @@ const removeIndexImage = async (req, res) => {
 //   }
 // };
 
+
 //working
+// const generateSalesReport = async (req, res) => {
+//     try {
+//         const { startDate, endDate } = req.body;
+
+//         // Retrieve the sales data from the database based on the date range
+//         const salesData = await Order.find({
+//             date: { $gte: startDate, $lte: endDate },
+//         }).populate('product.id');
+
+
+
+//         // Create a new PDF document
+//         const doc = new PDFDocument();
+
+//         // Set response headers for PDF download
+//         res.setHeader('Content-Type', 'application/pdf');
+//         res.setHeader('Content-Disposition', `attachment; filename="sales_report.pdf"`);
+
+//         // Pipe the PDF document to the response
+//         doc.pipe(res);
+
+//         // Sales report title
+//         doc.font('Helvetica-Bold').fontSize(18).text('Sales Report', { align: 'center' });
+//         doc.moveDown();
+
+//         // Formatted date range
+//         const formattedStartDate = moment(startDate).format('MMM D, YYYY');
+//         const formattedEndDate = moment(endDate).format('MMM D, YYYY');
+//         doc.font('Helvetica').fontSize(14).text(`${formattedStartDate} - ${formattedEndDate}`, { align: 'center' });
+//         doc.moveDown();
+
+//         // Sales data table header
+//         doc.font('Helvetica-Bold').fontSize(12).text('Date', { align: 'left' });
+//         doc.font('Helvetica-Bold').fontSize(12).text('Order ID', { align: 'left' });
+//         doc.font('Helvetica-Bold').fontSize(12).text('Payment Method', { align: 'left' });
+//         doc.font('Helvetica-Bold').fontSize(12).text('Product Details', { align: 'left' });
+//         doc.font('Helvetica-Bold').fontSize(12 ).text('Total', { align: 'left' });
+//         doc.moveDown();
+
+//         // Sales data table
+//         salesData.forEach((order) => {
+//             doc.font('Helvetica').fontSize(12).text(`Date: ${order.date.toDateString()}`, { align: 'left' });
+//             doc.font('Helvetica').fontSize(12).text(`Order ID: ${order.orderId}`, { align: 'left' });
+//             doc.font('Helvetica').fontSize(12).text(`Payment Method: ${order.paymentMethod}`, { align: 'left' });
+
+//             order.product.forEach((product) => {
+//                 doc.font('Helvetica').fontSize(12).text(`Name: ${product.id.productName}`, { align: 'left' });
+//                 doc.font('Helvetica').fontSize(12).text(`Price: ₹${product.price}`, { align: 'left' });
+//                 doc.font('Helvetica').fontSize(12).text(`Quantity: ${product.quantity}`, { align: 'left' });
+//                 doc.font('Helvetica').fontSize(12).text('', { align: 'left' }); // Add an empty line after each product
+//             });
+
+//             doc.font('Helvetica').fontSize(12).text(`Total: ₹${order.total}`, { align: 'left' });
+//             doc.moveDown();
+//         });
+
+//         // Finalize the PDF document
+//         doc.end();
+//     } catch (error) {
+//         console.log(error);
+//         res.status(500).send('Failed to generate sales report');
+//     }
+// };
+
+const puppeteer = require('puppeteer');
+
 const generateSalesReport = async (req, res) => {
-    try {
-      const { startDate, endDate } = req.body;
+  try {
+    const { startDate, endDate } = req.body;
 
-      // Retrieve the sales data from the database based on the date range
-      const salesData = await Order.find({
-        date: { $gte: startDate, $lte: endDate },
-      }).populate('product.id');
+    // Retrieve the sales data from the database based on the date range
+    const salesData = await Order.find({
+      date: { $gte: startDate, $lte: endDate },
+    }).populate('product.id');
 
-      // Create a new PDF document
-      const doc = new PDFDocument();
+    const filePathName = path.resolve(__dirname, '../views/admin/salesReport.ejs');
+    const htmlString = fs.readFileSync(filePathName).toString();
+    const renderedHTML = ejs.render(htmlString, { salesData });
 
-      // Set response headers for PDF download
-      res.setHeader('Content-Type', 'application/pdf');
-      res.setHeader('Content-Disposition', `attachment; filename="sales_report.pdf"`);
+    // Launch a headless Chrome browser instance
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
 
-      // Pipe the PDF document to the response
-      doc.pipe(res);
+    // Set the HTML content of the page
+    await page.setContent(renderedHTML);
 
-      // Sales report title
-      doc.font('Helvetica-Bold').fontSize(18).text('Sales Report', { align: 'center' });
-      doc.moveDown();
+    // Generate PDF from the page
+    const pdfBuffer = await page.pdf();
 
-      // Date range
-      doc.font('Helvetica').fontSize(14).text(`${startDate} - ${endDate}`, { align: 'center' });
-      doc.moveDown();
+    // Close the browser
+    await browser.close();
 
-      // Sales data table header
-      doc.font('Helvetica-Bold').fontSize(12).text('Date', { align: 'left' });
-      doc.font('Helvetica-Bold').fontSize(12).text('Order ID', { align: 'left' });
-      doc.font('Helvetica-Bold').fontSize(12).text('Payment Method', { align: 'left' });
-      doc.font('Helvetica-Bold').fontSize(12).text('Product Details', { align: 'left' });
-      doc.font('Helvetica-Bold').fontSize(12).text('Total', { align: 'left' });
-      doc.moveDown();
+    // Set response headers for PDF download
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', `attachment; filename="sales_report.pdf"`);
 
-      // Sales data table
-      salesData.forEach((order) => {
-        doc.font('Helvetica').fontSize(12).text(`Date: ${order.date.toDateString()}`, { align: 'left' });
-        doc.font('Helvetica').fontSize(12).text(`Order ID: ${order.orderId}`, { align: 'left' });
-        doc.font('Helvetica').fontSize(12).text(`Payment Method: ${order.paymentMethod}`, { align: 'left' });
+    // Send the PDF buffer as the response
+    res.send(pdfBuffer);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send('Failed to generate sales report');
+  }
+};
 
-        order.product.forEach((product) => {
-          doc.font('Helvetica').fontSize(12).text(`Name: ${product.id.productName}`, { align: 'left' });
-          doc.font('Helvetica').fontSize(12).text(`Price: ₹${product.price}`, { align: 'left' });
-          doc.font('Helvetica').fontSize(12).text(`Quantity: ${product.quantity}`, { align: 'left' });
-          doc.font('Helvetica').fontSize(12).text('', { align: 'left' }); // Add an empty line after each product
-        });
+  
 
-        doc.font('Helvetica').fontSize(12).text(`Total: ₹${order.total}`, { align: 'left' });
-        doc.moveDown();
-      });
+// const generateSalesReport = async (req, res) => {
+//     try {
+//       const today = new Date().toISOString().split('T')[0];
+//       const todaysOrders = await Order.aggregate([
+//         {
+//           $match: {
+//             orderDate: {
+//               $gte: new Date(today),
+//               $lt: new Date(today + 'T23:59:59.999Z'),
+//             },
+//           },
+//         },
+//         {
+//           $lookup: {
+//             from: 'users',
+//             localField: 'userId',
+//             foreignField: '_id',
+//             as: 'user',
+//           },
+//         },
+//         {
+//           $unwind: '$user',
+//         },
+//         {
+//           $lookup: {
+//             from: 'products',
+//             localField: 'item.product',
+//             foreignField: '_id',
+//             as: 'productDetails',
+//           },
+//         },
+//       ]);
+  
+//       const orderData = {
+//         todaysOrders: todaysOrders,
+//       };
+  
+//       const filePathName = path.resolve(__dirname, '../view/admin/htmlToPdf.ejs');
+//       const htmlString = fs.readFileSync(filePathName).toString();
+//       const ejsData = ejs.render(htmlString, orderData);
+  
+//       await createDailySalesPdf(ejsData);
+  
+//       const pdfFilePath = path.resolve(__dirname, 'DailySalesReport.pdf');
+//       const pdfData = fs.readFileSync(pdfFilePath);
+  
+//       res.setHeader('Content-Type', 'application/pdf');
+//       res.setHeader('Content-Disposition', 'attachment; filename="DailySalesReport.pdf"');
+  
+//       res.send(pdfData);
+//     } catch (error) {
+//       console.error('Error exporting PDF:', error);
+//       // Handle the error appropriately
+//     }
+//   };
+  
+//   const createDailySalesPdf = async (htmlData) => {
+//     const doc = new PDFDocument();
+  
+//     // Pipe the PDF document to a file
+//     doc.pipe(fs.createWriteStream('DailySalesReport.pdf'));
+  
+//     // Convert the HTML to PDF
+//     doc.html(htmlData, {
+//       autoFirstPage: false,
+//       bufferPages: true,
+//     });
+  
+//     // Finalize the PDF document
+//     doc.end();
+//   };
+  
+  
 
-      // Finalize the PDF document
-      doc.end();
-    } catch (error) {
-      console.log(error);
-      res.status(500).send('Failed to generate sales report');
-    }
-  };
+
+
+
 
 
 

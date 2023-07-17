@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sales Report</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
+    
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th, td {
+            text-align: center;
+            border: 1px solid black;
+            padding: 5px;
+        }
+        
+        .table-warning th {
+            background-color: #fcf8e3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <h1 class="text-center">SALES REPORT</h1>
+
+        <table id='myTable'>
+            <thead>
+                <tr class="table-warning">
+                    <th>Date</th>
+                    <th>Order ID</th>
+                    <th>Payment Method</th>
+                    <th>Product Details</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% salesData.forEach(function(order, index) { %>
+                    <tr>
+                        <td><%= order.date.toDateString() %></td>
+                        <td><%= order.orderId %></td>
+                        <td><%= order.paymentMethod %></td>
+                        <td>
+                            <% order.product.forEach(function(product) { %>
+                                <div>Name: <%= product.id.productName %></div>
+                                <div>Price: ₹<%= product.price %></div>
+                                <div>Quantity: <%= product.quantity %></div>
+                                <br>
+                            <% }) %>
+                        </td>
+                        <td>₹<%= order.total %></td>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
+    integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
+    crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
+    integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
+    crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+    crossorigin="anonymous"></script>
+</body>
+</html>
