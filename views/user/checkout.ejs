@@ -815,10 +815,9 @@
               // Change the button text to "Cancel Coupon"
               applyCouponBtn.innerText = 'Cancel Coupon';
               isCouponApplied = true;
-              if(typeof data.discountAmount!== 'undefined')
-              {
+              if (typeof data.discountAmount !== 'undefined') {
                 discountAmountElement.innerText = data.discountAmount;
-              saveText1.style.display = 'block';
+                saveText1.style.display = 'block';
               }
 
 
@@ -880,47 +879,99 @@
     var address2 = false;
     var payment = false;
 
+    // async function placeOrder() {
+    //   var selectedPaymentMode = document.querySelector('input[name="selector1"]:checked').value;
+    //   const subtotal = document.getElementById("subtotal").textContent.replace("Rs. ", "");
+    //   // Retrieve the coupon code from the input field (replace with your actual input field ID if different)
+    //   const couponCode = document.getElementById('couponCodeInput').value;
+    //   const enteredAmount = parseFloat(document.getElementById('walletInput').value);
+
+    //   const response = await fetch('/placeorder', {
+    //     method: 'POST',
+    //     headers: {
+    //       'Content-Type': 'application/json'
+    //     },
+    //     body: JSON.stringify({
+    //       paymentMethod: selectedPaymentMode,
+    //       subtotal: subtotal,
+    //       couponCode: couponCode,
+    //       usedWalletAmount: enteredAmount
+    //     })
+    //   })
+    //     .then(response => response.json())
+    //     .then(data => {
+    //       // Handle the response from the server
+    //       console.log(data);
+    //       if (data.error) {
+    //         alert(data.error);
+    //       } else if (selectedPaymentMode === 'gpay') {
+    //         const order = data.order;
+    //         console.log(order, "---------order---------");
+    //         // console.log(data.newOrder.orderId,"-------shijith-----------");
+    //         // console.log(data.newOrder,"---------azhar--------------");
+    //         const options = {
+    //           key: 'rzp_test_ORkJ65oKPb4Z48', // Replace with your Razorpay Key ID
+    //           amount: subtotal * 100, // Amount is in currency subunits
+    //           currency: 'INR',
+    //           order_id: order.id,
+    //           handler: function (response) {
+    //             // Handle the Razorpay payment response
+    //             console.log(response.razorpay_payment_id);
+    //             console.log(response.razorpay_order_id);
+    //             console.log(response.razorpay_signature);
+    //             // Redirect to the confirmation page or perform any other actions
+    //             window.location.href = '/confirmation?orderId=' + data.newOrder.orderId;
+    //           }
+    //         };
+    //         const rzp1 = new Razorpay(options);
+    //         rzp1.open();
+    //       } else {
+    //         const order = data.order;
+    //         window.location.href = '/confirmation?orderId=' + order.orderId;
+    //         // window.location.href = '/confirmation?orderId=' + order.orderId;data.newOrder.orderId
+    //       }
+    //     })
+    //     .catch(error => {
+    //       // Handle any errors that occurred during the request
+    //       console.error('Error placing order:', error);
+    //       // Display an error message to the user
+    //     });
+    // }
+
     async function placeOrder() {
       var selectedPaymentMode = document.querySelector('input[name="selector1"]:checked').value;
       const subtotal = document.getElementById("subtotal").textContent.replace("Rs. ", "");
-      // Retrieve the coupon code from the input field (replace with your actual input field ID if different)
       const couponCode = document.getElementById('couponCodeInput').value;
       const enteredAmount = parseFloat(document.getElementById('walletInput').value);
 
-      const response = await fetch('/placeorder', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          paymentMethod: selectedPaymentMode,
-          subtotal: subtotal,
-          couponCode: couponCode,
-          usedWalletAmount: enteredAmount
-        })
-      })
-        .then(response => response.json())
-        .then(data => {
-          // Handle the response from the server
-          console.log(data);
-          if (data.error) {
-            alert(data.error);
-          } else if (selectedPaymentMode === 'gpay') {
+      try {
+        const response = await fetch('/placeorder', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            paymentMethod: selectedPaymentMode,
+            subtotal: subtotal,
+            couponCode: couponCode,
+            usedWalletAmount: enteredAmount
+          })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          if (selectedPaymentMode === 'gpay') {
             const order = data.order;
-            console.log(order, "---------order---------");
-            // console.log(data.newOrder.orderId,"-------shijith-----------");
-            // console.log(data.newOrder,"---------azhar--------------");
             const options = {
               key: 'rzp_test_ORkJ65oKPb4Z48', // Replace with your Razorpay Key ID
               amount: subtotal * 100, // Amount is in currency subunits
               currency: 'INR',
               order_id: order.id,
               handler: function (response) {
-                // Handle the Razorpay payment response
                 console.log(response.razorpay_payment_id);
                 console.log(response.razorpay_order_id);
                 console.log(response.razorpay_signature);
-                // Redirect to the confirmation page or perform any other actions
                 window.location.href = '/confirmation?orderId=' + data.newOrder.orderId;
               }
             };
@@ -929,16 +980,22 @@
           } else {
             const order = data.order;
             window.location.href = '/confirmation?orderId=' + order.orderId;
-            // window.location.href = '/confirmation?orderId=' + order.orderId;data.newOrder.orderId
           }
-        })
-        .catch(error => {
-          // Handle any errors that occurred during the request
-          console.error('Error placing order:', error);
-          // Display an error message to the user
-        });
+        } else {
+          // Handle error scenarios and display Swal alerts
+          if (data.error === 'Insufficient stock for one or more products') {
+            Swal.fire('Error', 'Insufficient stock for one or more products', 'error');
+          } else if (data.error === 'Insufficient balance in the wallet') {
+            Swal.fire('Error', 'Insufficient balance in the wallet', 'error');
+          } else {
+            Swal.fire('Error', 'An error occurred while creating the order', 'error');
+          }
+        }
+      } catch (error) {
+        console.error('Error placing order:', error);
+        Swal.fire('Error', 'An error occurred while placing the order', 'error');
+      }
     }
-
 
 
 
@@ -1133,6 +1190,8 @@
   </script>
 
   <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 
 
 </body>

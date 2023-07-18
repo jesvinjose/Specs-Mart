@@ -330,7 +330,7 @@
 
                 <div class="mb-3">
                     <label for="Description" class="form-label">Stock Count</label>
-                    <input type="number" class="form-control" id="description" name="stockCount"
+                    <input type="number" class="form-control" id="description" min="0" name="stockCount"
                         value="<%= product[0].stockCount %>" placeholder="Enter Stock Count">
                 </div>
                 <input type="hidden" name="id" value="<%= product[0]._id %>">
