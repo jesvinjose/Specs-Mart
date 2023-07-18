@@ -187,37 +187,40 @@
         <!-- Search input code... -->
     </header>
     <!-- Header part end-->
-    <h2 style="margin-left: 41px;">My Orders</h2>
-    <table id="myTable">
-        <thead>
-            <tr>
-                <th>Order ID</th>
-                <th>Date of Order</th>
-                <th>Total Price</th>
-                <th>Status</th>
-                <th>View Details</th>
-            </tr>
-        </thead>
-        <tbody>
-            <%orderData.forEach((item)=>{%>
+    <div class="container">
+        <h2 style="margin-left: 41px;">My Orders</h2>
+        <table id="myTable">
+            <thead>
                 <tr>
-                    <td>
-                        <%=item.orderId%>
-                    </td>
-                    <td>
-                        <%=new Date(item.date).toLocaleString()%>
-                    </td>
-                    <td>
-                        <%=item.total%>
-                    </td>
-                    <td>
-                        <%=item.status%>
-                    </td>
-                    <td><a href="/orderDetails/?orderId=<%=item.orderId%>" class="btn btn-primary">View Details</a></td>
+                    <th>Order ID</th>
+                    <th>Date of Order</th>
+                    <th>Total Price</th>
+                    <th>Status</th>
+                    <th>View Details</th>
                 </tr>
-                <%})%>
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                <%orderData.forEach((item)=>{%>
+                    <tr>
+                        <td>
+                            <%=item.orderId%>
+                        </td>
+                        <td>
+                            <%=new Date(item.date).toLocaleString()%>
+                        </td>
+                        <td>
+                            <%=item.total%>
+                        </td>
+                        <td>
+                            <%=item.status%>
+                        </td>
+                        <td><a href="/orderDetails/?orderId=<%=item.orderId%>" class="btn btn-primary">View Details</a></td>
+                    </tr>
+                    <%})%>
+            </tbody>
+        </table>
+    </div>
+
 
     <!--================End Cart Area =================-->
     <!--::footer_part start::-->
@@ -244,29 +247,6 @@
                             <a href="#"><i class="fab fa-instagram"></i></a>
                             <a href="#"><i class="fab fa-google-plus-g"></i></a>
                             <a href="#"><i class="fab fa-linkedin-in"></i></a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="copyright_part">
-            <div class="container">
-                <div class="row ">
-                    <div class="col-lg-12">
-                        <div class="copyright_text">
-                            <P><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-                                Copyright &copy;
-                                <script>document.write(new Date().getFullYear());</script> All rights reserved | This
-                                template is made
-                                with <i class="ti-heart" aria-hidden="true"></i> by <a href="https://colorlib.com"
-                                    target="_blank">Colorlib</a>
-                                <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-                            </P>
-                            <div class="copyright_link">
-                                <a href="#">Turms & Conditions</a>
-                                <a href="#">FAQ</a>
-                            </div>
                         </div>
                     </div>
                 </div>
