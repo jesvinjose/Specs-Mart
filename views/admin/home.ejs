@@ -7,6 +7,7 @@
   <title>Admin:Specs-Mart</title>
   <link rel="shortcut icon" type="image" href="../admin/assets/images/logos/dark-logo.png" />
   <link rel="stylesheet" href="../admin/assets/css/styles.min.css" />
+  <!-- <link rel="stylesheet" href="/public/admin/assets/css/styles.min.css"> -->
 </head>
 
 <body>
@@ -33,77 +34,13 @@
               <span class="hide-menu">Home</span>
             </li>
             <li class="sidebar-item">
-              <a class="sidebar-link" href="./admin/home" aria-expanded="false">
+              <a class="sidebar-link" href="/admin/home" aria-expanded="false">
                 <span>
                   <i class="ti ti-layout-dashboard"></i>
                 </span>
                 <span class="hide-menu">Dashboard</span>
               </a>
             </li>
-            <!-- <li class="nav-small-cap">
-              <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
-              <span class="hide-menu">UI COMPONENTS</span>
-            </li>
-            <li class="sidebar-item">
-              <a class="sidebar-link" href="./ui-buttons.html" aria-expanded="false">
-                <span>
-                  <i class="ti ti-article"></i>
-                </span>
-                <span class="hide-menu">Buttons</span>
-              </a>
-            </li>
-            <li class="sidebar-item">
-              <a class="sidebar-link" href="./ui-alerts" aria-expanded="false">
-                <span>
-                  <i class="ti ti-alert-circle"></i>
-                </span>
-                <span class="hide-menu">Alerts</span>
-              </a>
-            </li>
-            <li class="sidebar-item">
-              <a class="sidebar-link" href="./ui-card.html" aria-expanded="false">
-                <span>
-                  <i class="ti ti-cards"></i>
-                </span>
-                <span class="hide-menu">Card</span>
-              </a>
-            </li>
-            <li class="sidebar-item">
-              <a class="sidebar-link" href="./ui-forms.html" aria-expanded="false">
-                <span>
-                  <i class="ti ti-file-description"></i>
-                </span>
-                <span class="hide-menu">Forms</span>
-              </a>
-            </li>
-            <li class="sidebar-item">
-              <a class="sidebar-link" href="./ui-typography.html" aria-expanded="false">
-                <span>
-                  <i class="ti ti-typography"></i>
-                </span>
-                <span class="hide-menu">Typography</span>
-              </a>
-            </li>
-            <li class="nav-small-cap">
-              <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
-              <span class="hide-menu">AUTH</span>
-            </li>
-            <li class="sidebar-item">
-              <a class="sidebar-link" href="./authentication-login.html" aria-expanded="false">
-                <span>
-                  <i class="ti ti-login"></i>
-                </span>
-                <span class="hide-menu">Login</span>
-              </a>
-            </li>
-            <li class="sidebar-item">
-              <a class="sidebar-link" href="./authentication-register.html" aria-expanded="false">
-                <span>
-                  <i class="ti ti-user-plus"></i>
-                </span>
-                <span class="hide-menu">Register</span>
-              </a>
-            </li> -->
             <li class="nav-small-cap">
               <a class="sidebar-link" href="/admin/orders" aria-expanded="false">
                 <!-- <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
@@ -631,20 +568,31 @@
           </div>
         </div>
         <div class="py-6 px-6 text-center">
-          <!-- <p class="mb-0 fs-4">Design and Developed by <a href="https://adminmart.com/" target="_blank" -->
-          <!-- class="pe-1 text-primary text-decoration-underline">AdminMart.com</a> Distributed by <a -->
-          <!-- href="https://themewagon.com">ThemeWagon</a></p> -->
         </div>
       </div>
     </div>
   </div>
-  <script src="../assets/libs/jquery/dist/jquery.min.js"></script>
-  <script src="../assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="../assets/js/sidebarmenu.js"></script>
-  <script src="../assets/js/app.min.js"></script>
-  <script src="../assets/libs/apexcharts/dist/apexcharts.min.js"></script>
-  <script src="../assets/libs/simplebar/dist/simplebar.js"></script>
-  <script src="../assets/js/dashboard.js"></script>
+  <!-- <script src="/public/admin/assets/libs/jquery/dist/jquery.min.js"></script> -->
+  <!-- <script src="/public/admin/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script> -->
+  <!-- <script src="/public/admin/assets/js/sidebarmenu.js"></script> -->
+  <!-- <script src="/public/admin/assets/js/app.min.js"></script> -->
+  <!-- <script src="/public/admin/assets/libs/apexcharts/dist/apexcharts.min.js"></script> -->
+  <!-- <script src="/public/admin/assets/libs/simplebar/dist/simplebar.js"></script> -->
+  <!-- <script src="/public/admin/assets/js/dashboard.js"></script> -->
+
+  <script src="../admin/assets/libs/jquery/dist/jquery.min.js"></script>
+  
+  <script src="../admin/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <script src="../admin/assets/js/sidebarmenu.js"></script>
+  
+  <script src="../admin/assets/js/app.min.js"></script>
+  
+  <script src="../admin/assets/libs/apexcharts/dist/apexcharts.min.js"></script>
+  
+  <script src="../admin/assets/libs/simplebar/dist/simplebar.js"></script>
+  
+  <script src="../admin/assets/js/dashboard.js"></script>
 
   <script>
 
@@ -707,42 +655,7 @@
 
   </script>
 
-  <script>
-    // const generateReport = () => {
-    //   const startDate = document.getElementById('startDate').value;
-    //   const endDate = document.getElementById('endDate').value;
 
-    //   // Send a request to the server to generate the sales report
-    //   fetch('/generate-sales-report', {
-    //     method: 'POST',
-    //     headers: {
-    //       'Content-Type': 'application/json',
-    //     },
-    //     body: JSON.stringify({ startDate, endDate }),
-    //   })
-    //     .then((response) => response.blob())
-    //     .then((blob) => {
-    //       // Create a URL for the blob data
-    //       const url = URL.createObjectURL(blob);
-
-    //       // Create a link element
-    //       const link = document.createElement('a');
-    //       link.href = url;
-    //       link.download = 'sales_report.pdf';
-
-    //       // Programmatically click the link to initiate the download
-    //       link.click();
-
-    //       // Clean up the URL and link element
-    //       URL.revokeObjectURL(url);
-    //       link.remove();
-    //     })
-    //     .catch((error) => {
-    //       console.log(error);
-    //       // Handle any errors that occurred during the request
-    //     });
-    // };
-  </script>
 
 
 </body>

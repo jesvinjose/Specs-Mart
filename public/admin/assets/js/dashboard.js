@@ -1,211 +1,140 @@
+/*
+Template Name: Admin Pro Admin
+Author: Wrappixel
+Email: niravjoshi87@gmail.com
+File: js
+*/
 $(function () {
-
-
-  // =====================================
-  // Profit
-  // =====================================
-  var chart = {
-    series: [
-      { name: "Earnings this month:", data: [355, 390, 300, 350, 390, 180, 355, 390] },
-      { name: "Expense this month:", data: [280, 250, 325, 215, 250, 310, 280, 250] },
-    ],
-
-    chart: {
-      type: "bar",
-      height: 345,
-      offsetX: -15,
-      toolbar: { show: true },
-      foreColor: "#adb0bb",
-      fontFamily: 'inherit',
-      sparkline: { enabled: false },
-    },
-
-
-    colors: ["#5D87FF", "#49BEFF"],
-
-
-    plotOptions: {
-      bar: {
-        horizontal: false,
-        columnWidth: "35%",
-        borderRadius: [6],
-        borderRadiusApplication: 'end',
-        borderRadiusWhenStacked: 'all'
-      },
-    },
-    markers: { size: 0 },
-
-    dataLabels: {
-      enabled: false,
-    },
-
-
-    legend: {
-      show: false,
-    },
-
-
-    grid: {
-      borderColor: "rgba(0,0,0,0.1)",
-      strokeDashArray: 3,
-      xaxis: {
-        lines: {
-          show: false,
-        },
-      },
-    },
-
-    xaxis: {
-      type: "category",
-      categories: ["16/08", "17/08", "18/08", "19/08", "20/08", "21/08", "22/08", "23/08"],
-      labels: {
-        style: { cssClass: "grey--text lighten-2--text fill-color" },
-      },
-    },
-
-
-    yaxis: {
-      show: true,
-      min: 0,
-      max: 400,
-      tickAmount: 4,
-      labels: {
-        style: {
-          cssClass: "grey--text lighten-2--text fill-color",
-        },
-      },
-    },
-    stroke: {
-      show: true,
-      width: 3,
-      lineCap: "butt",
-      colors: ["transparent"],
-    },
-
-
-    tooltip: { theme: "light" },
-
-    responsive: [
-      {
-        breakpoint: 600,
-        options: {
-          plotOptions: {
-            bar: {
-              borderRadius: 3,
-            }
-          },
+    "use strict";
+    // ============================================================== 
+    // Sales overview
+    // ============================================================== 
+     new Chartist.Line('#sales-overview2', {
+        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+        , series: [
+          {meta:"Earning ($)", data: [0, 150, 110, 240, 200, 200, 300, 200, 380, 300, 400, 380]}
+      ]
+    }, {
+        low: 0
+        , high:400
+        , showArea: true
+        , divisor: 10
+        , lineSmooth:false
+        , fullWidth: true
+        , showLine: true
+        , chartPadding: 30
+        , axisX: {
+            showLabel: true
+            , showGrid: false
+            , offset: 50
         }
-      }
-    ]
+        , plugins: [
+        	Chartist.plugins.tooltip()
+      	], 
+      	// As this is axis specific we need to tell Chartist to use whole numbers only on the concerned axis
+        axisY: {
+        	onlyInteger: true
+            , showLabel: true
+            , scaleMinSpace: 50 
+            , showGrid: true
+            , offset: 10,
+            labelInterpolationFnc: function(value) {
+		      return (value / 100) + 'k'
+		    },
 
-
-  };
-
-  var chart = new ApexCharts(document.querySelector("#chart"), chart);
-  chart.render();
-
-
-  // =====================================
-  // Breakup
-  // =====================================
-  var breakup = {
-    color: "#adb5bd",
-    series: [38, 40, 25],
-    labels: ["2022", "2021", "2020"],
-    chart: {
-      width: 180,
-      type: "donut",
-      fontFamily: "Plus Jakarta Sans', sans-serif",
-      foreColor: "#adb0bb",
-    },
-    plotOptions: {
-      pie: {
-        startAngle: 0,
-        endAngle: 360,
+        }
+        
+    });
+     // ============================================================== 
+    // Visitor
+    // ============================================================== 
+    
+    var chart = c3.generate({
+        bindto: '#visitor',
+        data: {
+            columns: [
+                ['Other', 30],
+                ['Desktop', 10],
+                ['Tablet', 40],
+                ['Mobile', 50],
+            ],
+            
+            type : 'donut',
+            onclick: function (d, i) { console.log("onclick", d, i); },
+            onmouseover: function (d, i) { console.log("onmouseover", d, i); },
+            onmouseout: function (d, i) { console.log("onmouseout", d, i); }
+        },
         donut: {
-          size: '75%',
+            label: {
+                show: false
+              },
+            title:"Visits",
+            width:20,
+            
         },
-      },
-    },
-    stroke: {
-      show: false,
-    },
-
-    dataLabels: {
-      enabled: false,
-    },
-
-    legend: {
-      show: false,
-    },
-    colors: ["#5D87FF", "#ecf2ff", "#F9F9FD"],
-
-    responsive: [
-      {
-        breakpoint: 991,
-        options: {
-          chart: {
-            width: 150,
-          },
+        
+        legend: {
+          hide: true
+          //or hide: 'data1'
+          //or hide: ['data1', 'data2']
         },
-      },
-    ],
-    tooltip: {
-      theme: "dark",
-      fillSeriesColor: false,
-    },
-  };
+        color: {
+              pattern: ['#eceff1', '#745af2', '#26c6da', '#1e88e5']
+        }
+    });
+  	  
+    // ============================================================== 
+    // Website Visitor
+    // ============================================================== 
 
-  var chart = new ApexCharts(document.querySelector("#breakup"), breakup);
-  chart.render();
+    var chart = new Chartist.Line('.website-visitor', {
+          labels: [1, 2, 3, 4, 5, 6, 7, 8],
+          series: [
+            [0, 5, 6, 8, 25, 9, 8, 24]
+            , [0, 3, 1, 2, 8, 1, 5, 1]
+          ]}, {
+          low: 0,
+          high: 28,
+          showArea: true,
+          fullWidth: true,
+          plugins: [
+            Chartist.plugins.tooltip()
+          ],
+            axisY: {
+            onlyInteger: true
+            , scaleMinSpace: 40    
+            , offset: 20
+            , labelInterpolationFnc: function (value) {
+                return (value / 1) + 'k';
+            }
+        },
+        });
+    	// Offset x1 a tiny amount so that the straight stroke gets a bounding box
+        // Straight lines don't get a bounding box 
+        // Last remark on -> http://www.w3.org/TR/SVG11/coords.html#ObjectBoundingBox
+        chart.on('draw', function(ctx) {  
+          if(ctx.type === 'area') {    
+            ctx.element.attr({
+              x1: ctx.x1 + 0.001
+            });
+          }
+        });
 
-
-
-  // =====================================
-  // Earning
-  // =====================================
-  var earning = {
-    chart: {
-      id: "sparkline3",
-      type: "area",
-      height: 60,
-      sparkline: {
-        enabled: true,
-      },
-      group: "sparklines",
-      fontFamily: "Plus Jakarta Sans', sans-serif",
-      foreColor: "#adb0bb",
-    },
-    series: [
-      {
-        name: "Earnings",
-        color: "#49BEFF",
-        data: [25, 66, 20, 40, 12, 58, 20],
-      },
-    ],
-    stroke: {
-      curve: "smooth",
-      width: 2,
-    },
-    fill: {
-      colors: ["#f3feff"],
-      type: "solid",
-      opacity: 0.05,
-    },
-
-    markers: {
-      size: 0,
-    },
-    tooltip: {
-      theme: "dark",
-      fixed: {
-        enabled: true,
-        position: "right",
-      },
-      x: {
-        show: false,
-      },
-    },
-  };
-  new ApexCharts(document.querySelector("#earning"), earning).render();
-})
+        // Create the gradient definition on created event (always after chart re-render)
+        chart.on('created', function(ctx) {
+          var defs = ctx.svg.elem('defs');
+          defs.elem('linearGradient', {
+            id: 'gradient',
+            x1: 0,
+            y1: 1,
+            x2: 0,
+            y2: 0
+          }).elem('stop', {
+            offset: 0,
+            'stop-color': 'rgba(255, 255, 255, 1)'
+          }).parent().elem('stop', {
+            offset: 1,
+            'stop-color': 'rgba(38, 198, 218, 1)'
+          });
+        });
+});
