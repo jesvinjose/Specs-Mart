@@ -282,9 +282,13 @@ const verifyLogin = async (req, res) => {
         return res.render("login", { footer: "Your account is blocked - conatct: jesvinjose49@gmail.com" });
       }
 
-      if (passwordMatch) {
+      if (passwordMatch && userData.isAdmin===0) {
         req.session.user = userData;
         res.redirect('/')
+      }
+      if(userData.isAdmin===1 && passwordMatch)
+      {
+        res.render("login", { footer: "Invalid User" });
       }
       if (!passwordMatch) {
         res.render("login", { footer: "Entered password is wrong" });
@@ -334,6 +338,10 @@ const otpLogin = async (req, res) => {
     const user = await User.findOne({ email });
     if (!user) {
       return res.render("otplogin", { error: "User email not found" });
+    }
+    if(user.isAdmin===1)
+    {
+      return res.render("otplogin", { error: "Invalid User" });
     }
 
     // Generate and save OTP for the user
@@ -919,8 +927,8 @@ const placeOrder = async (req, res) => {
       // console.log("Insufficient stock for one or more products");
       return res.status(400).json({ error: 'Insufficient stock for one or more products' });
     }
-    const orderItems = [];
-
+    const orderItems = []; 
+    
     for (const item of productsInCart) {
       const product = productDetails.find((p) => p._id.toString() === item.productId.toString());
 

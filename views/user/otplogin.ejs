@@ -128,6 +128,13 @@
                                 Please Sign in now</h3>
                             <form class="row contact_form" action="/otplogin" method="post" novalidate="novalidate">
                                 <div class="col-md-12 form-group p_star">
+                                    <% if (typeof error !=='undefined' ) { %>
+                                        <div class="error-message">
+                                            <%= error %>
+                                        </div>
+                                        <% } %>
+                                </div>
+                                <div class="col-md-12 form-group p_star">
                                     <input type="email" class="form-control" id="email" name="email" value=""
                                         placeholder="Enter Email">
                                 </div>
