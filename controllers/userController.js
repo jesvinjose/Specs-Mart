@@ -336,6 +336,10 @@ const otpLogin = async (req, res) => {
   try {
     // Check if the user email exists
     const user = await User.findOne({ email });
+    if(user.blockStatus===true)
+    {
+      return res.render("otplogin", { error: "User is Blocked" });
+    }
     if (!user) {
       return res.render("otplogin", { error: "User email not found" });
     }
