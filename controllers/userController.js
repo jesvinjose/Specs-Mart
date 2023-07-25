@@ -1565,6 +1565,8 @@ const saveBillingAddressinCheckout = async (req, res) => {
     console.log("Hi Billing Address in checkout");
     const id = req.body.billingId;
     userData = req.session.user;
+    const userobj = await User.findOne({ _id: userData._id })
+    var couponData = await Coupon.find({ usedBy: { $ne: userData._id } });
     const userWithCartDetails = await User.findById(userData._id)
       .populate({
         path: 'cart',
@@ -1608,8 +1610,8 @@ const saveBillingAddressinCheckout = async (req, res) => {
       })
       const billingAddresses = await BillingAddress.find({ userId: userData._id })
       const shippingAddresses = await ShippingAddress.find({ userId: userData._id })
-      res.render("checkout", { billingAddresses, shippingAddresses, userData, products: productsCheck, subtotal })
-      console.log(BillingAddress, "------------edited--------------------");
+      res.render("checkout", { billingAddresses, shippingAddresses, userData, couponData, products: productsCheck, subtotal,walletamount:userobj.wallet.balance })
+      // console.log(BillingAddress, "------------edited--------------------");
     }
   } catch (error) {
     console.log(error);
@@ -1635,7 +1637,7 @@ const saveShippingAddress = async (req, res) => {
       const billingAddresses = await BillingAddress.find({ userId: userData._id })
       const shippingAddresses = await ShippingAddress.find({ userId: userData._id })
       res.render("addresses", { billingAddresses, shippingAddresses, userData })
-      console.log(BillingAddress, "------------edited--------------------");
+      // console.log(BillingAddress, "------------edited--------------------");
     }
   } catch (error) {
     console.log(error);
@@ -1647,6 +1649,8 @@ const saveShippingAddressinCheckout = async (req, res) => {
     console.log("Hi Shipping Address in checkout");
     const id = req.body.shippingId;
     userData = req.session.user;
+    const userobj = await User.findOne({ _id: userData._id })
+    var couponData = await Coupon.find({ usedBy: { $ne: userData._id } });
     const userWithCartDetails = await User.findById(userData._id)
       .populate({
         path: 'cart',
@@ -1690,8 +1694,8 @@ const saveShippingAddressinCheckout = async (req, res) => {
       })
       const billingAddresses = await BillingAddress.find({ userId: userData._id })
       const shippingAddresses = await ShippingAddress.find({ userId: userData._id })
-      res.render("checkout", { billingAddresses, shippingAddresses, userData, products: productsCheck, subtotal })
-      console.log(ShippingAddress, "------------edited--------------------");
+      res.render("checkout", { billingAddresses, shippingAddresses, userData, couponData, products: productsCheck, subtotal,walletamount:userobj.wallet.balance })
+      // console.log(ShippingAddress, "------------edited--------------------");
     }
   } catch (error) {
     console.log(error);
