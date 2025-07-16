@@ -2,7 +2,7 @@ const User = require('../models/userModel');
 const Category = require('../models/categoryModel')
 const Product = require('../models/productModel')
 const Carousel = require('../models/carouselModel')
-const Review = require('../models/reviewModel')
+// const Review = require('../models/reviewModel')
 const BillingAddress = require('../models/billingAddressModel')
 const ShippingAddress = require('../models/shippingAddressModel')
 const Order = require('../models/orderModel')
@@ -679,7 +679,7 @@ const loadCheckOut = async (req, res) => {
       const data = req.session.user;
       const shippingAddresses = await ShippingAddress.find({ userId: data._id })
       const billingAddresses = await BillingAddress.find({ userId: data._id })
-      const userobj = await User.findOne({ _id: userData._id })
+      const userobj = await User.findOne({ _id: data._id })
       // console.log(billingAddresses,"----------------Billing Addresses---------------");
       // console.log(shippingAddresses,"----------------shippingAddress----------------");
       var couponData = await Coupon.find({ usedBy: { $ne: data._id } });
@@ -1249,7 +1249,7 @@ const loadFullProducts = async (req, res) => {
       query.productName = { $regex: '.*' + search + '.*', $options: 'i' };
     }
 
-    // Category selection
+    // Category selection 
     const category = req.query.category || '';
     if (category) {
       query.productCategory = category;
